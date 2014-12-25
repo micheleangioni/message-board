@@ -1,10 +1,7 @@
 <?php
 
-namespace TopGames\MessageBoard\TopPlayer;
+namespace TopGames\MessageBoard;
 
-use TopGames\MessageBoard\AbstractMbGateway;
-use TopGames\MessageBoard\MbUserInterface;
-use TopGames\MessageBoard\MbGatewayInterface;
 use TopGames\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
 use TopGames\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
 use TopGames\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
@@ -14,6 +11,8 @@ use InvalidArgumentException;
 
 class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
 
+    protected $langFile = 'messageboard';
+
     protected $mbText;
 
     function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, ViewRepo $viewRepo)
@@ -22,8 +21,8 @@ class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
-     * Create the text of the mb post will be sent.
-     * Keys in the mb_topplayer lang file will be used for localization.
+     * Create the coded text of the mb post.
+     * Keys in the messageboard.php lang file will be used for localization.
      *
      * @param  string           $code
      * @param  MbUserInterface  $user
@@ -32,17 +31,19 @@ class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
      *
      * @return string
      */
-    protected function setCodedPostText($code, MbUserInterface $user, array $attributes)
+    protected function getCodedPostText($code, MbUserInterface $user = NULL, array $attributes)
     {
         if(!$code) {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': No input code.');
         }
 
-        // Set user attribute
+        // Set user attribute, is set
 
-        $variables['user'] =  $this->getUserLink($user);
+        if($user) {
+            $variables['user'] =  $this->getUserLink($user);
+        }
 
-        return $this->mbText = Lang::get("$code", $variables);
+        return $this->mbText = Lang::get('message-board::messageboard.'."$code", $variables);
     }
 
 }

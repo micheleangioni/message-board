@@ -21,24 +21,38 @@ class MessageBoardServiceProvider extends ServiceProvider {
 		$this->package('top-games/message-board');
 	}
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		//
-	}
+    /**
+     * Register the service provider.
+     */
+    public function register()
+    {
+        $this->registerRepositories();
+    }
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array();
-	}
+    /**
+     * Register the repositories that will handle all the database interaction.
+     */
+    protected function registerRepositories()
+    {
+        $this->app->bind(
+            'TopGames\MessageBoard\Repos\CommentRepositoryInterface',
+            'TopGames\MessageBoard\Repos\EloquentCommentRepository'
+        );
+
+        $this->app->bind(
+            'TopGames\MessageBoard\Repos\LikeRepositoryInterface',
+            'TopGames\MessageBoard\Repos\EloquentLikeRepository'
+        );
+
+        $this->app->bind(
+            'TopGames\MessageBoard\Repos\PostRepositoryInterface',
+            'TopGames\MessageBoard\Repos\EloquentPostRepository'
+        );
+
+        $this->app->bind(
+            'TopGames\MessageBoard\Repos\ViewRepositoryInterface',
+            'TopGames\MessageBoard\Repos\EloquentViewRepository'
+        );
+    }
 
 }

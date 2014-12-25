@@ -22,6 +22,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     protected $allowedMessageTypes = array('private_mess', 'public_mess');
 
+    /**
+     * Laravel application.
+     *
+     * @var \Illuminate\Foundation\Application
+     */
+    protected $app;
+
     protected $commentRepo;
 
     /**
@@ -41,7 +48,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @var int
      */
-    protected $postsPerPage = 20;
+    protected $postsPerPage;
 
     protected $postRepo;
 
@@ -50,9 +57,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
     function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, ViewRepo $viewRepo)
     {
+        $this->app = app();
+
         $this->commentRepo = $commentRepo;
 
         $this->likeRepo = $likeRepo;
+
+        $this->postsPerPage = $this->app['config']->get('message-board::posts_per_page');
 
         $this->postRepo = $postRepo;
 
@@ -62,7 +73,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     /**
      * Create the text of the Post that will be sent.
      */
-    abstract protected function setCodedPostText($code, MbUserInterface $user, array $attributes);
+    abstract protected function getCodedPostText($code, MbUserInterface $user, array $attributes);
 
     /**
      * Create a new Post from a coded text.
@@ -83,7 +94,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
         // Take post text
 
-        $data['text'] = $this->setCodedPostText($code, $user, $attributes);
+        $data['text'] = $this->getCodedPostText($code, $user, $attributes);
 
         // Check if the message is private or not
 
@@ -104,6 +115,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  int              $idPoster
      * @param  string           $messageType
      * @param  string           $text
+     * @throws InvalidArgumentException
+     *
      * @return Post
      */
     public function createPost(MbUserInterface $user, $idPoster = NULL, $messageType = 'public_mess', $text)
@@ -114,6 +127,12 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             'poster_id' => $idPoster,
             'text' => $text,
         );
+
+        // Check if the message type is allowed
+
+        if(!in_array($messageType, $this->app['config']->get('message-board::message_types'))) {
+            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid message type.');
+        }
 
         // Check if the message is private or not
 
@@ -206,7 +225,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     public function createLike($idUser, $likableEntityId, $likableEntity)
     {
         if(!isset($this->likableEntities[$likableEntity])) {
-            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $likableEntity is not a valid entiry to be liked.');
+            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $likableEntity is not a valid entity to be liked.');
         }
 
         // Check if input entity is already liked by the input user, if not, create a new one
@@ -279,7 +298,6 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         return $this->postRepo->getOrderedPosts($user->getPrimaryId(), $messageType, $page, $limit);
     }
 
-
     /**
      * Return input user page link for the view.
      *
@@ -288,8 +306,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     protected function getUserLink(MbUserInterface $user)
     {
-        //TODO Add conf file for the user named route
-        return link_to_route('user.show', e($user->getUsername()), $parameters = array($user->getPrimaryId()), $attributes = array());
+        return link_to_route($this->app['config']->get('message-board::user_named_route'), e($user->getUsername()), $parameters = array($user->getPrimaryId()), $attributes = array());
     }
 
 }
