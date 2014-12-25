@@ -52,6 +52,10 @@ $user is an instance of your User model (which must implement the MbUserInterfac
 $messageType defines the type of the messages you want to retrieve, 'all' will retrieve all posts in the User message board.
 $page and $limit handle pagination.
 
+A particularly useful feature is the "user last view datetime", that is when a user sees his own message board the datetime of the visit can be saved to remember which posts have been already seen and which not.
+To achieve that call the `updateUserLastView(MbUserInterface $user)` method, where $user is an instance of your User model.
+You can then retrieve the saved datetime by calling the `getLastViewDatetime()` method from your user model. You can than use it in your classes or views.
+
 ### Managing posts
 
 Use the `createPost(MbUserInterface $user, $idPoster = NULL, $messageType = 'public_mess', $text)` method to create a new post.

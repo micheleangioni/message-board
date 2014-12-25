@@ -15,4 +15,14 @@ trait MbTrait {
         return $this->hasOne('\TopGames\MessageBoard\Models\View');
     }
 
+    /**
+     * Return the User last view datetime.
+     *
+     * @return string
+     */
+    public function getLastViewDatetime()
+    {
+        return $this->mbLastView->datetime;
+    }
+
 }
