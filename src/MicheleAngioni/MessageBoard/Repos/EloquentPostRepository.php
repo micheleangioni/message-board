@@ -1,11 +1,11 @@
 <?php
 
-namespace TopGames\MessageBoard\Repos;
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use Helpers;
 use Illuminate\Support\Collection;
 use TopGames\Support\Repos\AbstractEloquentRepository;
-use TopGames\MessageBoard\Models\Post;
+use MicheleAngioni\MessageBoard\Models\Post;
 use DatabaseException;
 use Exception;
 use InvalidArgumentException;

@@ -1,9 +1,9 @@
 <?php
 
-namespace TopGames\MessageBoard\Repos;
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use TopGames\Support\Repos\AbstractEloquentRepository;
-use TopGames\MessageBoard\Models\Like;
+use MicheleAngioni\MessageBoard\Models\Like;
 
 class EloquentLikeRepository extends AbstractEloquentRepository implements LikeRepositoryInterface
 {

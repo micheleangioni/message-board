@@ -1,7 +1,7 @@
 {
-    "name": "top-games/message-board",
+    "name": "michele-angioni/message-board",
     "description": "A message board package for Laravel.",
-    "keywords": ["laravel", "messageboard"],
+    "keywords": ["laravel", "message board"],
     "license": "Apache 2.0",
     "authors": [
         {
@@ -12,13 +12,13 @@
     "repositories": [
         {
             "type": "vcs",
-            "url":  "git@bitbucket.org:TopGames/support.git"
+            "url":  "git@bitbucket.org:Voodoo10/support.git"
         }
     ],
     "require": {
         "php": ">=5.4.0",
         "laravel/framework": "4.2.*",
-        "top-games/support": "dev-master"
+        "michele-angioni/support": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master",
@@ -26,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-            "TopGames\\Messageboard\\": "src"
+            "MicheleAngioni\\MessageBoard\\": "src/MicheleAngioni/MessageBoard"
         }
     },
     "minimum-stability": "stable"

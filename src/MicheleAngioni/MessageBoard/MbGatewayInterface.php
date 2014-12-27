@@ -1,6 +1,6 @@
 <?php
 
-namespace TopGames\MessageBoard;
+namespace MicheleAngioni\MessageBoard;
 
 interface MbGatewayInterface {
 

@@ -1,18 +1,18 @@
 <?php
 
-namespace TopGames\MessageBoard;
+namespace MicheleAngioni\MessageBoard;
 
 trait MbTrait {
 
 
     public function mbPosts()
     {
-        return $this->hasMany('\TopGames\MessageBoard\Models\Post');
+        return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Post');
     }
 
     public function mbLastView()
     {
-        return $this->hasOne('\TopGames\MessageBoard\Models\View');
+        return $this->hasOne('\MicheleAngioni\MessageBoard\Models\View');
     }
 
     /**

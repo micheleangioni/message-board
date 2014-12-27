@@ -1,15 +1,15 @@
 <?php
 
-namespace TopGames\MessageBoard;
+namespace MicheleAngioni\MessageBoard;
 
 use Illuminate\Support\Collection;
-use TopGames\MessageBoard\Models\Comment;
-use TopGames\MessageBoard\Models\Like;
-use TopGames\MessageBoard\Models\Post;
-use TopGames\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
-use TopGames\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
-use TopGames\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
-use TopGames\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
+use MicheleAngioni\MessageBoard\Models\Comment;
+use MicheleAngioni\MessageBoard\Models\Like;
+use MicheleAngioni\MessageBoard\Models\Post;
+use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
+use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
+use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
+use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use InvalidArgumentException;
 

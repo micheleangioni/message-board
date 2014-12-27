@@ -6,20 +6,20 @@ The Message Board is a [Laravel 4](http://laravel.com) package which assigns a m
 
 ## Installation
 
-Message Board can be installed through Composer, just include `"angioni/message-board": "dev-master"` to your composer.json.
+Message Board can be installed through Composer, just include `"michele-angioni/message-board": "dev-master"` to your composer.json.
 
 ## Configuration
 
 The Message Board Service Provided must be added in the app.php config file, under the providers array
 
-    'TopGames\MessageBoard\MessageBoardServiceProvider'
+    'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
 
 Add the `MbTrait` to your User model. It has also to implement the `MbUserInterface` so that Message Board classes can type hint it
 
     <?php
 
-    use TopGames\MessageBoard\MbTrait; // Message Board Trait
-    use TopGames\MessageBoard\MbUserInterface;
+    use MicheleAngioni\MessageBoard\MbTrait; // Message Board Trait
+    use MicheleAngioni\MessageBoard\MbUserInterface;
 
     class User MbUserInterface {
 
@@ -34,14 +34,14 @@ Add the `MbTrait` to your User model. It has also to implement the `MbUserInterf
 
         [...]
 
-Even if not strictly needed, it is recommended to publish the Message Board conf and lang files through the artisan commands `php artisan config:publish angioni/message-board` and `php artisan lang:publish angioni/message-board`.
-You can than edit the config.php file in your `app/config/packages/angioni/message-board`.
+Even if not strictly needed, it is recommended to publish the Message Board conf and lang files through the artisan commands `php artisan config:publish michele-angioni/message-board` and `php artisan lang:publish michele-angioni/message-board`.
+You can than edit the config.php file in your `app/config/packages/michele-angioni/message-board`.
 
 In particular it can be useful to define a named route for your User page and copy it the in the conf file.
 
 ## Usage
 
-The `TopGames\MessageBoard\AbstractMbGateway` class is a prototype of the Message Board Gateway which can be used to access all main features of the message board.
+The `MicheleAngioni\MessageBoard\AbstractMbGateway` class is a prototype of the Message Board Gateway which can be used to access all main features of the message board.
 
 A simple concrete class is provided as well and can be directly used to try the Message Board features:
 
@@ -100,7 +100,7 @@ Pull requests are welcome, especially for the to do list below.
 
 ## To do list
 
-- images
+- images handling
 - emoticons management
 - default presenters
 

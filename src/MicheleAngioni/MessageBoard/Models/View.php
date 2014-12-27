@@ -1,6 +1,6 @@
 <?php
 
-namespace TopGames\MessageBoard\Models;
+namespace MicheleAngioni\MessageBoard\Models;
 
 class View extends \Eloquent {
 

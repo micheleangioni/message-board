@@ -6,7 +6,7 @@ class PostModelTest extends TestCase {
 	{
         $datetime = date('Y-m-d H:i:s');
 
-        $post = App::make('TopGames\MessageBoard\Models\Post');
+        $post = App::make('MicheleAngioni\MessageBoard\Models\Post');
         $post->created_at = $datetime;
 
         $this->assertEquals($datetime, $post->child_datetime);
@@ -17,7 +17,7 @@ class PostModelTest extends TestCase {
         $postdatetime = date('Y-m-d H:i:s');
         $commentDatetime = date("Y-m-d H:i:s", strtotime('+1 minute'));
 
-        $post = App::make('TopGames\MessageBoard\Models\Post');
+        $post = App::make('MicheleAngioni\MessageBoard\Models\Post');
         $post->id = 1;
         $post->user_id = 1;
         $post->post_type = 'public_mess';

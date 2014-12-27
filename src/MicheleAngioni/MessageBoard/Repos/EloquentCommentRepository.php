@@ -1,9 +1,9 @@
 <?php
 
-namespace TopGames\MessageBoard\Repos;
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use TopGames\Support\Repos\AbstractEloquentRepository;
-use TopGames\MessageBoard\Models\Comment;
+use MicheleAngioni\MessageBoard\Models\Comment;
 
 class EloquentCommentRepository extends AbstractEloquentRepository implements CommentRepositoryInterface
 {

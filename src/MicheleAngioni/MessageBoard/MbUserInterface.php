@@ -1,11 +1,11 @@
 <?php
 
-namespace TopGames\MessageBoard;
+namespace MicheleAngioni\MessageBoard;
 
 /**
  * The MbUserInterface is used by other MessageBoard components to require a User model.
  *
- * @package TopGames\MessageBoard
+ * @package MicheleAngioni\MessageBoard
  */
 interface MbUserInterface {
 

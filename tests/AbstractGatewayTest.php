@@ -15,7 +15,7 @@ class AbstractGatewayTest extends TestCase {
 	{
         $stub = $this->getAbstractGatewayStub();
 
-        $user = $this->mock('TopGames\MessageBoard\MbUserInterface');
+        $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
 
         $user->shouldReceive('getPrimaryId')
             ->once()
@@ -36,7 +36,7 @@ class AbstractGatewayTest extends TestCase {
     {
         $stub = $this->getAbstractGatewayStub();
 
-        $user = $this->mock('TopGames\MessageBoard\MbUserInterface');
+        $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
 
         $user->shouldReceive('getPrimaryId')
             ->once()
@@ -81,7 +81,7 @@ class AbstractGatewayTest extends TestCase {
     {
         $stub = $this->getAbstractGatewayStub();
 
-        $user = $this->mock('TopGames\MessageBoard\MbUserInterface');
+        $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
 
         $user->shouldReceive('getPrimaryId')
             ->once()
@@ -129,7 +129,7 @@ class AbstractGatewayTest extends TestCase {
 
         $stub = $this->getAbstractGatewayStub();
 
-        $post = $this->mock('TopGames\MessageBoard\Models\Post');
+        $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
 
         $this->postRepo->shouldReceive('findOrFail')
             ->once()
@@ -161,7 +161,7 @@ class AbstractGatewayTest extends TestCase {
 
         $stub = $this->getAbstractGatewayStub();
 
-        $post = $this->mock('TopGames\MessageBoard\Models\Post');
+        $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
 
         $this->postRepo->shouldReceive('findOrFail')
             ->once()
@@ -183,7 +183,7 @@ class AbstractGatewayTest extends TestCase {
 
         $stub = $this->getAbstractGatewayStub();
 
-        $comment = $this->mock('TopGames\MessageBoard\Models\Comment');
+        $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
 
         $this->commentRepo->shouldReceive('findOrFail')
             ->once()
@@ -215,8 +215,8 @@ class AbstractGatewayTest extends TestCase {
 
         $stub = $this->getAbstractGatewayStub();
 
-        $post = $this->mock('TopGames\MessageBoard\Models\Post');
-        $like = $this->mock('TopGames\MessageBoard\Models\Like');
+        $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
+        $like = $this->mock('MicheleAngioni\MessageBoard\Models\Like');
 
         $this->postRepo->shouldReceive('findOrFail')
             ->once()
@@ -241,8 +241,8 @@ class AbstractGatewayTest extends TestCase {
 
         $stub = $this->getAbstractGatewayStub();
 
-        $comment = $this->mock('TopGames\MessageBoard\Models\Comment');
-        $like = $this->mock('TopGames\MessageBoard\Models\Like');
+        $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
+        $like = $this->mock('MicheleAngioni\MessageBoard\Models\Like');
 
         $this->commentRepo->shouldReceive('findOrFail')
             ->once()
@@ -263,12 +263,12 @@ class AbstractGatewayTest extends TestCase {
 
     protected function getAbstractGatewayStub()
     {
-        $this->commentRepo = $this->mock('TopGames\MessageBoard\Repos\CommentRepositoryInterface');
-        $this->likeRepo = $this->mock('TopGames\MessageBoard\Repos\LikeRepositoryInterface');
-        $this->postRepo = $this->mock('TopGames\MessageBoard\Repos\PostRepositoryInterface');
-        $this->viewRepo = $this->mock('TopGames\MessageBoard\Repos\ViewRepositoryInterface');
+        $this->commentRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface');
+        $this->likeRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface');
+        $this->postRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface');
+        $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface');
 
-        return $this->getMockForAbstractClass('TopGames\MessageBoard\AbstractMbGateway',
+        return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
             [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->viewRepo]);
     }
 

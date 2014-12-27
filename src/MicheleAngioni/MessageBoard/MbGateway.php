@@ -1,11 +1,11 @@
 <?php
 
-namespace TopGames\MessageBoard;
+namespace MicheleAngioni\MessageBoard;
 
-use TopGames\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
-use TopGames\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
-use TopGames\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
-use TopGames\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
+use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
+use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
+use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
+use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
 use Lang;
 use InvalidArgumentException;
 

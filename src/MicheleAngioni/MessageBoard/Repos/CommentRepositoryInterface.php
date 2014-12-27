@@ -1,5 +1,5 @@
 <?php
 
-namespace TopGames\MessageBoard\Repos;
+namespace MicheleAngioni\MessageBoard\Repos;
 
 interface CommentRepositoryInterface {}

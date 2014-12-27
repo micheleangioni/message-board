@@ -1,6 +1,6 @@
 <?php
 
-namespace TopGames\MessageBoard\Models;
+namespace MicheleAngioni\MessageBoard\Models;
 
 class Comment extends \Eloquent {
 
@@ -17,12 +17,12 @@ class Comment extends \Eloquent {
 
     public function likes()
     {
-        return $this->morphMany('\TopGames\MessageBoard\Models\Like', 'likable');
+        return $this->morphMany('\MicheleAngioni\MessageBoard\Models\Like', 'likable');
     }
 
     public function post()
     {
-        return $this->belongsTo('\TopGames\MessageBoard\Models\Post');
+        return $this->belongsTo('\MicheleAngioni\MessageBoard\Models\Post');
     }
 
     public function user()

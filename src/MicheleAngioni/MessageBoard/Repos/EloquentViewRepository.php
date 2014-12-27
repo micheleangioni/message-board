@@ -1,9 +1,9 @@
 <?php
 
-namespace TopGames\MessageBoard\Repos;
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use TopGames\Support\Repos\AbstractEloquentRepository;
-use TopGames\MessageBoard\Models\View;
+use MicheleAngioni\MessageBoard\Models\View;
 
 class EloquentViewRepository extends AbstractEloquentRepository implements ViewRepositoryInterface
 {

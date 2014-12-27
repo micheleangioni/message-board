@@ -1,4 +1,4 @@
-<?php namespace TopGames\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -18,7 +18,7 @@ class MessageBoardServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('top-games/message-board');
+		$this->package('michele-angioni/message-board');
 	}
 
     /**
@@ -35,23 +35,23 @@ class MessageBoardServiceProvider extends ServiceProvider {
     protected function registerRepositories()
     {
         $this->app->bind(
-            'TopGames\MessageBoard\Repos\CommentRepositoryInterface',
-            'TopGames\MessageBoard\Repos\EloquentCommentRepository'
+            'MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository'
         );
 
         $this->app->bind(
-            'TopGames\MessageBoard\Repos\LikeRepositoryInterface',
-            'TopGames\MessageBoard\Repos\EloquentLikeRepository'
+            'MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository'
         );
 
         $this->app->bind(
-            'TopGames\MessageBoard\Repos\PostRepositoryInterface',
-            'TopGames\MessageBoard\Repos\EloquentPostRepository'
+            'MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Repos\EloquentPostRepository'
         );
 
         $this->app->bind(
-            'TopGames\MessageBoard\Repos\ViewRepositoryInterface',
-            'TopGames\MessageBoard\Repos\EloquentViewRepository'
+            'MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Repos\EloquentViewRepository'
         );
     }
 
