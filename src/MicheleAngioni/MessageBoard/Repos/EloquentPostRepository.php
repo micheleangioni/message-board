@@ -4,7 +4,7 @@ namespace MicheleAngioni\MessageBoard\Repos;
 
 use Helpers;
 use Illuminate\Support\Collection;
-use TopGames\Support\Repos\AbstractEloquentRepository;
+use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Models\Post;
 use DatabaseException;
 use Exception;

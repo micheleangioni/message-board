@@ -2,7 +2,7 @@
 
 namespace MicheleAngioni\MessageBoard\Repos;
 
-use TopGames\Support\Repos\AbstractEloquentRepository;
+use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Models\View;
 
 class EloquentViewRepository extends AbstractEloquentRepository implements ViewRepositoryInterface
