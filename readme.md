@@ -98,6 +98,10 @@ If you want a deeper level of customization for your coded posts, you can extend
 
 Pull requests are welcome, especially for the to do list below.
 
+## License
+
+Message Board is distributed under the terms of the Apache 2.0 license.
+
 ## To do list
 
 - images handling
