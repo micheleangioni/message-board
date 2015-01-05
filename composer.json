@@ -9,12 +9,6 @@
             "email": "michele.angioni@gmail.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "git@bitbucket.org:Voodoo10/support.git"
-        }
-    ],
     "require": {
         "php": ">=5.4.0",
         "laravel/framework": "4.2.*",
