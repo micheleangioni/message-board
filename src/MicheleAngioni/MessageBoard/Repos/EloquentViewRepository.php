@@ -1,6 +1,4 @@
-<?php
-
-namespace MicheleAngioni\MessageBoard\Repos;
+<?php namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Models\View;

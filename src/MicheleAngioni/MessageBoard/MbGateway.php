@@ -1,6 +1,4 @@
-<?php
-
-namespace MicheleAngioni\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard;
 
 use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;

@@ -1,6 +1,4 @@
-<?php
-
-namespace MicheleAngioni\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard;
 
 interface MbGatewayInterface {
 

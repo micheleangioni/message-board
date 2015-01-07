@@ -1,6 +1,6 @@
 <?php
 
-class AbstractGatewayTest extends PHPUnit_Framework_TestCase {
+class AbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     protected $commentRepo;
 
@@ -10,6 +10,12 @@ class AbstractGatewayTest extends PHPUnit_Framework_TestCase {
 
     protected $viewRepo;
 
+    /*
+    protected function getPackageProviders($app)
+    {
+        return ['MicheleAngioni\MessageBoard\MessageBoardServiceProvider'];
+    }
+    */
 
 	public function testCreateCodedPost()
 	{
@@ -267,17 +273,18 @@ class AbstractGatewayTest extends PHPUnit_Framework_TestCase {
         $this->likeRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface');
         $this->postRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface');
         $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface');
+        $app = [];
+        $app['config'] = $this->mock('config');
+        $app['config']->shouldReceive('get')->andReturn(['public_mess','private_mess']);
 
         return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
-            [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->viewRepo]);
+            [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->viewRepo, $app]);
     }
 
 
     public function mock($class)
     {
         $mock = Mockery::mock($class);
-
-        $this->app->instance($class, $mock);
 
         return $mock;
     }

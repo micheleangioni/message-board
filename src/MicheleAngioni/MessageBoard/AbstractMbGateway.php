@@ -1,6 +1,4 @@
-<?php
-
-namespace MicheleAngioni\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard;
 
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Models\Comment;
@@ -55,9 +53,9 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     protected $viewRepo;
 
 
-    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, ViewRepo $viewRepo)
+    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, ViewRepo $viewRepo, $app = NULL)
     {
-        $this->app = app();
+        $this->app = $app ?: app();
 
         $this->commentRepo = $commentRepo;
 

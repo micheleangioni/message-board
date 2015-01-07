@@ -1,8 +1,6 @@
-<?php
+<?php namespace MicheleAngioni\MessageBoard\Models;
 
-namespace MicheleAngioni\MessageBoard\Models;
-
-class Like extends \Eloquent {
+class Like extends \Illuminate\Database\Eloquent\Model {
 
 	/**
 	 * The database table used by the model.

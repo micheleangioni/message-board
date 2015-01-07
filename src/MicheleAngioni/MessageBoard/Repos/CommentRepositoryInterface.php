@@ -1,5 +1,3 @@
-<?php
-
-namespace MicheleAngioni\MessageBoard\Repos;
+<?php namespace MicheleAngioni\MessageBoard\Repos;
 
 interface CommentRepositoryInterface {}

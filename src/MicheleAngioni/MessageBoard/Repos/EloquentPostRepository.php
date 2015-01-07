@@ -1,6 +1,4 @@
-<?php
-
-namespace MicheleAngioni\MessageBoard\Repos;
+<?php namespace MicheleAngioni\MessageBoard\Repos;
 
 use Helpers;
 use Illuminate\Support\Collection;

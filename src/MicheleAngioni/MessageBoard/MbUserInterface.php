@@ -1,6 +1,4 @@
-<?php
-
-namespace MicheleAngioni\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard;
 
 /**
  * The MbUserInterface is used by other MessageBoard components to require a User model.
