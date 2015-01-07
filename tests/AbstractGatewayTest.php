@@ -1,6 +1,6 @@
 <?php
 
-class AbstractGatewayTest extends TestCase {
+class AbstractGatewayTest extends PHPUnit_Framework_TestCase {
 
     protected $commentRepo;
 

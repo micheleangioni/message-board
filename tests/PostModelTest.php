@@ -1,6 +1,6 @@
 <?php
 
-class PostModelTest extends TestCase {
+class PostModelTest extends PHPUnit_Framework_TestCase {
 
 	public function testSinglePostGetChildDatetimeAttribute()
 	{
