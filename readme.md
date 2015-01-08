@@ -1,5 +1,8 @@
 # MESSAGE BOARD
 
+[![Build Status](https://travis-ci.org/micheleangioni/message-board.svg)](https://travis-ci.org/micheleangioni/message-board)
+[![License](https://poser.pugx.org/michele-angioni/message-board/license.svg)](https://packagist.org/packages/michele-angioni/message-board) 
+
 ## Introduction
 
 The Message Board is a [Laravel 4](http://laravel.com) package which assigns a message board to each User, where posts and comments can be posted. Social features like "likes" are included as well.
