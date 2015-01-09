@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6d423b9ca048a3da42212bfc14adacc0",
+    "hash": "b76c47bad904412734ae118db8998c64",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -356,12 +356,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/micheleangioni/support.git",
-                "reference": "418bb240ff6757d0e12d95c7732834181636126e"
+                "reference": "ec8f342af567f618b0730f5104288dfffbdebb0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/micheleangioni/support/zipball/418bb240ff6757d0e12d95c7732834181636126e",
-                "reference": "418bb240ff6757d0e12d95c7732834181636126e",
+                "url": "https://api.github.com/repos/micheleangioni/support/zipball/ec8f342af567f618b0730f5104288dfffbdebb0d",
+                "reference": "ec8f342af567f618b0730f5104288dfffbdebb0d",
                 "shasum": ""
             },
             "require": {
@@ -398,7 +398,7 @@
                 "semaphores",
                 "support"
             ],
-            "time": "2015-01-07 18:38:19"
+            "time": "2015-01-08 22:00:32"
         },
         {
             "name": "monolog/monolog",
