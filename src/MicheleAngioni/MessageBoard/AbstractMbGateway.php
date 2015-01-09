@@ -18,7 +18,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @var array
      */
-    protected $allowedMessageTypes = array('private_mess', 'public_mess');
+    protected $allowedMessageTypes = array();
 
     /**
      * Laravel application.
@@ -56,6 +56,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, ViewRepo $viewRepo, $app = NULL)
     {
         $this->app = $app ?: app();
+
+        $this->allowedMessageTypes = $this->app['config']->get('message-board::message_types');
 
         $this->commentRepo = $commentRepo;
 
@@ -281,7 +283,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * It also set the child_datetime post attribute.
      *
      * @param  MbUserInterface  $user
-     * @param  string           $messageType
+     * @param  string           $messageType = 'all'
      * @param  int              $page
      * @param  int|bool         $limit
      *
@@ -291,6 +293,10 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     {
         if(!$limit) {
             $limit = $this->postsPerPage;
+        }
+
+        if( !in_array($messageType, array_merge(['all'], $this->allowedMessageTypes)) ) {
+            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid post type.');
         }
 
         return $this->postRepo->getOrderedPosts($user->getPrimaryId(), $messageType, $page, $limit);
@@ -304,7 +310,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     protected function getUserLink(MbUserInterface $user)
     {
-        return link_to_route($this->app['config']->get('message-board::user_named_route'), e($user->getUsername()), $parameters = array($user->getPrimaryId()), $attributes = array());
+        return link_to_route($this->app['config']->get('message-board::user_named_route'), e($user->getUsername()), [$user->getPrimaryId()], []);
     }
 
 }

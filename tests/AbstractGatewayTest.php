@@ -275,7 +275,9 @@ class AbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface');
         $app = [];
         $app['config'] = $this->mock('config');
-        $app['config']->shouldReceive('get')->andReturn(['public_mess','private_mess']);
+        $app['config']->shouldReceive('get')->with('message-board::message_types')->andReturn(['public_mess','private_mess']);
+        $app['config']->shouldReceive('get')->with('message-board::posts_per_page')->andReturn(20);
+        $app['config']->shouldReceive('get')->with('message-board::user_named_route')->andReturn('user');
 
         return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
             [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->viewRepo, $app]);

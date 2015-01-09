@@ -12,19 +12,9 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 {
     protected $model;
 
-    /**
-     * Allowed types for mb posts.
-     *
-     * @var array
-     */
-    private $allowedMessageTypes;
-
 
     public function __construct(Post $model)
     {
-        //TODO ADD THE CONF MB TYPES FILE AS SECOND PARAMETER OF THE MERGE
-        $this->allowedMessageTypes = array_merge(['all'], ['public_mess', 'private_mess', 'topplayer_news']);
-
         $this->model = $model;
     }
 
@@ -59,7 +49,7 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
      * It also sets the child_datetime post attribute.
      *
      * @param  int     $idUser
-     * @param  string  $messageType
+     * @param  string  $messageType = 'public_mess'
      * @param  int     $page = 1
      * @param  int     $limit = 20
      * @throws InvalidArgumentException
@@ -67,14 +57,10 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
      *
      * @return Collection
      */
-    public function getOrderedPosts($idUser, $messageType, $page = 1, $limit = 20)
+    public function getOrderedPosts($idUser, $messageType = 'public_mess', $page = 1, $limit = 20)
     {
         if( !(Helpers::isInt($idUser,1) && Helpers::isInt($page,1) && Helpers::isInt($limit,1))) {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $idUser, $page or $limit are not valid integers.');
-        }
-
-        if( !in_array($messageType, $this->allowedMessageTypes) ) {
-            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid post type.');
         }
 
         // Take all posts in the mb, ordered by Post AND Comment datetime.

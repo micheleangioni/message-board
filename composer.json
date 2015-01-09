@@ -2,7 +2,7 @@
     "name": "michele-angioni/message-board",
     "description": "A message board package for Laravel.",
     "keywords": ["laravel", "message board"],
-    "license": "Apache 2.0",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Michele Angioni",
