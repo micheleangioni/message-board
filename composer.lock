@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b76c47bad904412734ae118db8998c64",
+    "hash": "991602b0562a912ab67fcd6c3794b6f4",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -352,7 +352,7 @@
         },
         {
             "name": "michele-angioni/support",
-            "version": "dev-master",
+            "version": "v1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/micheleangioni/support.git",
@@ -2508,7 +2508,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "michele-angioni/support": 20,
         "mockery/mockery": 20
     },
     "prefer-stable": false,
