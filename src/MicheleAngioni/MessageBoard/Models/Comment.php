@@ -25,7 +25,7 @@ class Comment extends \Illuminate\Database\Eloquent\Model {
 
     public function user()
     {
-        return $this->belongsTo('\TopGames\Models\Tough\User');
+        return $this->belongsTo(\Config::get('auth.model'));
     }
 
 
