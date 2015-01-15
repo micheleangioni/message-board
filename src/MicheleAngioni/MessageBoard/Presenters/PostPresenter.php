@@ -51,7 +51,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
 
 		$this->user = $user;
 
-        $this->lastView = $user->mbLastView->datetime;
+        $this->lastView = $user->mbLastView ? $user->mbLastView->datetime : NULL;
 	}
 	
 	
