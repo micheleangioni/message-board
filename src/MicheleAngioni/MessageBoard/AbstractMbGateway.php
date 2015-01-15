@@ -288,16 +288,22 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
     /**
      * Return posts of input type on the input user mb, ordered by post AND comment datetime.
-     * It also set the child_datetime post attribute.
+     * Optionally the posts can be passed to the presenter and the text escaped.
+     * If the user requesting the post is not the owner of the message board, it can be specified among the iputs
      *
      * @param  MbUserInterface  $user
-     * @param  string           $messageType = 'all'
-     * @param  int              $page
-     * @param  int|bool         $limit
+     * @param  string  $messageType = 'all'
+     * @param  int     $page = 1
+     * @param  int     $limit = 2
+     * @param  bool    $applyPresenter = false
+     * @param  bool    $escapeText = false
+     * @param  MbUserInterface|bool  $userVisiting = NULL
+     * @throws InvalidArgumentException
      *
      * @return Collection
      */
-    public function getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20, $applyPresenter = false, $escapeText = false)
+    public function getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20,
+                                        $applyPresenter = false, $escapeText = false, MbUserInterface $userVisiting = NULL)
     {
         if(!$limit) {
             $limit = $this->postsPerPage;
@@ -310,7 +316,12 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         $posts = $this->postRepo->getOrderedPosts($user->getPrimaryId(), $messageType, $page, $limit);
 
         if($applyPresenter) {
-            $posts = $this->presentCollection($user, $posts, $escapeText);
+            if($userVisiting) {
+                $posts = $this->presentCollection($userVisiting, $posts, $escapeText);
+            }
+            else {
+                $posts = $this->presentCollection($user, $posts, $escapeText);
+            }
         }
 
         return $posts;
@@ -322,6 +333,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  MbUserInterface  $user
      * @param  Post|Comment     $model
      * @param  bool             $escapeText = false
+     * @throws InvalidArgumentException
      *
      * @return PostPresenter|CommentPresenter
      */
@@ -346,6 +358,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  MbUserInterface  $user
      * @param  Collection       $collection
      * @param  bool             $escapeText = false
+     * @throws InvalidArgumentException
      *
      * @return Collection
      */

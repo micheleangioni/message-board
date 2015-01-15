@@ -124,10 +124,17 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
      */
     public function isNew()
     {
+        // Check if the user is seeing a post of another mb
+        if($this->object->user_id != $this->user->getPrimaryId()) {
+            return false;
+        }
+
+        // Check if a isNew value is already stored
         if(!is_null($this->isNew)) {
             return $this->isNew;
         }
 
+        // Confront the user lastView with the post child_datetime
         if(is_null($this->lastView)) {
             return $this->isNew = true;
         }
