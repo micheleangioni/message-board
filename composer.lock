@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "97c11389c3ca9929844e381a0fba2eb9",
+    "hash": "53d6f7c084181fe73583970b151692d3",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -86,6 +86,51 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "time": "2014-01-17 12:21:18"
+        },
+        {
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/6f389f0f25b90d0b495308efcfa073981177f0fd",
+                "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "time": "2013-11-30 08:25:19"
         },
         {
             "name": "filp/whoops",
@@ -189,16 +234,16 @@
         },
         {
             "name": "jeremeamia/SuperClosure",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jeremeamia/super_closure.git",
-                "reference": "d05400085f7d4ae6f20ba30d36550836c0d061e8"
+                "reference": "4d89ca74994feab128ea46d5b3add92e6cb84554"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/d05400085f7d4ae6f20ba30d36550836c0d061e8",
-                "reference": "d05400085f7d4ae6f20ba30d36550836c0d061e8",
+                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/4d89ca74994feab128ea46d5b3add92e6cb84554",
+                "reference": "4d89ca74994feab128ea46d5b3add92e6cb84554",
                 "shasum": ""
             },
             "require": {
@@ -233,7 +278,7 @@
                 "serialize",
                 "tokenizer"
             ],
-            "time": "2013-10-09 04:20:00"
+            "time": "2015-01-10 01:09:28"
         },
         {
             "name": "laravel/framework",
@@ -351,17 +396,63 @@
             "time": "2014-12-22 20:56:10"
         },
         {
-            "name": "michele-angioni/support",
-            "version": "v1.1",
+            "name": "mews/purifier",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/micheleangioni/support.git",
-                "reference": "4412d11e4003f39296e7903ace69f941e554f919"
+                "url": "https://github.com/mewebstudio/Purifier.git",
+                "reference": "e4132879bf9c0d7733dc576628d28d3be4234539"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/micheleangioni/support/zipball/4412d11e4003f39296e7903ace69f941e554f919",
-                "reference": "4412d11e4003f39296e7903ace69f941e554f919",
+                "url": "https://api.github.com/repos/mewebstudio/Purifier/zipball/e4132879bf9c0d7733dc576628d28d3be4234539",
+                "reference": "e4132879bf9c0d7733dc576628d28d3be4234539",
+                "shasum": ""
+            },
+            "require": {
+                "ezyang/htmlpurifier": "4.6.*",
+                "illuminate/support": "4.*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Mews\\Purifier": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Muharrem ERIN",
+                    "email": "me@mewebstudio.com"
+                }
+            ],
+            "description": "HTMLPurifier Package for Laravel 4",
+            "homepage": "http://github.com/mewebstudio/Purifier",
+            "keywords": [
+                "L4",
+                "Laravel 4",
+                "Purifier",
+                "htmlpurifier",
+                "laravel"
+            ],
+            "time": "2014-12-31 14:02:27"
+        },
+        {
+            "name": "michele-angioni/support",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/micheleangioni/support.git",
+                "reference": "0dbabb63d6d08adee359eb8d4dc6b6e25a7a71d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/micheleangioni/support/zipball/0dbabb63d6d08adee359eb8d4dc6b6e25a7a71d6",
+                "reference": "0dbabb63d6d08adee359eb8d4dc6b6e25a7a71d6",
                 "shasum": ""
             },
             "require": {
@@ -398,7 +489,7 @@
                 "semaphores",
                 "support"
             ],
-            "time": "2015-01-09 22:07:59"
+            "time": "2015-01-14 23:58:44"
         },
         {
             "name": "monolog/monolog",
@@ -565,16 +656,16 @@
         },
         {
             "name": "patchwork/utf8",
-            "version": "v1.1.26",
+            "version": "v1.1.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tchwork/utf8.git",
-                "reference": "6b8e46603b49ee87ad6bceb314da94cc04ffcdce"
+                "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/6b8e46603b49ee87ad6bceb314da94cc04ffcdce",
-                "reference": "6b8e46603b49ee87ad6bceb314da94cc04ffcdce",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/ffa082111aa3cb23cf2479a17e6785ace91da982",
+                "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982",
                 "shasum": ""
             },
             "require": {
@@ -587,11 +678,6 @@
                 "ext-mbstring": "Use Mbstring for best performance"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
                     "Patchwork": "class/",
@@ -617,7 +703,7 @@
                 "utf-8",
                 "utf8"
             ],
-            "time": "2014-11-08 10:13:25"
+            "time": "2015-01-12 08:05:15"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -1697,12 +1783,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "ee277735d9dea95553ee667bee3292cdd6947574"
+                "reference": "d1eeaf0ed40ae91dc36913b5f4085af08c366d9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/ee277735d9dea95553ee667bee3292cdd6947574",
-                "reference": "ee277735d9dea95553ee667bee3292cdd6947574",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/d1eeaf0ed40ae91dc36913b5f4085af08c366d9d",
+                "reference": "d1eeaf0ed40ae91dc36913b5f4085af08c366d9d",
                 "shasum": ""
             },
             "require": {
@@ -1755,7 +1841,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2014-12-31 11:42:06"
+            "time": "2015-01-14 18:27:31"
         },
         {
             "name": "orchestra/testbench",
@@ -2508,6 +2594,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "mews/purifier": 20,
         "mockery/mockery": 20
     },
     "prefer-stable": false,

@@ -41,4 +41,22 @@ return array(
 
     'user_named_route' => '',
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | MessageBoard Purifier Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This is the default configuration used by Html Purifier to escape
+    | post and comment text.
+    |
+    */
+
+    'mb_purifier_conf' => array(
+        'HTML.Doctype'             => 'XHTML 1.0 Strict',
+        'HTML.Allowed'             => 'b,i,a[href|title]',
+        'CSS.AllowedProperties'    => '',
+        'AutoFormat.AutoParagraph' => false,
+        'AutoFormat.RemoveEmpty'   => true,
+    ),
 );

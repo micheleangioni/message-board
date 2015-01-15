@@ -4,10 +4,13 @@ use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\MessageBoard\Models\Post;
+use MicheleAngioni\MessageBoard\Presenters\CommentPresenter;
+use MicheleAngioni\MessageBoard\Presenters\PostPresenter;
 use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
 use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
+use MicheleAngioni\Support\Presenters\Presenter;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use InvalidArgumentException;
 
@@ -50,10 +53,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
     protected $postRepo;
 
+    protected $presenter;
+
     protected $viewRepo;
 
 
-    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, ViewRepo $viewRepo, $app = NULL)
+    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
+                         ViewRepo $viewRepo, $app = NULL)
     {
         $this->app = $app ?: app();
 
@@ -66,6 +72,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         $this->postsPerPage = $this->app['config']->get('message-board::posts_per_page');
 
         $this->postRepo = $postRepo;
+
+        $this->presenter = $presenter;
 
         $this->viewRepo = $viewRepo;
     }
@@ -289,7 +297,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @return Collection
      */
-    public function getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = false)
+    public function getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20, $applyPresenter = false, $escapeText = false)
     {
         if(!$limit) {
             $limit = $this->postsPerPage;
@@ -299,7 +307,71 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid post type.');
         }
 
-        return $this->postRepo->getOrderedPosts($user->getPrimaryId(), $messageType, $page, $limit);
+        $posts = $this->postRepo->getOrderedPosts($user->getPrimaryId(), $messageType, $page, $limit);
+
+        if($applyPresenter) {
+            $posts = $this->presentCollection($user, $posts, $escapeText);
+        }
+
+        return $posts;
+    }
+
+    /**
+     * Pass a Post or Comment model to the corresponding presenter and return it
+     *
+     * @param  MbUserInterface  $user
+     * @param  Post|Comment     $model
+     * @param  bool             $escapeText = false
+     *
+     * @return PostPresenter|CommentPresenter
+     */
+    public function presentModel(MbUserInterface $user, $model, $escapeText = false)
+    {
+        if($model instanceof Post) {
+            $model = $this->presenter->model($model, new PostPresenter($user, $escapeText));
+        }
+        elseif($model instanceof Comment) {
+            $model = $this->presenter->model($model, new CommentPresenter($user, $escapeText));
+        }
+        else {
+            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': input model should be an instance of Post or Comment.');
+        }
+
+        return $model;
+    }
+
+    /**
+     * Pass a Post or Comment collection to the corresponding presenter and return it
+     *
+     * @param  MbUserInterface  $user
+     * @param  Collection       $collection
+     * @param  bool             $escapeText = false
+     *
+     * @return Collection
+     */
+    public function presentCollection(MbUserInterface $user, Collection $collection, $escapeText = false)
+    {
+        if($collection->count() == 0) {
+            return $collection;
+        }
+
+        if($collection[0] instanceof Comment) {
+            return $this->presenter->collection($collection, new CommentPresenter($user, $escapeText));
+        }
+        elseif($collection[0] instanceof Post) {
+
+            $newCollection = new Collection;
+
+            foreach($collection as $key => $post){
+                $newCollection[$key] = $this->presenter->model($post, new PostPresenter($user, $escapeText));
+                $newCollection[$key]->comments = $this->presentCollection($user, $post->comments, $escapeText);
+            }
+
+            return $newCollection;
+        }
+        else {
+            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': input collection should contain Post or Comment models.');
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
 use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
+use MicheleAngioni\Support\Presenters\Presenter;
 use Lang;
 use InvalidArgumentException;
 
@@ -13,9 +14,9 @@ class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
 
     protected $mbText;
 
-    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, ViewRepo $viewRepo)
+    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter, ViewRepo $viewRepo)
     {
-        parent::__construct($commentRepo, $likeRepo, $postRepo, $viewRepo);
+        parent::__construct($commentRepo, $likeRepo, $postRepo, $presenter, $viewRepo);
     }
 
     /**

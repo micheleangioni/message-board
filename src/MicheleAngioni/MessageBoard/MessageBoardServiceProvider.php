@@ -27,6 +27,10 @@ class MessageBoardServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->registerRepositories();
+
+        // Register the HTML Purifier
+
+        $this->app->register('Mews\Purifier\PurifierServiceProvider');
     }
 
     /**

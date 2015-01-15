@@ -4,7 +4,7 @@ use Helpers;
 use Illuminate\Support\Collection;
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Models\Post;
-use DatabaseException;
+use MicheleAngioni\Support\Exceptions\DatabaseException;
 use Exception;
 use InvalidArgumentException;
 

@@ -12,7 +12,8 @@
     "require": {
         "php": ">=5.4.0",
         "laravel/framework": "4.2.*",
-        "michele-angioni/support": "~1.1"
+        "mews/purifier": "dev-master",
+        "michele-angioni/support": "~1.2"
     },
     "require-dev": {
         "mockery/mockery": "dev-master",

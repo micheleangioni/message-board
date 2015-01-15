@@ -10,7 +10,7 @@ The Message Board is a [Laravel 4](http://laravel.com) package which assigns a m
 
 ## Installation
 
-Message Board can be installed through Composer, just include `"michele-angioni/message-board": "dev-master"` to your composer.json.
+Message Board can be installed through Composer, just include `"michele-angioni/message-board": "dev-master"` to your composer.json and run `composer update` or `composer install`.
 
 ## Configuration
 
@@ -51,7 +51,7 @@ A simple concrete class is provided as well and can be used. To use it, just cre
 
 ### Managing a User Message Board
 
-The AbstractMbGateway method `getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = false)` returns a Collection of posts, ordered by datetime, posted in the $user message board.
+The AbstractMbGateway method `getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20, , $applyPresenter = false, $escapeText = false)` returns a Collection of posts, ordered by datetime, posted in the $user message board.
 $user is an instance of the User model (which must implement the MbUserInterface).
 $messageType defines the type of the messages you want to retrieve, 'all' will retrieve all posts in the User message board.
 $page and $limit handle pagination.
@@ -59,6 +59,12 @@ $page and $limit handle pagination.
 A particularly useful feature is the "user last view datetime", that is when a user sees his own message board the datetime of the visit can be saved to remember which posts have been already seen and which not.
 To achieve that, just call the `updateUserLastView(MbUserInterface $user)` method, where $user is an instance of your User model.
 You can then retrieve the saved datetime by calling the `getLastViewDatetime()` method from your user model. You can than use it in your classes or views.
+
+By setting $applyPresenter to true, the posts will also be passed to a `PostPresenter` before being returned. 
+By setting $escapeText to true, the Post and Comment text will be escaped by [HtmlPurifier](https://github.com/mewebstudio/Purifier) so that can be securely echoed in your views.
+In the config file you find the default rules used by Message Board under the `mb_purifier_conf` key. You can easily customize it by looking at the [HtmlPurifier](https://github.com/mewebstudio/Purifier) documentation.
+
+You can also manually pass a single model to the presenter by using the `presentModel(MbUserInterface $user, $model, $escapeText = false)` method, or even an entire collection through `presentCollection(MbUserInterface $user, Collection $collection, $escapeText = false)`.
 
 ### Managing posts
 
@@ -88,29 +94,28 @@ The `deleteLike($idUser, $likableEntityId, $likableEntity)` works in the same wa
 
 ### (optional) Coded posts
 
-By extending the `AbstractMbGateway` coded messages can be handled. In the messageboard.php lang file you can define codes with pre-defined messages.
+Message Board supports also coded posts, that is in the messageboard.php lang file you can define codes with pre-defined messages.
 
-You can than use the `createCodedPost(MbUserInterface $user, $messageType = 'public_mess', $code, array $attributes = array())` method to access the coded messages.
+You can use the `createCodedPost(MbUserInterface $user, $messageType = 'public_mess', $code, array $attributes = array())` method to access the coded messages.
 $user is an instance of your User model (which must implement the MbUserInterface) where the post will be posted.
 $messageType defines the type of the message will be posted.
 $code is the key of the lang file array which identifies the coded message.
 $attributes defines a list of variables can be injected in the coded message. See the [Laravel localization documentation](http://laravel.com/docs/4.2/localization) for further details.
 
-If you want a deeper level of customization for your coded posts, you can extend the AbstractMbGateway and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
+If you want a deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
 
 ## Contribution guidelines
 
 Pull requests are welcome, especially for the to do list below.
 
-## License
-
-Message Board is distributed under the terms of the Apache 2.0 license.
-
 ## To do list
 
 - images handling
 - emoticons management
-- default presenters
+
+## License
+
+Message Board is distributed under the terms of the Apache 2.0 license.
 
 ## Contacts
 

@@ -7,8 +7,14 @@
  */
 interface MbUserInterface {
 
+    public function mbLastView();
+
+    public function mbPosts();
+
     public function getPrimaryId();
 
     public function getUsername();
+
+    public function getLastViewDatetime();
 
 }
