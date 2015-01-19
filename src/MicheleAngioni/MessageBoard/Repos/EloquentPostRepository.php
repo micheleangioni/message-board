@@ -67,10 +67,10 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
         try {
             if($messageType != 'all') {
-                $posts = $this->getByPage($page, $limit, array('user_id' => $idUser, 'post_type' => $messageType), array('likes', 'poster', 'comments.likes.user', 'comments.user'));
+                $posts = $this->getBy(array('user_id' => $idUser, 'post_type' => $messageType), array('likes', 'poster', 'comments.likes.user', 'comments.user'));
             }
             else {
-                $posts = $this->getByPage($page, $limit, array('user_id' => $idUser), array('likes', 'poster', 'comments.likes', 'comments.user'));
+                $posts = $this->getBy(array('user_id' => $idUser), array('likes', 'poster', 'comments.likes', 'comments.user'));
             }
         } catch (Exception $e) {
             throw new DatabaseException("DB error in ".__METHOD__.' at line '.__LINE__.':'. $e->getMessage());
@@ -82,9 +82,9 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
             if(!$post->comments->isEmpty())
             {
-                $post->comments = $post->comments->sortBy('created_at')->reverse();
+                $post->comments = $post->comments->sortBy('created_at');
 
-                if($post->child_datetime < $lastCommentDatetime = (string)$post->comments->first()->created_at)
+                if($post->child_datetime < $lastCommentDatetime = (string)$post->comments->last()->created_at)
                 {
                     $post->child_datetime = $lastCommentDatetime;
                 };
@@ -93,7 +93,12 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
         $posts = $posts->sortBy('child_datetime')->reverse();
 
-       return $posts;
+        // Handle pagination
+
+        $offset = $limit * ($page - 1);
+        $pagedPosts = $posts->slice($offset, $limit);
+
+        return $pagedPosts;
     }
 
 }

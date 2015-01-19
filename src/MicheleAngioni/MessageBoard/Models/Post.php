@@ -57,9 +57,9 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 
             if(!$this->comments->isEmpty())
             {
-                $this->comments = $this->comments->sortBy('created_at')->reverse();
+                $comments = $this->comments->sortBy('created_at');
 
-                if($this->child_datetime < $lastCommentDatetime = (string)$this->comments->first()->created_at)
+                if($this->child_datetime < $lastCommentDatetime = (string)$comments->last()->created_at)
                 {
                     $this->child_datetime = $lastCommentDatetime;
                 }
