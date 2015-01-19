@@ -51,10 +51,12 @@ A simple concrete class is provided as well and can be used. To use it, just cre
 
 ### Managing a User Message Board
 
-The AbstractMbGateway method `getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20, , $applyPresenter = false, $escapeText = false)` returns a Collection of posts, ordered by datetime, posted in the $user message board.
-$user is an instance of the User model (which must implement the MbUserInterface).
+The AbstractMbGateway method `getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20, , $applyPresenter = false, $escapeText = false, , MbUserInterface $userVisiting = NULL)` returns a Collection of posts, ordered by datetime, posted in the $user message board.$user is an instance of the User model (which must implement the MbUserInterface) 
 $messageType defines the type of the messages you want to retrieve, 'all' will retrieve all posts in the User message board.
 $page and $limit handle pagination.
+$applyPresenter states if posts and comments must be passed to the presenter before being returned
+$escateText states if post and comment texts must be escaped before being returned
+$userVisiting is the instance of the User model (which must implement the MbUserInterface) of the user who is requesting the posts. Leave it null if $user is requesting its own posts 
 
 A particularly useful feature is the "user last view datetime", that is when a user sees his own message board the datetime of the visit can be saved to remember which posts have been already seen and which not.
 To achieve that, just call the `updateUserLastView(MbUserInterface $user)` method, where $user is an instance of your User model.
@@ -63,6 +65,12 @@ You can then retrieve the saved datetime by calling the `getLastViewDatetime()` 
 By setting $applyPresenter to true, the posts will also be passed to a `PostPresenter` before being returned. 
 By setting $escapeText to true, the Post and Comment text will be escaped by [HtmlPurifier](https://github.com/mewebstudio/Purifier) so that can be securely echoed in your views.
 In the config file you find the default rules used by Message Board under the `mb_purifier_conf` key. You can easily customize it by looking at the [HtmlPurifier](https://github.com/mewebstudio/Purifier) documentation.
+If you want to use your own text purifier, create your own class which must implement the `MicheleAngioni\MessageBoard\PurifierInterface` interface. You then have to override the binding in the `MessageBoardServiceProvider`, that is define is a custom service provider
+
+    $this->app->bind(
+            'MicheleAngioni\MessageBoard\PurifierInterface',
+            'Namespace\YourOwnPurifier'
+        );
 
 You can also manually pass a single model to the presenter by using the `presentModel(MbUserInterface $user, $model, $escapeText = false)` method, or even an entire collection through `presentCollection(MbUserInterface $user, Collection $collection, $escapeText = false)`.
 

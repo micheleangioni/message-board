@@ -4,6 +4,7 @@ use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\MessageBoard\Models\Post;
+use MicheleAngioni\MessageBoard\PurifierInterface;
 use MicheleAngioni\MessageBoard\Presenters\CommentPresenter;
 use MicheleAngioni\MessageBoard\Presenters\PostPresenter;
 use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
@@ -55,11 +56,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
     protected $presenter;
 
+    protected $purifier;
+
     protected $viewRepo;
 
 
     function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
-                         ViewRepo $viewRepo, $app = NULL)
+                         PurifierInterface $purifier, ViewRepo $viewRepo, $app = NULL)
     {
         $this->app = $app ?: app();
 
@@ -74,6 +77,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         $this->postRepo = $postRepo;
 
         $this->presenter = $presenter;
+
+        $this->purifier = $purifier;
 
         $this->viewRepo = $viewRepo;
     }
@@ -340,10 +345,10 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     public function presentModel(MbUserInterface $user, $model, $escapeText = false)
     {
         if($model instanceof Post) {
-            $model = $this->presenter->model($model, new PostPresenter($user, $escapeText));
+            $model = $this->presenter->model($model, new PostPresenter($user, $escapeText, $this->purifier));
         }
         elseif($model instanceof Comment) {
-            $model = $this->presenter->model($model, new CommentPresenter($user, $escapeText));
+            $model = $this->presenter->model($model, new CommentPresenter($user, $escapeText, $this->purifier));
         }
         else {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': input model should be an instance of Post or Comment.');
@@ -369,14 +374,14 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         }
 
         if($collection[0] instanceof Comment) {
-            return $this->presenter->collection($collection, new CommentPresenter($user, $escapeText));
+            return $this->presenter->collection($collection, new CommentPresenter($user, $escapeText, $this->purifier));
         }
         elseif($collection[0] instanceof Post) {
 
             $newCollection = new Collection;
 
             foreach($collection as $key => $post){
-                $newCollection[$key] = $this->presenter->model($post, new PostPresenter($user, $escapeText));
+                $newCollection[$key] = $this->presenter->model($post, new PostPresenter($user, $escapeText, $this->purifier));
                 $newCollection[$key]->comments = $this->presentCollection($user, $post->comments, $escapeText);
             }
 

@@ -1,17 +1,12 @@
 <?php namespace MicheleAngioni\MessageBoard\Presenters;
 
+use MicheleAngioni\MessageBoard\PurifierInterface;
 use MicheleAngioni\MessageBoard\MbUserInterface;
 use MicheleAngioni\Support\Presenters\AbstractPresenter;
 use MicheleAngioni\Support\Presenters\PresentableInterface;
+use Config;
 
 class PostPresenter extends AbstractPresenter implements PresentableInterface {
-
-    /**
-     * Laravel application.
-     *
-     * @var \Illuminate\Foundation\Application
-     */
-    protected $app;
 
     /**
      * @var bool
@@ -43,11 +38,11 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     protected $user;
 
 
-	function __construct(MbUserInterface $user, $escapeText = false, $app = NULL)
+	function __construct(MbUserInterface $user, $escapeText = false, PurifierInterface $purifier)
 	{
-        $this->app = $app ?: app();
-
         $this->escapeText = $escapeText;
+
+        $this->purifier = $purifier;
 
 		$this->user = $user;
 
@@ -73,11 +68,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     public function text()
     {
         if($this->escapeText) {
-            if(!$this->purifier) {
-                $this->purifier = $this->app->make('Mews\Purifier\Purifier');
-            }
-
-            return $this->purifier->clean($this->object->text, $this->app['config']->get('message-board::mb_purifier_conf'));
+            return $this->purifier->clean($this->object->text, Config::get('message-board::mb_purifier_conf'));
         }
 
         return $this->object->text;

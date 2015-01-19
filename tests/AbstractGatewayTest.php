@@ -378,12 +378,14 @@ class AbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
+        $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
         $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
         $app = $this->app;
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter, $viewRepo, $app);
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+                                                                $purifier, $viewRepo, $app);
 
         $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
         $user->shouldReceive('getPrimaryId')->andReturn(1);
@@ -420,11 +422,13 @@ class AbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
         $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
+        $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
         $app = $this->app;
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter, $viewRepo, $app);
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+                                                                $purifier, $viewRepo, $app);
 
         $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
         $user->shouldReceive('getPrimaryId')->andReturn(1);
@@ -452,6 +456,7 @@ class AbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->commentRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface');
         $this->likeRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface');
         $this->postRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface');
+        $this->purifier = $this->mock('MicheleAngioni\MessageBoard\PurifierInterface');
         $this->presenter = $this->mock('MicheleAngioni\Support\Presenters\Presenter');
         $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface');
 
@@ -460,7 +465,7 @@ class AbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Config::shouldReceive('get')->with('message-board::user_named_route')->andReturn('user');
 
         return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
-            [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->viewRepo]);
+            [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->purifier, $this->viewRepo]);
     }
 
 

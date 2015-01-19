@@ -57,6 +57,11 @@ class MessageBoardServiceProvider extends ServiceProvider {
             'MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentViewRepository'
         );
+
+        $this->app->bind(
+            'MicheleAngioni\MessageBoard\PurifierInterface',
+            'MicheleAngioni\MessageBoard\Purifier'
+        );
     }
 
 }

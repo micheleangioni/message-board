@@ -1,5 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
+use MicheleAngioni\MessageBoard\PurifierInterface;
 use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
@@ -14,9 +15,10 @@ class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
 
     protected $mbText;
 
-    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter, ViewRepo $viewRepo)
+    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
+                         PurifierInterface $purifier, ViewRepo $viewRepo)
     {
-        parent::__construct($commentRepo, $likeRepo, $postRepo, $presenter, $viewRepo);
+        parent::__construct($commentRepo, $likeRepo, $postRepo, $presenter, $purifier, $viewRepo);
     }
 
     /**
