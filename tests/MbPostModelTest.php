@@ -1,6 +1,6 @@
 <?php
 
-class PostModelTest extends Orchestra\Testbench\TestCase {
+class MbPostModelTest extends Orchestra\Testbench\TestCase {
 
     /*
     protected function getPackageProviders($app)

@@ -49,8 +49,18 @@ class MessageBoardServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
+            'MicheleAngioni\MessageBoard\Repos\PermissionRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Repos\EloquentPermissionRepository'
+        );
+
+        $this->app->bind(
             'MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentPostRepository'
+        );
+
+        $this->app->bind(
+            'MicheleAngioni\MessageBoard\Repos\RoleRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Repos\EloquentRoleRepository'
         );
 
         $this->app->bind(

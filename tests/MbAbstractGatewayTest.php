@@ -1,6 +1,6 @@
 <?php
 
-class AbstractGatewayTest extends Orchestra\Testbench\TestCase {
+class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     protected $commentRepo;
 
