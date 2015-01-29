@@ -15,7 +15,7 @@ class CreateTbMessboardRolesTable extends Migration {
 		Schema::create('tb_messboard_roles', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('name', 30)->unique('`roles_name_unique`');
+			$table->string('name', 30)->unique('`mb_roles_name_unique`');
 			$table->timestamps();
 		});
 	}

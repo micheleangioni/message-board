@@ -15,7 +15,7 @@ class CreateTbMessboardPermissionsTable extends Migration {
 		Schema::create('tb_messboard_permissions', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('name', 30)->unique('`permissions_name_unique`');
+			$table->string('name', 30)->unique('`mb_permissions_name_unique`');
 			$table->timestamps();
 		});
 	}
