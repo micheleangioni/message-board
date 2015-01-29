@@ -17,7 +17,7 @@ trait MbTrait {
 
     public function mbRoles()
     {
-        return $this->belongsToMany('\MicheleAngioni\MessageBoard\Models\Role', 'tb_messboard_user_role', 'user_id');
+        return $this->belongsToMany('\MicheleAngioni\MessageBoard\Models\Role', 'tb_messboard_user_role', 'user_id')->withTimestamps();
     }
 
     /**

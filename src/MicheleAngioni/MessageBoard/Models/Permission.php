@@ -12,7 +12,7 @@ class Permission extends \Illuminate\Database\Eloquent\Model {
 
     public function roles()
     {
-        return $this->belongsToMany('\MicheleAngioni\MessageBoard\Models\Role', 'tb_messboard_permission_role');
+        return $this->belongsToMany('\MicheleAngioni\MessageBoard\Models\Role', 'tb_messboard_permission_role')->withTimestamps();
     }
 
 }

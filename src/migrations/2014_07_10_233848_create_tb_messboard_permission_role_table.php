@@ -16,6 +16,7 @@ class CreateTbMessboardPermissionRoleTable extends Migration {
 		{
 			$table->integer('permission_id')->unsigned();
 			$table->integer('role_id')->unsigned();
+			$table->timestamps();
 		});
 	}
 

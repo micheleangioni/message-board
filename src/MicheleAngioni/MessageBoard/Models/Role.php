@@ -12,12 +12,12 @@ class Role extends \Illuminate\Database\Eloquent\Model {
 
     public function permissions()
     {
-        return $this->belongsToMany('\MicheleAngioni\MessageBoard\Models\Permission', 'tb_messboard_permission_role');
+        return $this->belongsToMany('\MicheleAngioni\MessageBoard\Models\Permission', 'tb_messboard_permission_role')->withTimestamps();
     }
 
     public function user()
     {
-        return $this->belongsToMany(\Config::get('auth.model'), 'tb_messboard_user_role', 'role_id');
+        return $this->belongsToMany(\Config::get('auth.model'), 'tb_messboard_user_role', 'role_id')->withTimestamps();
     }
 
 }
