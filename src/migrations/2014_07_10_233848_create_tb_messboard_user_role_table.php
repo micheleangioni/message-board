@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTbMessboardPermissionRoleTable extends Migration {
+class CreateTbMessboardUserRoleTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,9 +12,9 @@ class CreateTbMessboardPermissionRoleTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('tb_messboard_permission_role', function(Blueprint $table)
+		Schema::create('tb_messboard_user_role', function(Blueprint $table)
 		{
-			$table->integer('permission_id')->unsigned();
+			$table->integer('user_id')->unsigned();
 			$table->integer('role_id')->unsigned();
 		});
 	}
@@ -27,7 +27,7 @@ class CreateTbMessboardPermissionRoleTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('tb_messboard_permission_role');
+		Schema::drop('tb_messboard_user_role');
 	}
 
 }

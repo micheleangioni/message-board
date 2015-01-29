@@ -58,14 +58,14 @@ class DatabaseSeeder extends Seeder {
     {
         Permission::create(array(
             'id' => 1,
-            'name' => 'Edit Posts and Comments',
+            'name' => 'Edit Posts',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
         ));
 
         Permission::create(array(
             'id' => 2,
-            'name' => 'Delete Posts and Comments',
+            'name' => 'Delete Posts',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
         ));

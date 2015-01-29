@@ -486,10 +486,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 }
 
 /**
- * A stub class that implements ConfideUserInterface and uses
- * the ConfideUser trait.
- *
- * @see \Zizaco\Confide\ConfideUser
+ * A stub class that implements MbUserInterface and uses the MbTrait trait.
  */
 class User extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\MbUserInterface
 {
