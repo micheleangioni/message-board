@@ -10,7 +10,8 @@ The Message Board is a [Laravel 4](http://laravel.com) package which assigns a m
 
 ## Installation
 
-Message Board can be installed through Composer, just include `"michele-angioni/message-board": "dev-master"` to your composer.json and run `composer update` or `composer install`.
+Message Board can be installed through Composer, first of all include `"michele-angioni/message-board": "dev-master"` to your composer.json and run `composer update` or `composer install`.  
+Then run migrations and seeding through `php artisan migrate --package="michele-angioni/message-board"` and `php artisan db:seed --class="MessageBoardSeeder"` and you are done.
 
 ## Configuration
 
@@ -25,7 +26,7 @@ Then add the `MbTrait` to your User model, which has also to implement the `MbUs
     use MicheleAngioni\MessageBoard\MbTrait; // Message Board Trait
     use MicheleAngioni\MessageBoard\MbUserInterface;
 
-    class User MbUserInterface {
+    class User extends Eloquent implements MbUserInterface {
 
         use MbTrait; // Message Board Trait
 
@@ -94,11 +95,11 @@ Use the `getComment($idComment)` and `deleteComment($idComment)` methods to resp
 
 ### Managing likes
 
-Use the `createLike($idUser, $likableEntityId, $likableEntity)` to add a like.
+Use the `createLike($idUser, $likableEntityId, $likableEntity)` method to add a like.
 $isUser is the User who gives the like. $likableEntity is the entity which is liked: 'post' and 'comment' are supported by default.
 $likableEntityId is the primary id of the entity which is liked.
 
-The `deleteLike($idUser, $likableEntityId, $likableEntity)` works in the same way, but instead it deletes the like.
+The `deleteLike($idUser, $likableEntityId, $likableEntity)` method works in the same way, but instead it deletes the like.
 
 ### (optional) Coded posts
 
@@ -112,12 +113,24 @@ $attributes defines a list of variables can be injected in the coded message. Se
 
 If you want a deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
 
+### Roles and Permissions
+
+Message Board comes with a role and permission system out of the box. Base roles are `Admin` and `Moderator`. The first one can edit and delete posts and comments, ban users (user bans must still be implemented), add and remove moderators.  
+The Moderator has the same permissions of the admin, but adding and remove other moderators.
+
+In order to retrieve all available methods, just use the `getRoles()` method of the MbGateway. Each role returns its permissions through the `permissions` property.    
+
+Thanks to the `MbTrait`, you can easily add a role to an user with `$user->attachRole($role)` and detach it by using `$user->detachRole($role)`.    
+If you want to test an user for a particular permission, just user `$user->canMb($permission)` where $permission is the name of the permission.
+
 ## Contribution guidelines
 
+Please report any issue you find in the issues page.  
 Pull requests are welcome, especially for the to do list below.
 
 ## To do list
 
+- user bans
 - images handling
 - emoticons management
 

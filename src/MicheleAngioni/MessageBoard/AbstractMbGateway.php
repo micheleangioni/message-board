@@ -10,6 +10,7 @@ use MicheleAngioni\MessageBoard\Presenters\PostPresenter;
 use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
+use MicheleAngioni\MessageBoard\Repos\RoleRepositoryInterface as RoleRepo;
 use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -58,11 +59,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
     protected $purifier;
 
+    protected $roleRepo;
+
     protected $viewRepo;
 
 
     function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
-                         PurifierInterface $purifier, ViewRepo $viewRepo, $app = NULL)
+                         PurifierInterface $purifier, RoleRepo $roleRepo, ViewRepo $viewRepo, $app = NULL)
     {
         $this->app = $app ?: app();
 
@@ -79,6 +82,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         $this->presenter = $presenter;
 
         $this->purifier = $purifier;
+
+        $this->roleRepo = $roleRepo;
 
         $this->viewRepo = $viewRepo;
     }
@@ -390,6 +395,16 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         else {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': input collection should contain Post or Comment models.');
         }
+    }
+
+    /**
+     * Return a collection of all available Roles.
+     *
+     * @return Collection
+     */
+    public function getRoles()
+    {
+        return $this->roleRepo->all();
     }
 
     /**

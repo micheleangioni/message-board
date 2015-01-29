@@ -8,6 +8,8 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     protected $postRepo;
 
+    protected $roleRepo;
+
     protected $viewRepo;
 
     /**
@@ -380,12 +382,13 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
         $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
         $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
+        $roleRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentRoleRepository');
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
         $app = $this->app;
 
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
-                                                                $purifier, $viewRepo, $app);
+                                                                $purifier, $roleRepo, $viewRepo, $app);
 
         $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
         $user->shouldReceive('getPrimaryId')->andReturn(1);
@@ -458,6 +461,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->postRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface');
         $this->purifier = $this->mock('MicheleAngioni\MessageBoard\PurifierInterface');
         $this->presenter = $this->mock('MicheleAngioni\Support\Presenters\Presenter');
+        $this->roleRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\RoleRepositoryInterface');
         $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface');
 
         Config::shouldReceive('get')->with('message-board::message_types')->andReturn(['public_mess','private_mess']);
@@ -465,7 +469,8 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Config::shouldReceive('get')->with('message-board::user_named_route')->andReturn('user');
 
         return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
-            [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->purifier, $this->viewRepo]);
+            [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->purifier,
+                $this->roleRepo, $this->viewRepo]);
     }
 
 

@@ -25,7 +25,7 @@ class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
         ));
 
         // Call seeding
-        Artisan::call('db:seed');
+        Artisan::call('db:seed', ['--class' => 'MessageBoardSeeder']);
     }
 
     /**
