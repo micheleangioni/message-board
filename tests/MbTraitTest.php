@@ -88,12 +88,12 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
         $user->id = 1;
         $user->save();
 
-        $user->attachRole($roles[0]);
+        $user->attachMbRole($roles[0]);
         $this->assertEquals(1, count($user->mbRoles));
 
         $this->assertTrue($user->canMb($roles[0]->permissions[0]->name));
 
-        $user->detachRole($roles[0]);
+        $user->detachMbRole($roles[0]);
         $user = User::find(1);
         $this->assertEquals(0, count($user->mbRoles));
     }
