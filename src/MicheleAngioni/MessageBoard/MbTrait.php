@@ -78,7 +78,7 @@ trait MbTrait {
      * @param Role|array $role
      * @return void
      */
-    public function attachRole($role)
+    public function attachMbRole($role)
     {
         if( is_object($role)) {
             $role = $role->getKey();
@@ -97,7 +97,7 @@ trait MbTrait {
      * @param Role $role
      * @return void
      */
-    public function detachRole($role)
+    public function detachMbRole($role)
     {
         if (is_object($role)) {
             $role = $role->getKey();

@@ -120,7 +120,7 @@ The Moderator has the same permissions of the admin, but adding and remove other
 
 In order to retrieve all available methods, just use the `getRoles()` method of the MbGateway. Each role returns its permissions through the `permissions` property.    
 
-Thanks to the `MbTrait`, you can easily add a role to an user with `$user->attachRole($role)` and detach it by using `$user->detachRole($role)`.    
+Thanks to the `MbTrait`, you can easily add a role to an user with `$user->attachMbRole($role)` and detach it by using `$user->attachMbRole($role)`.    
 If you want to test an user for a particular permission, just user `$user->canMb($permission)` where $permission is the name of the permission.
 
 ## Contribution guidelines
