@@ -1,8 +1,11 @@
+/build
+/cache
+
 /bootstrap/compiled.php
 /vendor
 composer.phar
+composer.lock
 .DS_Store
-Thumbs.db
 
 /conf
 /.idea
