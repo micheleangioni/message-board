@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="robots" content="index, follow, all" />
+        <title>MicheleAngioni\MessageBoard\MbGateway | Message Board API</title>
+                    <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+                            </head>
+        <body id="class">
+            <div class="header">
+        <ul>
+            <li><a href="../../classes.html">Classes</a></li>
+                            <li><a href="../../namespaces.html">Namespaces</a></li>
+                        <li><a href="../../interfaces.html">Interfaces</a></li>
+            <li><a href="../../traits.html">Traits</a></li>
+            <li><a href="../../doc-index.html">Index</a></li>
+            
+        </ul>
+
+        <div id="title">Message Board API</div>
+
+            <div class="type">Class</div>
+    <h1><a href="../../MicheleAngioni/MessageBoard.html">MicheleAngioni\MessageBoard</a>\MbGateway</h1>
+    </div>
+        <div class="content">
+                <p>    class
+    <strong>MbGateway</strong>        extends <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a>        implements
+        <a href="../../MicheleAngioni/MessageBoard/MbGatewayInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbGatewayInterface">MbGatewayInterface</abbr></a></p>
+
+    
+    
+    
+            <h2>Methods</h2>
+
+            <table>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method___construct">__construct</a>(<a href="../../MicheleAngioni/MessageBoard/Repos/CommentRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface">CommentRepositoryInterface</abbr></a> $commentRepo, <a href="../../MicheleAngioni/MessageBoard/Repos/LikeRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface">LikeRepositoryInterface</abbr></a> $likeRepo, <a href="../../MicheleAngioni/MessageBoard/Repos/PostRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface">PostRepositoryInterface</abbr></a> $postRepo, <abbr title="MicheleAngioni\Support\Presenters\Presenter">Presenter</abbr> $presenter, <a href="../../MicheleAngioni/MessageBoard/PurifierInterface.html"><abbr title="MicheleAngioni\MessageBoard\PurifierInterface">PurifierInterface</abbr></a> $purifier, <a href="../../MicheleAngioni/MessageBoard/Repos/ViewRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface">ViewRepositoryInterface</abbr></a> $viewRepo)
+                    <p>
+</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_createCodedPost">createCodedPost</a>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, string $messageType = &#039;public_mess&#039;, string|bool $code, array $attributes = array())
+                    <p>Create a new Post from a coded text.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_createCodedPost"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_createPost">createPost</a>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, <a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $poster = NULL, $messageType = &#039;public_mess&#039;, $text, $banCheck = true)
+                    <p>Create a new Post.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_createPost"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_getPost">getPost</a>(int $idPost)
+                    <p>Retrieve and return input Post.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_getPost"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    bool
+                </td>
+                <td class="last">
+                    <a href="#method_deletePost">deletePost</a>(int $idPost)
+                    <p>Delete input Post.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_deletePost"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_createComment">createComment</a>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, $postId, $text, $banCheck = true)
+                    <p>Create a new Comment.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_createComment"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_getComment">getComment</a>(int $idComment)
+                    <p>Retrieve and return input Comment.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_getComment"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    bool
+                </td>
+                <td class="last">
+                    <a href="#method_deleteComment">deleteComment</a>(int $idComment)
+                    <p>Delete input Comment.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_deleteComment"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../MicheleAngioni/MessageBoard/Models/Like.html"><abbr title="MicheleAngioni\MessageBoard\Models\Like">Like</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_createLike">createLike</a>(int $idUser, int $likableEntityId, string $likableEntity)
+                    <p>Assign a new Like to input entity and user.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_createLike"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    bool
+                </td>
+                <td class="last">
+                    <a href="#method_deleteLike">deleteLike</a>(int $idUser, int $likableEntityId, string $likableEntity)
+                    <p>Delete input like.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_deleteLike"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_updateUserLastView">updateUserLastView</a>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user)
+                    <p>Update input user last view.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_updateUserLastView"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <abbr title="Illuminate\Support\Collection">Collection</abbr>
+                </td>
+                <td class="last">
+                    <a href="#method_getOrderedUserPosts">getOrderedUserPosts</a>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, string $messageType = &#039;all&#039;, int $page = 1, int $limit = 20, bool $applyPresenter = false, bool $escapeText = false, <a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $userVisiting = NULL)
+                    <p>Return posts of input type on the input user mb, ordered by post AND comment datetime.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_getOrderedUserPosts"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../MicheleAngioni/MessageBoard/Presenters/PostPresenter.html"><abbr title="MicheleAngioni\MessageBoard\Presenters\PostPresenter">PostPresenter</abbr></a>|<a href="../../MicheleAngioni/MessageBoard/Presenters/CommentPresenter.html"><abbr title="MicheleAngioni\MessageBoard\Presenters\CommentPresenter">CommentPresenter</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_presentModel">presentModel</a>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, <a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>|<a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a> $model, bool $escapeText = false)
+                    <p>Pass a Post or Comment model to the corresponding presenter and return it</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_presentModel"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <abbr title="Illuminate\Support\Collection">Collection</abbr>
+                </td>
+                <td class="last">
+                    <a href="#method_presentCollection">presentCollection</a>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, <abbr title="Illuminate\Support\Collection">Collection</abbr> $collection, bool $escapeText = false)
+                    <p>Pass a Post or Comment collection to the corresponding presenter and return it</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_presentCollection"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    bool
+                </td>
+                <td class="last">
+                    <a href="#method_banUser">banUser</a>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, int $days, string $reason = &#039;&#039;)
+                    <p>Ban input user.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_banUser"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a></small></td>
+            </tr>
+            </table>
+
+
+        <h2>Details</h2>
+
+                        <h3 id="method___construct">
+        <div class="location">at line 18</div>
+        <code>            public            
+    <strong>__construct</strong>(<a href="../../MicheleAngioni/MessageBoard/Repos/CommentRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface">CommentRepositoryInterface</abbr></a> $commentRepo, <a href="../../MicheleAngioni/MessageBoard/Repos/LikeRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface">LikeRepositoryInterface</abbr></a> $likeRepo, <a href="../../MicheleAngioni/MessageBoard/Repos/PostRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface">PostRepositoryInterface</abbr></a> $postRepo, <abbr title="MicheleAngioni\Support\Presenters\Presenter">Presenter</abbr> $presenter, <a href="../../MicheleAngioni/MessageBoard/PurifierInterface.html"><abbr title="MicheleAngioni\MessageBoard\PurifierInterface">PurifierInterface</abbr></a> $purifier, <a href="../../MicheleAngioni/MessageBoard/Repos/ViewRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface">ViewRepositoryInterface</abbr></a> $viewRepo)</code>
+    </h3>
+    <div class="details">
+        <p>
+</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/Repos/CommentRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface">CommentRepositoryInterface</abbr></a></td>
+                <td>$commentRepo</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/Repos/LikeRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface">LikeRepositoryInterface</abbr></a></td>
+                <td>$likeRepo</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/Repos/PostRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface">PostRepositoryInterface</abbr></a></td>
+                <td>$postRepo</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><abbr title="MicheleAngioni\Support\Presenters\Presenter">Presenter</abbr></td>
+                <td>$presenter</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/PurifierInterface.html"><abbr title="MicheleAngioni\MessageBoard\PurifierInterface">PurifierInterface</abbr></a></td>
+                <td>$purifier</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/Repos/ViewRepositoryInterface.html"><abbr title="MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface">ViewRepositoryInterface</abbr></a></td>
+                <td>$viewRepo</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_createCodedPost">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_createCodedPost"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 103</div>
+        <code>            public            <a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>
+    <strong>createCodedPost</strong>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, string $messageType = &#039;public_mess&#039;, string|bool $code, array $attributes = array())</code>
+    </h3>
+    <div class="details">
+        <p>Create a new Post from a coded text.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$user</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$messageType</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string|bool</td>
+                <td>$code</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$attributes</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_createPost">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_createPost"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 138</div>
+        <code>            public            <a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>
+    <strong>createPost</strong>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, <a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $poster = NULL, $messageType = &#039;public_mess&#039;, $text, $banCheck = true)</code>
+    </h3>
+    <div class="details">
+        <p>Create a new Post.</p>
+        <p>By default, check if the poster is actually banned.</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$user</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$poster</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$messageType</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$text</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$banCheck</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getPost">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_getPost"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 193</div>
+        <code>            public            <a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>
+    <strong>getPost</strong>(int $idPost)</code>
+    </h3>
+    <div class="details">
+        <p>Retrieve and return input Post.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>int</td>
+                <td>$idPost</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><abbr title="ModelNotFoundException">ModelNotFoundException</abbr></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_deletePost">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_deletePost"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 204</div>
+        <code>            public            bool
+    <strong>deletePost</strong>(int $idPost)</code>
+    </h3>
+    <div class="details">
+        <p>Delete input Post.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>int</td>
+                <td>$idPost</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>bool</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_createComment">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_createComment"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 218</div>
+        <code>            public            <a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a>
+    <strong>createComment</strong>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, $postId, $text, $banCheck = true)</code>
+    </h3>
+    <div class="details">
+        <p>Create a new Comment.</p>
+        <p>Check if the user is actually banned.</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$user</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$postId</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$text</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$banCheck</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getComment">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_getComment"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 242</div>
+        <code>            public            <a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a>
+    <strong>getComment</strong>(int $idComment)</code>
+    </h3>
+    <div class="details">
+        <p>Retrieve and return input Comment.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>int</td>
+                <td>$idComment</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><abbr title="ModelNotFoundException">ModelNotFoundException</abbr></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_deleteComment">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_deleteComment"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 253</div>
+        <code>            public            bool
+    <strong>deleteComment</strong>(int $idComment)</code>
+    </h3>
+    <div class="details">
+        <p>Delete input Comment.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>int</td>
+                <td>$idComment</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>bool</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_createLike">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_createLike"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 268</div>
+        <code>            public            <a href="../../MicheleAngioni/MessageBoard/Models/Like.html"><abbr title="MicheleAngioni\MessageBoard\Models\Like">Like</abbr></a>
+    <strong>createLike</strong>(int $idUser, int $likableEntityId, string $likableEntity)</code>
+    </h3>
+    <div class="details">
+        <p>Assign a new Like to input entity and user.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>int</td>
+                <td>$idUser</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$likableEntityId</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$likableEntity</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../MicheleAngioni/MessageBoard/Models/Like.html"><abbr title="MicheleAngioni\MessageBoard\Models\Like">Like</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_deleteLike">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_deleteLike"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 297</div>
+        <code>            public            bool
+    <strong>deleteLike</strong>(int $idUser, int $likableEntityId, string $likableEntity)</code>
+    </h3>
+    <div class="details">
+        <p>Delete input like.</p>
+        <p>Return true on success.</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>int</td>
+                <td>$idUser</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$likableEntityId</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$likableEntity</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>bool</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_updateUserLastView">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_updateUserLastView"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 315</div>
+        <code>            public            
+    <strong>updateUserLastView</strong>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user)</code>
+    </h3>
+    <div class="details">
+        <p>Update input user last view.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$user</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getOrderedUserPosts">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_getOrderedUserPosts"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 341</div>
+        <code>            public            <abbr title="Illuminate\Support\Collection">Collection</abbr>
+    <strong>getOrderedUserPosts</strong>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, string $messageType = &#039;all&#039;, int $page = 1, int $limit = 20, bool $applyPresenter = false, bool $escapeText = false, <a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $userVisiting = NULL)</code>
+    </h3>
+    <div class="details">
+        <p>Return posts of input type on the input user mb, ordered by post AND comment datetime.</p>
+        <p>Optionally the posts can be passed to the presenter and the text escaped.
+If the user requesting the post is not the owner of the message board, it can be specified among the iputs</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$user</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$messageType</td>
+                <td>= 'all'</td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$page</td>
+                <td>= 1</td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$limit</td>
+                <td>= 2</td>
+            </tr>
+                    <tr>
+                <td>bool</td>
+                <td>$applyPresenter</td>
+                <td>= false</td>
+            </tr>
+                    <tr>
+                <td>bool</td>
+                <td>$escapeText</td>
+                <td>= false</td>
+            </tr>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$userVisiting</td>
+                <td>= NULL</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><abbr title="Illuminate\Support\Collection">Collection</abbr></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_presentModel">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_presentModel"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 376</div>
+        <code>            public            <a href="../../MicheleAngioni/MessageBoard/Presenters/PostPresenter.html"><abbr title="MicheleAngioni\MessageBoard\Presenters\PostPresenter">PostPresenter</abbr></a>|<a href="../../MicheleAngioni/MessageBoard/Presenters/CommentPresenter.html"><abbr title="MicheleAngioni\MessageBoard\Presenters\CommentPresenter">CommentPresenter</abbr></a>
+    <strong>presentModel</strong>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, <a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>|<a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a> $model, bool $escapeText = false)</code>
+    </h3>
+    <div class="details">
+        <p>Pass a Post or Comment model to the corresponding presenter and return it</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$user</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/Models/Post.html"><abbr title="MicheleAngioni\MessageBoard\Models\Post">Post</abbr></a>|<a href="../../MicheleAngioni/MessageBoard/Models/Comment.html"><abbr title="MicheleAngioni\MessageBoard\Models\Comment">Comment</abbr></a></td>
+                <td>$model</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>bool</td>
+                <td>$escapeText</td>
+                <td>= false</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../MicheleAngioni/MessageBoard/Presenters/PostPresenter.html"><abbr title="MicheleAngioni\MessageBoard\Presenters\PostPresenter">PostPresenter</abbr></a>|<a href="../../MicheleAngioni/MessageBoard/Presenters/CommentPresenter.html"><abbr title="MicheleAngioni\MessageBoard\Presenters\CommentPresenter">CommentPresenter</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_presentCollection">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_presentCollection"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 401</div>
+        <code>            public            <abbr title="Illuminate\Support\Collection">Collection</abbr>
+    <strong>presentCollection</strong>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, <abbr title="Illuminate\Support\Collection">Collection</abbr> $collection, bool $escapeText = false)</code>
+    </h3>
+    <div class="details">
+        <p>Pass a Post or Comment collection to the corresponding presenter and return it</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$user</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><abbr title="Illuminate\Support\Collection">Collection</abbr></td>
+                <td>$collection</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>bool</td>
+                <td>$escapeText</td>
+                <td>= false</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><abbr title="Illuminate\Support\Collection">Collection</abbr></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_banUser">
+        <div class="location">in <a href="../../MicheleAngioni/MessageBoard/AbstractMbGateway.html#method_banUser"><abbr title="MicheleAngioni\MessageBoard\AbstractMbGateway">AbstractMbGateway</abbr></a> at line 436</div>
+        <code>            public            bool
+    <strong>banUser</strong>(<a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a> $user, int $days, string $reason = &#039;&#039;)</code>
+    </h3>
+    <div class="details">
+        <p>Ban input user.</p>
+        <p>In the user is already banned, extend the banning days.
+Return true on success.</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../MicheleAngioni/MessageBoard/MbUserInterface.html"><abbr title="MicheleAngioni\MessageBoard\MbUserInterface">MbUserInterface</abbr></a></td>
+                <td>$user</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$days</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$reason</td>
+                <td>= ''</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>bool</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+    
+            </div>
+            <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/" target="_top">Sami, the API Documentation Generator</a>.
+    </div>
+    </body>
+</html>
