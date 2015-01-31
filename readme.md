@@ -166,6 +166,10 @@ $user is an instance of your User model (which must implement the MbUserInterfac
 $days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative.  
 $reason is the reason of the ban. Can be left blank.    
 
+## API Docs
+
+You can browse the Message Board [API Documentation](http://micheleangioni.github.io/message-board/master/index.html).
+
 ## Contribution guidelines
 
 Please report any issue you find in the issues page.  
