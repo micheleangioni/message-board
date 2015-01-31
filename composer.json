@@ -18,7 +18,8 @@
     "require-dev": {
         "mockery/mockery": "dev-master",
         "orchestra/testbench": "2.2.*",
-        "phpunit/phpunit": "4.1.*"
+        "phpunit/phpunit": "4.1.*",
+        "sami/sami": "2.0.*"
     },
     "autoload": {
         "classmap": [
