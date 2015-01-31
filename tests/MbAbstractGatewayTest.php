@@ -8,8 +8,6 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     protected $postRepo;
 
-    protected $roleRepo;
-
     protected $viewRepo;
 
     /**
@@ -122,7 +120,39 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->once()
             ->andReturn(true);
 
-        $this->assertTrue($stub->createPost($user, NULL, 'public_mess', 'text'));
+        $poster = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
+
+        $poster->shouldReceive('getPrimaryId')
+            ->once()
+            ->andReturn(2);
+
+        $poster->shouldReceive('isBanned')
+            ->once()
+            ->andReturn(false);
+
+        $this->assertTrue($stub->createPost($user, $poster, 'public_mess', 'text'));
+    }
+
+    /**
+     * @expectedException \MicheleAngioni\Support\Exceptions\PermissionsException
+     */
+    public function testCreatePostByBannedUser()
+    {
+        $stub = $this->getAbstractGatewayStub();
+
+        $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
+
+        $poster = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
+
+        $poster->shouldReceive('isBanned')
+            ->once()
+            ->andReturn(true);
+
+        $poster->shouldReceive('getUsername')
+            ->once()
+            ->andReturn('Username');
+
+        $stub->createPost($user, $poster, 'public_mess', 'text');
     }
 
     public function testGetPost()
@@ -163,11 +193,35 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->once()
             ->andReturn(1);
 
+        $user->shouldReceive('isBanned')
+            ->once()
+            ->andReturn(false);
+
         $this->commentRepo->shouldReceive('create')
             ->once()
             ->andReturn(true);
 
         $this->assertTrue($stub->createComment($user, 1, 'ciao'));
+    }
+
+    /**
+     * @expectedException \MicheleAngioni\Support\Exceptions\PermissionsException
+     */
+    public function testCreateCommentByBannedUser()
+    {
+        $stub = $this->getAbstractGatewayStub();
+
+        $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
+
+        $user->shouldReceive('getUsername')
+            ->once()
+            ->andReturn('Username');
+
+        $user->shouldReceive('isBanned')
+            ->once()
+            ->andReturn(true);
+
+        $stub->createComment($user, 1, 'ciao');
     }
 
     public function testGetComment()
@@ -382,13 +436,12 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
         $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
         $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
-        $roleRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentRoleRepository');
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
         $app = $this->app;
 
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
-                                                                $purifier, $roleRepo, $viewRepo, $app);
+                                                                $purifier, $viewRepo, $app);
 
         $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
         $user->shouldReceive('getPrimaryId')->andReturn(1);
@@ -461,7 +514,6 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->postRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface');
         $this->purifier = $this->mock('MicheleAngioni\MessageBoard\PurifierInterface');
         $this->presenter = $this->mock('MicheleAngioni\Support\Presenters\Presenter');
-        $this->roleRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\RoleRepositoryInterface');
         $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface');
 
         Config::shouldReceive('get')->with('message-board::message_types')->andReturn(['public_mess','private_mess']);
@@ -470,7 +522,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
             [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->purifier,
-                $this->roleRepo, $this->viewRepo]);
+                $this->viewRepo]);
     }
 
 

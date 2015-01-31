@@ -9,6 +9,8 @@ class Role extends \Illuminate\Database\Eloquent\Model {
      */
     protected $table = 'tb_messboard_roles';
 
+    protected $fillable = array('name');
+
 
     public function permissions()
     {

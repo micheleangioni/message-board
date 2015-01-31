@@ -1,6 +1,10 @@
 <?php
 
-class MbTraitTest extends Orchestra\Testbench\TestCase {
+class MbPermissionManagerTest extends Orchestra\Testbench\TestCase {
+
+    protected $permissionRepo;
+
+    protected $roleRepo;
 
     /**
      * Setup the test environment.
@@ -38,7 +42,6 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
     {
         // reset base path to point to our package's src directory
         $app['path.base'] = __DIR__ . '/../src';
-        $app['config']->set('auth.model', 'User');
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', array(
             'driver' => 'sqlite',
@@ -80,33 +83,49 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
     }
 
 
-	public function testTrait()
+	public function testRolesAndPermissionGetters()
 	{
-        $roles = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentRoleRepository')->all();
+        $permissionManager = $this->app->make('MicheleAngioni\MessageBoard\PermissionManager');
 
-        $user = new UserMb;
-        $user->id = 1;
-        $user->save();
+        $role = $permissionManager->getRole(1);
+        $this->assertNotNull($role);
 
-        // Test attach and detach roles
-        $user->attachMbRole($roles[0]);
-        $this->assertEquals(1, count($user->mbRoles));
-        $this->assertTrue($user->canMb($roles[0]->permissions[0]->name));
+        $roles = $permissionManager->getRoles();
+        $this->assertGreaterThan(1, count($roles));
 
-        $user->detachMbRole($roles[0]);
-        $user = UserMb::find(1);
-        $this->assertEquals(0, count($user->mbRoles));
+        $permission = $permissionManager->getPermission(1);
+        $this->assertNotNull($permission);
 
-        // Test isBanned
-        $user->mbBans()->create(array(
-            'user_id' => 1,
-            'reason' => 'Reason',
-            'until' => '2100-01-01'
-        ));
-
-        $this->assertTrue($user->isBanned());
+        $permissions = $permissionManager->getPermissions();
+        $this->assertGreaterThan(1, count($permissions));
     }
 
+    public function testCreateRole()
+    {
+        $permissionManager = $this->app->make('MicheleAngioni\MessageBoard\PermissionManager');
+
+        $permissions = $permissionManager->getPermissions();
+        $rolesNumberBefore = count($permissionManager->getRoles());
+
+        $newRole = $permissionManager->createRole('New Role', $permissions);
+
+        $rolesNumberAfter = count($permissionManager->getRoles());
+        $this->assertEquals($rolesNumberBefore + 1, $rolesNumberAfter);
+
+        $this->assertGreaterThan(0, count($newRole->permissions));
+    }
+
+    public function testCreatePermission()
+    {
+        $permissionManager = $this->app->make('MicheleAngioni\MessageBoard\PermissionManager');
+
+        $permissionsNumberBefore = count($permissionManager->getPermissions());
+
+        $permissionManager->createPermission('New Permission');
+
+        $permissionsNumberAfter = count($permissionManager->getPermissions());
+        $this->assertEquals($permissionsNumberBefore + 1, $permissionsNumberAfter);
+    }
 
 
     public function mock($class)
@@ -123,24 +142,4 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
         Mockery::close();
     }
 
-}
-
-/**
- * A stub class that implements MbUserInterface and uses the MbTrait trait.
- */
-class UserMb extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\MbUserInterface
-{
-    use MicheleAngioni\MessageBoard\MbTrait;
-
-    protected $table = 'users';
-
-    public function getPrimaryId()
-    {
-        return $this->id;
-    }
-
-    public function getUsername()
-    {
-        return $this->username;
-    }
 }

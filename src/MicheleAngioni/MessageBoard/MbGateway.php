@@ -4,7 +4,6 @@ use MicheleAngioni\MessageBoard\PurifierInterface;
 use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
-use MicheleAngioni\MessageBoard\Repos\RoleRepositoryInterface as RoleRepo;
 use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
 use Lang;
@@ -17,9 +16,9 @@ class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
     protected $mbText;
 
     function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
-                         PurifierInterface $purifier, RoleRepo $roleRepo, ViewRepo $viewRepo)
+                         PurifierInterface $purifier, ViewRepo $viewRepo)
     {
-        parent::__construct($commentRepo, $likeRepo, $postRepo, $presenter, $purifier, $roleRepo, $viewRepo);
+        parent::__construct($commentRepo, $likeRepo, $postRepo, $presenter, $purifier, $viewRepo);
     }
 
     /**

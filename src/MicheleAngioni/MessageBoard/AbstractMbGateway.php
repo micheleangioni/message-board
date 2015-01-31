@@ -1,5 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
+use Helpers;
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use MicheleAngioni\MessageBoard\Models\Like;
@@ -10,11 +11,11 @@ use MicheleAngioni\MessageBoard\Presenters\PostPresenter;
 use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
-use MicheleAngioni\MessageBoard\Repos\RoleRepositoryInterface as RoleRepo;
 use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use InvalidArgumentException;
+use MicheleAngioni\Support\Exceptions\PermissionsException;
 
 abstract class AbstractMbGateway implements MbGatewayInterface {
 
@@ -59,13 +60,11 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
     protected $purifier;
 
-    protected $roleRepo;
-
     protected $viewRepo;
 
 
     function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
-                         PurifierInterface $purifier, RoleRepo $roleRepo, ViewRepo $viewRepo, $app = NULL)
+                         PurifierInterface $purifier, ViewRepo $viewRepo, $app = NULL)
     {
         $this->app = $app ?: app();
 
@@ -82,8 +81,6 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         $this->presenter = $presenter;
 
         $this->purifier = $purifier;
-
-        $this->roleRepo = $roleRepo;
 
         $this->viewRepo = $viewRepo;
     }
@@ -127,22 +124,43 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
-     * Create a new Post.
+     * Create a new Post. By default, check if the poster is actually banned.
      *
-     * @param  MbUserInterface  $user
-     * @param  int              $idPoster
-     * @param  string           $messageType
-     * @param  string           $text
+     * @param  MbUserInterface       $user
+     * @param  MbUserInterface|NULL  $poster = NULL
+     * @param  string                $messageType = 'public_mess'
+     * @param  string                $text
+     * $param  bool                  $banCheck = true
      * @throws InvalidArgumentException
      *
      * @return Post
      */
-    public function createPost(MbUserInterface $user, $idPoster = NULL, $messageType = 'public_mess', $text)
+    public function createPost(MbUserInterface $user, MbUserInterface $poster = NULL, $messageType = 'public_mess', $text, $banCheck = true)
     {
+        // Check if the poster is banned and take poster id
+        if($poster) {
+            if($banCheck) {
+                if ($poster->isBanned()) {
+                    throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $poster->getUsername() . ' is currently banned and cannot create a new post.');
+                }
+            }
+
+            $posterId = $poster->getPrimaryId();
+        }
+        else {
+            if($banCheck) {
+                if ($user->isBanned()) {
+                    throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . ' is currently banned and cannot create a new post.');
+                }
+            }
+
+            $posterId = $user->getPrimaryId();
+        }
+
         $data = array(
             'post_type' => $messageType,
             'user_id' => $user->getPrimaryId(),
-            'poster_id' => $idPoster,
+            'poster_id' => $posterId,
             'text' => $text,
         );
 
@@ -189,16 +207,23 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
-     * Create a new Comment.
+     * Create a new Comment. Check if the user is actually banned.
      *
      * @param  MbUserInterface  $user
      * @param  int              $postId
      * @param  string           $text
-     *
+     * $param  bool             $banCheck = true
      * @return Comment
      */
-    public function createComment(MbUserInterface $user, $postId, $text)
+    public function createComment(MbUserInterface $user, $postId, $text, $banCheck = true)
     {
+        // Check if the user is banned
+        if($banCheck) {
+            if ($user->isBanned()) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . ' is currently banned and cannot create a new comment.');
+            }
+        }
+
         return $this->commentRepo->create(array(
             'post_id' => $postId,
             'user_id' => $user->getPrimaryId(),
@@ -266,6 +291,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  int     $idUser
      * @param  int     $likableEntityId
      * @param  string  $likableEntity
+     *
      * @return bool
      */
     public function deleteLike($idUser, $likableEntityId, $likableEntity)
@@ -398,13 +424,36 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
-     * Return a collection of all available Roles.
+     * Ban input user. In the user is already banned, extend the banning days.
+     * Return true on success.
      *
-     * @return Collection
+     * @param  MbUserInterface  $user
+     * @param  int              $days
+     * @param  string           $reason = ''
+     *
+     * @return bool
      */
-    public function getRoles()
+    public function banUser(MbUserInterface $user, $days, $reason = '')
     {
-        return $this->roleRepo->all();
+        // Check if input user is already banned
+        if($user->isBanned) {
+            // Extend the current ban
+
+            $ban = $user->mbBans->first();
+
+            $currentBanDays = Helpers::daysBetweenDates(Helpers::getDate(), $ban->until);
+
+            $ban->until = max($currentBanDays + $days,0);
+            $ban->save();
+        }
+        else {
+            $user->mbBans()->create(array(
+                'reason' => $reason,
+                'until' => Helpers::getDate(max($days,0)),
+            ));
+        }
+
+        return true;
     }
 
     /**

@@ -1,9 +1,15 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
+use Helpers;
 use MicheleAngioni\MessageBoard\Models\Role;
 
 trait MbTrait {
 
+
+    public function mbBans()
+    {
+        return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Ban', 'user_id')->orderBy('updated_at', 'desc');
+    }
 
     public function mbPosts()
     {
@@ -28,6 +34,22 @@ trait MbTrait {
     public function getLastViewDatetime()
     {
         return $this->mbLastView->datetime;
+    }
+
+    /**
+     * Check if the user is actually banned.
+     *
+     * @return bool
+     */
+    public function isBanned()
+    {
+        if(count($this->mbBans) > 0) {
+            if($this->mbBans->first()->until >= Helpers::getDate()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -56,12 +78,6 @@ trait MbTrait {
     public function canMb($permission)
     {
         foreach ($this->mbRoles as $role) {
-            // Deprecated permission value within the role table.
-            if (is_array($role->permissions) && in_array($permission, $role->permissions) ) {
-                return true;
-            }
-
-            // Validate against the Permission table
             foreach ($role->permissions as $perm) {
                 if ($perm->name == $permission) {
                     return true;
@@ -109,4 +125,5 @@ trait MbTrait {
 
         $this->mbRoles()->detach($role);
     }
+
 }
