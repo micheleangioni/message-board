@@ -154,7 +154,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
                 }
             }
 
-            $posterId = $user->getPrimaryId();
+            $posterId = NULL;
         }
 
         $data = array(
