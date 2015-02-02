@@ -130,7 +130,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  MbUserInterface|NULL  $poster = NULL
      * @param  string                $messageType = 'public_mess'
      * @param  string                $text
-     * $param  bool                  $banCheck = true
+     * @param  bool                  $banCheck = true
      * @throws InvalidArgumentException
      *
      * @return Post
@@ -225,7 +225,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  MbUserInterface  $user
      * @param  int              $postId
      * @param  string           $text
-     * $param  bool             $banCheck = true
+     * @param  bool             $banCheck = true
      *
      * @return Comment
      */
