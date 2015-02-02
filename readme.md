@@ -181,6 +181,7 @@ Pull requests are welcome, especially for the to do list below.
 
 - editing posts/comments
 - soft delete
+- "report"/"abuse" feature
 - images handling
 - emoticons management
 

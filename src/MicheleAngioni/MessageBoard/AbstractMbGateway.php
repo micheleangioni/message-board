@@ -148,12 +148,6 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             $posterId = $poster->getPrimaryId();
         }
         else {
-            if($banCheck) {
-                if ($user->isBanned()) {
-                    throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . ' is currently banned and cannot create a new post.');
-                }
-            }
-
             $posterId = NULL;
         }
 
