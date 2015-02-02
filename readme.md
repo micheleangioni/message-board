@@ -96,7 +96,7 @@ You can also manually pass a single model to the presenter by using the `present
 ### Managing posts
 
 Use the `createPost(MbUserInterface $user, MbUserInterface $poster = NULL, $messageType = 'public_mess', $text, $banCheck = true)` method to create a new post.
-$user and $poster are instances of your User model (which must implement the MbUserInterface) of the owner of the message board where the post will be posted and the poster. If a use writes a post on his/her own messageboard, just leave $poster as NULL.   
+$user and $poster are instances of your User model (which must implement the MbUserInterface) of the owner of the message board where the post will be posted and the poster. If a use writes a post on his/her own messageboard, use the same User instance of both first and second parameters. 
 $messageType defines the type of the message will be posted and $text is the test of the post. Messages of type 'private_mess' are marked as unread by default. Other messages are datetime based (see below).
 $banCheck states if a ban check on the poster user will be performed.  
 
