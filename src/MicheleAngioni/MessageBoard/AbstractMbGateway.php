@@ -196,14 +196,27 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
-     * Delete input Post.
+     * Delete input Post. Return true on success.
+     * If a User is provided as second argument, first check if he/she can delete it.
      *
-     * @param  int  $idPost
+     * @param  int              $idPost
+     * @param  MbUserInterface  $user
+     *
      * @return bool
      */
-    public function deletePost($idPost)
+    public function deletePost($idPost, MbUserInterface $user = NULL)
     {
-        return $this->postRepo->destroy($idPost);
+        if($user) {
+            $post = $this->getPost($idPost);
+
+            if(!$this->userCanDeleteEntity($user, $post)) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " can not delete post with id $idPost.");
+            }
+        }
+
+        $this->postRepo->destroy($idPost);
+
+        return true;
     }
 
     /**
@@ -213,6 +226,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  int              $postId
      * @param  string           $text
      * $param  bool             $banCheck = true
+     *
      * @return Comment
      */
     public function createComment(MbUserInterface $user, $postId, $text, $banCheck = true)
@@ -245,14 +259,96 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
-     * Delete input Comment.
+     * Delete input Comment. Return true on success.
+     * If a User is provided as second argument, first check if he/she can delete it.
      *
      * @param  int  $idComment
      * @return bool
      */
-    public function deleteComment($idComment)
+    public function deleteComment($idComment, MbUserInterface $user = NULL)
     {
-        return $this->commentRepo->destroy($idComment);
+        if($user) {
+            $comment = $this->getComment($idComment);
+
+            if(!$this->userCanDeleteEntity($user, $comment)) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " can not delete comment with id $idComment.");
+            }
+        }
+
+        $this->commentRepo->destroy($idComment);
+
+        return true;
+    }
+
+    /**
+     * Check if input User can edit input Post/Comment.
+     *
+     * @param  MbUserInterface  $user
+     * @param  Post|Comment     $entity
+     *
+     * @return bool
+     */
+    public function userCanEditEntity(MbUserInterface $user, $entity)
+    {
+        // Check if the user is banned
+        if($user->isBanned()) {
+            return false;
+        }
+
+        // Check if the user owns the entity
+        if($entity instanceof Post) {
+            if($entity->user_id == $user->getPrimaryId() || $entity->poster_id  == $user->getPrimaryId()) {
+                return true;
+            }
+        }
+        elseif($entity instanceof Comment) {
+            if($entity->user_id == $user->getPrimaryId()) {
+                return true;
+            }
+        }
+        else {
+            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $entity must be an instance of Post or Comment.');
+        }
+
+        // The user does not own the entity. Last chance to be able to edit it is to have the permission to edit not owned entities
+        if($user->canMb('Edit Posts')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if input User can delete input Post/Comment.
+     *
+     * @param  MbUserInterface  $user
+     * @param  Post|Comment     $entity
+     *
+     * @return bool
+     */
+    public function userCanDeleteEntity(MbUserInterface $user, $entity)
+    {
+        // Check if the user owns the entity
+        if($entity instanceof Post) {
+            if($entity->user_id == $user->getPrimaryId() || $entity->poster_id  == $user->getPrimaryId()) {
+                return true;
+            }
+        }
+        elseif($entity instanceof Comment) {
+            if($entity->user_id == $user->getPrimaryId()) {
+                return true;
+            }
+        }
+        else {
+            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $entity must be an instance of Post or Comment.');
+        }
+
+        // The user does not own the entity. Last chance to be able to edit it is to have the permission to edit not owned entities
+        if($user->canMb('Delete Posts')) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -436,7 +532,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     public function banUser(MbUserInterface $user, $days, $reason = '')
     {
         // Check if input user is already banned
-        if($user->isBanned) {
+        if($user->isBanned()) {
             // Extend the current ban
 
             $ban = $user->mbBans->first();

@@ -100,7 +100,8 @@ $user and $poster are instances of your User model (which must implement the MbU
 $messageType defines the type of the message will be posted and $text is the test of the post. Messages of type 'private_mess' are marked as unread by default. Other messages are datetime based (see below).
 $banCheck states if a ban check on the poster user will be performed.  
 
-Use the `getPost($idPost)` and `deletePost($idPost)` methods to respectively retrieve and delete a post.
+Use the `getPost($idPost)` and `deletePost($idPost, MbUserInterface $user = NULL)` methods to respectively retrieve and delete a post.  
+In the `deletePost` method, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Post or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
 
 ### Managing comments
 
@@ -110,7 +111,8 @@ $postId is the post where the comment belongs.
 $text is the text of the comment.  
 $banCheck states if a ban check on the user will be performed.  
 
-Use the `getComment($idComment)` and `deleteComment($idComment)` methods to respectively get and delete a comment.
+Use the `getComment($idComment)` and `deleteComment($idComment, MbUserInterface $user = NULL)` methods to respectively get and delete a comment.  
+In the `deleteComment` method, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Comment or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
 
 ### Managing likes
 
@@ -177,6 +179,8 @@ Pull requests are welcome, especially for the to do list below.
 
 ## To do list
 
+- editing posts/comments
+- soft delete
 - images handling
 - emoticons management
 

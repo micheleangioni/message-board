@@ -23,4 +23,8 @@ interface MbUserInterface {
 
     public function isBanned();
 
+    public function hasMbRole($name);
+
+    public function canMb($permission);
+
 }

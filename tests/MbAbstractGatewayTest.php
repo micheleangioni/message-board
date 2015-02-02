@@ -32,6 +32,8 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             '--path' => '../tests/migrations',
         ));
 
+        // Call seeding
+        Artisan::call('db:seed', ['--class' => 'MessageBoardSeeder']);
     }
 
     /**
@@ -393,6 +395,183 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     // <<< --- INTEGRATION TESTS --- >>>
 
+    public function testBanUser()
+    {
+        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
+        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
+        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
+        $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
+        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
+        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
+
+        $app = $this->app;
+
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+            $purifier, $viewRepo, $app);
+
+        $user = new User;
+        $user->id = 1;
+        $user->save();
+
+        $this->assertFalse($user->isBanned());
+
+        $mbGateway->banUser($user, 3, $reason = 'Ban');
+        $user = User::find(1);
+        $this->assertTrue($user->isBanned());
+    }
+
+    /**
+     * @expectedException \MicheleAngioni\Support\Exceptions\PermissionsException
+     */
+    public function testDeletePostByOtherUser()
+    {
+        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
+        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
+        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
+        $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
+        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
+        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
+
+        $app = $this->app;
+
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+            $purifier, $viewRepo, $app);
+
+        $user = new User;
+        $user->id = 1;
+        $user->save();
+
+        $user2 = new User;
+        $user2->id = 2;
+        $user2->save();
+
+        $post = $user->mbPosts()->create(array(
+            'post_type' => 'public_mess',
+            'poster_id' => $user->id,
+            'text' => 'text'
+        ));
+
+        $mbGateway->deletePost($post->id, $user2);
+    }
+
+    public function testDeletePostByAdmin()
+    {
+        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
+        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
+        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
+        $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
+        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
+        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
+
+        $app = $this->app;
+
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+            $purifier, $viewRepo, $app);
+
+        $user = new User;
+        $user->id = 1;
+        $user->save();
+
+        $user2 = new User;
+        $user2->id = 2;
+        $user2->save();
+
+        $roleRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentRoleRepository');
+        $role = $roleRepo->findOrFail(1);
+
+        $user2->attachMbRole($role);
+
+        $post = $user->mbPosts()->create(array(
+            'post_type' => 'public_mess',
+            'user_id' => $user->id,
+            'poster_id' => $user->id,
+            'text' => 'text'
+        ));
+
+        $this->assertTrue($mbGateway->deletePost($post->id, $user2));
+    }
+
+    /**
+     * @expectedException \MicheleAngioni\Support\Exceptions\PermissionsException
+     */
+    public function testDeleteCommentByOtherUser()
+    {
+        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
+        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
+        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
+        $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
+        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
+        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
+
+        $app = $this->app;
+
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+            $purifier, $viewRepo, $app);
+
+        $user = new User;
+        $user->id = 1;
+        $user->save();
+
+        $user2 = new User;
+        $user2->id = 2;
+        $user2->save();
+
+        $post = $user->mbPosts()->create(array(
+            'post_type' => 'public_mess',
+            'user_id' => $user->id,
+            'poster_id' => $user->id,
+            'text' => 'text'
+        ));
+
+        $comment = $post->comments()->create(array(
+            'user_id' => $user->id,
+            'text' => 'text'
+        ));
+
+        $mbGateway->deleteComment($comment->id, $user2);
+    }
+
+    public function testDeleteCommentByAdmin()
+    {
+        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
+        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
+        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
+        $purifier = $this->app->make('MicheleAngioni\MessageBoard\PurifierInterface');
+        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
+        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
+
+        $app = $this->app;
+
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+            $purifier, $viewRepo, $app);
+
+        $user = new User;
+        $user->id = 1;
+        $user->save();
+
+        $user2 = new User;
+        $user2->id = 2;
+        $user2->save();
+
+        $roleRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentRoleRepository');
+        $role = $roleRepo->findOrFail(1);
+
+        $user2->attachMbRole($role);
+
+        $post = $user->mbPosts()->create(array(
+            'post_type' => 'public_mess',
+            'user_id' => $user->id,
+            'poster_id' => $user->id,
+            'text' => 'text'
+        ));
+
+        $comment = $post->comments()->create(array(
+            'user_id' => $user->id,
+            'text' => 'text'
+        ));
+
+        $this->assertTrue($mbGateway->deleteComment($comment->id, $user2));
+    }
 
     public function testGetOrderedUserPosts()
     {
