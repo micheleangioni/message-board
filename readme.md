@@ -6,8 +6,10 @@
 
 ## Introduction
 
-The Message Board is a [Laravel 4](http://laravel.com) package which assigns a message board to each User, where posts and comments can be posted.  
+Message Board is a [Laravel 4](http://laravel.com) package which assigns a message board to each User, where posts and comments can be posted.  
 Bans and a roles and permission system is provided out of the box. Social features such as "likes" are included as well.
+
+**WARNING** : The Laravel 4 version will not be developed any more.
 
 ## Installation
 
@@ -171,19 +173,6 @@ $reason is the reason of the ban. Can be left blank.
 ## API Docs
 
 You can browse the Message Board [API Documentation](http://micheleangioni.github.io/message-board/master/index.html).
-
-## Contribution guidelines
-
-Please report any issue you find in the issues page.  
-Pull requests are welcome, especially for the to do list below.
-
-## To do list
-
-- editing posts/comments
-- soft delete
-- "report"/"abuse" feature
-- images handling
-- emoticons management
 
 ## License
 
