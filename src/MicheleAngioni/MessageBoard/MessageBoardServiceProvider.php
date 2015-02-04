@@ -18,7 +18,27 @@ class MessageBoardServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('michele-angioni/message-board');
+        // Publish config files
+        $this->publishes([
+            __DIR__.'/../../config/config.php' => config_path('ma_messageboard.php'),
+        ]);
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/config.php', 'ma_messageboard'
+        );
+
+        // Publish migrations
+        $this->publishes([
+            __DIR__.'/../../migrations/' => base_path('/database/migrations/messageboard'),
+        ]);
+
+        // Publish seeds
+        $this->publishes([
+            __DIR__.'/../../seeds/' => base_path('/database/seeds'),
+        ]);
+
+        // Load translations
+        $this->loadTranslationsFrom(__DIR__.'/../../seeds/', 'ma_messageboard');
 	}
 
     /**
@@ -30,7 +50,7 @@ class MessageBoardServiceProvider extends ServiceProvider {
 
         // Register the HTML Purifier
 
-        $this->app->register('Mews\Purifier\PurifierServiceProvider');
+        $this->app->register('Chromabits\Purifier\PurifierServiceProvider');
     }
 
     /**

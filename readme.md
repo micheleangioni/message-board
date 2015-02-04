@@ -6,23 +6,31 @@
 
 ## Introduction
 
-Message Board is a [Laravel 4](http://laravel.com) package which assigns a message board to each User, where posts and comments can be posted.  
+Message Board is a [Laravel 5](http://laravel.com) package which assigns a message board to each User, where posts and comments can be posted.  
 Bans and a roles and permission system is provided out of the box. Social features such as "likes" are included as well.
-
-**WARNING** : The Laravel 4 version will not be developed any more.
 
 ## Installation
 
-Message Board can be installed through Composer, first of all include `"michele-angioni/message-board": "0.1"` to your composer.json and run `composer update` or `composer install`.    
-Then run migrations and seeding through `php artisan migrate --package="michele-angioni/message-board"` and `php artisan db:seed --class="MessageBoardSeeder"` and you are done.
-
-## Configuration
-
-The Message Board Service Provider must be added in the app.php config file, under the providers array
+Message Board can be installed through Composer, first of all include `"michele-angioni/message-board": "dev-master"` to your composer.json and run `composer update` or `composer install`.  
+Then publish the Message Board conf and lang files through the artisan command `php artisan vendor:publish`. It will create the `ma_messageboard.php` file in your config directory.  
+You can now run migrations and seeding through `php artisan migrate --path="database/migrations/messageboard"` and `php artisan db:seed --class="MessageBoardSeeder"` and you are done.  
+Eventually add the Message Board Service Provider in the app.php config file, under the providers array
 
     'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
 
-Then add the `MbTrait` to your User model, which has also to implement the `MbUserInterface` so that Message Board classes can type hint it
+and you are done.
+
+If you are looking for the Laravel 4 version, check the not-anymore-maintained [0.1 version](https://github.com/micheleangioni/message-board/tree/6cf137951184597bec2eafa37134b7093d61fd64) and its documentation.
+
+## Configuration
+
+You can than edit the ma_messageboard.php file in your `app/config` directory.
+
+In particular it can be useful to define a named route for your User page and write it the in the conf file.
+
+## Usage
+
+First of all add the `MbTrait` to your User model, which has also to implement the `MbUserInterface` so that Message Board classes can type hint it
 
     <?php
 
@@ -41,13 +49,6 @@ Then add the `MbTrait` to your User model, which has also to implement the `MbUs
         protected $table = 'tb_users';
 
         [...]
-
-Even if not strictly needed, it is recommended to publish the Message Board conf and lang files through the artisan commands `php artisan config:publish michele-angioni/message-board` and `php artisan lang:publish michele-angioni/message-board`.  
-You can than edit the config.php file in your `app/config/packages/michele-angioni/message-board`.
-
-In particular it can be useful to define a named route for your User page and write it the in the conf file.
-
-## Usage
 
 The `MicheleAngioni\MessageBoard\AbstractMbGateway` class is a prototype of the Message Board Gateway which can be used to access all main features of the message board.
 
@@ -132,7 +133,7 @@ You can use the `createCodedPost(MbUserInterface $user, $messageType = 'public_m
 $user is an instance of your User model (which must implement the MbUserInterface) where the post will be posted.  
 $messageType defines the type of the message will be posted.  
 $code is the key of the lang file array which identifies the coded message.  
-$attributes defines a list of variables can be injected in the coded message. See the [Laravel localization documentation](http://laravel.com/docs/4.2/localization) for further details.
+$attributes defines a list of variables can be injected in the coded message. See the [Laravel localization documentation](http://laravel.com/docs/5.0/localization) for further details.
 
 If you want a deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
 
@@ -173,6 +174,21 @@ $reason is the reason of the ban. Can be left blank.
 ## API Docs
 
 You can browse the Message Board [API Documentation](http://micheleangioni.github.io/message-board/master/index.html).
+
+## Contribution guidelines
+
+Support follows PSR-1 and PSR-4 PHP coding standards, and semantic versioning.
+
+Please report any issue you find in the issues page.  
+Pull requests are welcome, especially for the to do list below.
+
+## To do list
+
+- editing posts/comments
+- soft delete
+- "report"/"abuse" feature
+- images handling
+- emoticons management
 
 ## License
 

@@ -1,6 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
-use Mews\Purifier\Purifier as HtmlPurifier;
+use Chromabits\Purifier\Contracts\Purifier as HtmlPurifier;
 
 class Purifier implements PurifierInterface {
 

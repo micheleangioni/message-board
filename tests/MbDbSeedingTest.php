@@ -10,7 +10,7 @@ class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
         parent::setUp();
 
         // Create an artisan object for calling migrations
-        $artisan = $this->app->make('artisan');
+        $artisan = $this->app->make('Illuminate\Contracts\Console\Kernel');
 
         // Call migrations
         $artisan->call('migrate', [
@@ -21,11 +21,22 @@ class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
         // Call migrations specific to our tests
         $artisan->call('migrate', array(
             '--database' => 'testbench',
-            '--path' => '/migrations',
+            '--path' => '../tests/migrations',
         ));
 
         // Call seeding
         Artisan::call('db:seed', ['--class' => 'MessageBoardSeeder']);
+    }
+
+    /**
+     * Get base path.
+     *
+     * @return string
+     */
+    protected function getBasePath()
+    {
+        // reset base path to point to our package's src directory
+        return __DIR__.'/../src';
     }
 
     /**
@@ -36,8 +47,6 @@ class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
      */
     protected function getEnvironmentSetUp($app)
     {
-        // reset base path to point to our package's src directory
-        $app['path.base'] = __DIR__ . '/../src';
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', array(
             'driver' => 'sqlite',
@@ -54,7 +63,7 @@ class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
      *
      * @return array
      */
-    protected function getPackageProviders()
+    protected function getPackageProviders($app)
     {
         return array(
             'Illuminate\Database\DatabaseServiceProvider',
@@ -72,7 +81,7 @@ class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
      *
      * @return array
      */
-    protected function getPackageAliases()
+    protected function getPackageAliases($app)
     {
         return array(
             'Config' => 'Illuminate\Support\Facades\Config',
