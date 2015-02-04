@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "etcinit/purifier": "dev-master",
+        "chromabits/purifier": "dev-master",
         "laravel/framework": "~5.0",
         "michele-angioni/support": "~2.0"
     },
