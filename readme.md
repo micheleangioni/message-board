@@ -19,7 +19,7 @@ Add the Message Board Service Provider in the app.php config file, under the pro
 
 You can now run migrations and seeding through `php artisan migrate --path="database/migrations/messageboard"` and `php artisan db:seed --class="MessageBoardSeeder"` and you are done.
 
-**N.B** : Message Board needs MicheleAngioni/Support 's Helpers facade to work, so be sure to register it in the app.php file under the aliases array as
+**N.B** : Message Board needs [MicheleAngioni/Support](https://github.com/micheleangioni/support)'s Helpers facade to work, so be sure to register it in the app.php file under the aliases array as
                                                                                                
     'Helpers' => 'MicheleAngioni\Support\Facades\Helpers'
 

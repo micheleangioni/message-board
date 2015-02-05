@@ -74,7 +74,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
         $this->likeRepo = $likeRepo;
 
-        $this->postsPerPage = $this->app['config']->get('message-board::posts_per_page');
+        $this->postsPerPage = $this->app['config']->get('ma_multilanguage.posts_per_page');
 
         $this->postRepo = $postRepo;
 
@@ -160,7 +160,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
         // Check if the message type is allowed
 
-        if(!in_array($messageType, $this->app['config']->get('message-board::message_types'))) {
+        if(!in_array($messageType, $this->app['config']->get('ma_multilanguage.message_types'))) {
             throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid message type.');
         }
 
@@ -554,7 +554,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     protected function getUserLink(MbUserInterface $user)
     {
-        return link_to_route($this->app['config']->get('message-board::user_named_route'), e($user->getUsername()), [$user->getPrimaryId()], []);
+        return link_to_route($this->app['config']->get('ma_multilanguage.user_named_route'), e($user->getUsername()), [$user->getPrimaryId()], []);
     }
 
 }
