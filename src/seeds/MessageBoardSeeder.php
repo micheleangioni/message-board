@@ -3,7 +3,7 @@
 use MicheleAngioni\MessageBoard\Models\Permission;
 use MicheleAngioni\MessageBoard\Models\Role;
 
-class MessageBoardSeeder extends Seeder {
+class MessageBoardSeeder extends Illuminate\Database\Seeder {
 
     /**
      * @var Role

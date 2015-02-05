@@ -637,12 +637,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "7c96b75441002fb6799a4e355f2190b9d905782d"
+                "reference": "0fd4d3d2dd97d5b1c937d4bb8f42f7a3776cf782"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/7c96b75441002fb6799a4e355f2190b9d905782d",
-                "reference": "7c96b75441002fb6799a4e355f2190b9d905782d",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/0fd4d3d2dd97d5b1c937d4bb8f42f7a3776cf782",
+                "reference": "0fd4d3d2dd97d5b1c937d4bb8f42f7a3776cf782",
                 "shasum": ""
             },
             "require": {
@@ -712,7 +712,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-02-01 15:53:05"
+            "time": "2015-02-04 20:51:56"
         },
         {
             "name": "michele-angioni/support",
@@ -1993,12 +1993,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "cce38ee95d444190e8aac2d46c6d5e7b94ea44ef"
+                "reference": "40d0e5ea061e0345053a5d5855a3adaab466d2f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/cce38ee95d444190e8aac2d46c6d5e7b94ea44ef",
-                "reference": "cce38ee95d444190e8aac2d46c6d5e7b94ea44ef",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/40d0e5ea061e0345053a5d5855a3adaab466d2f1",
+                "reference": "40d0e5ea061e0345053a5d5855a3adaab466d2f1",
                 "shasum": ""
             },
             "require": {
@@ -2027,7 +2027,7 @@
             ],
             "authors": [
                 {
-                    "name": "Padraic Brady",
+                    "name": "Pádraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 },
@@ -2051,7 +2051,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2015-01-18 20:11:41"
+            "time": "2015-02-04 20:38:41"
         },
         {
             "name": "orchestra/testbench",

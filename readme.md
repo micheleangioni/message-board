@@ -13,12 +13,15 @@ Bans and a roles and permission system is provided out of the box. Social featur
 
 Message Board can be installed through Composer, first of all include `"michele-angioni/message-board": "dev-master"` to your composer.json and run `composer update` or `composer install`.  
 Then publish the Message Board conf and lang files through the artisan command `php artisan vendor:publish`. It will create the `ma_messageboard.php` file in your config directory.  
-You can now run migrations and seeding through `php artisan migrate --path="database/migrations/messageboard"` and `php artisan db:seed --class="MessageBoardSeeder"` and you are done.  
-Eventually add the Message Board Service Provider in the app.php config file, under the providers array
+Add the Message Board Service Provider in the app.php config file, under the providers array
 
     'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
 
-and you are done.
+You can now run migrations and seeding through `php artisan migrate --path="database/migrations/messageboard"` and `php artisan db:seed --class="MessageBoardSeeder"` and you are done.
+
+**N.B** : Message Board needs MicheleAngioni/Support 's Helpers facade to work, so be sure to register it in the app.php file under the aliases array as
+                                                                                               
+    'Helpers' => 'MicheleAngioni\Support\Facades\Helpers'
 
 If you are looking for the Laravel 4 version, check the not-anymore-maintained [0.1 version](https://github.com/micheleangioni/message-board/tree/6cf137951184597bec2eafa37134b7093d61fd64) and its documentation.
 
