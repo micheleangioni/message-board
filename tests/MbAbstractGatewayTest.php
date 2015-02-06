@@ -95,6 +95,17 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         );
     }
 
+    /**
+     * Get application timezone.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return string|null
+     */
+    protected function getApplicationTimezone($app)
+    {
+        return 'UTC';
+    }
+
 
 	public function testCreateCodedPost()
 	{
