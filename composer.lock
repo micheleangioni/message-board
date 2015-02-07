@@ -512,12 +512,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "dfaca7cfc50e5dbde99e072e94eff01e78449de7"
+                "reference": "50f13bbf47b528cab1a49840e4f70ae5eb8278b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/dfaca7cfc50e5dbde99e072e94eff01e78449de7",
-                "reference": "dfaca7cfc50e5dbde99e072e94eff01e78449de7",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/50f13bbf47b528cab1a49840e4f70ae5eb8278b0",
+                "reference": "50f13bbf47b528cab1a49840e4f70ae5eb8278b0",
                 "shasum": ""
             },
             "require": {
@@ -629,7 +629,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-06 18:48:46"
+            "time": "2015-02-07 02:12:27"
         },
         {
             "name": "league/flysystem",
@@ -637,12 +637,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "4929157803d55a7ee93b6e8168c11bae42bffec9"
+                "reference": "f31699eafc5299f93ae55f9ca48cfe4f4695b8b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/4929157803d55a7ee93b6e8168c11bae42bffec9",
-                "reference": "4929157803d55a7ee93b6e8168c11bae42bffec9",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f31699eafc5299f93ae55f9ca48cfe4f4695b8b7",
+                "reference": "f31699eafc5299f93ae55f9ca48cfe4f4695b8b7",
                 "shasum": ""
             },
             "require": {
@@ -712,7 +712,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-02-06 16:19:49"
+            "time": "2015-02-07 09:24:21"
         },
         {
             "name": "michele-angioni/support",
@@ -2054,21 +2054,71 @@
             "time": "2015-02-05 10:30:00"
         },
         {
+            "name": "orchestra/database",
+            "version": "3.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orchestral/database.git",
+                "reference": "fbc3d141844034e8faf4740feec3cedeb06d1dfc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orchestral/database/zipball/fbc3d141844034e8faf4740feec3cedeb06d1dfc",
+                "reference": "fbc3d141844034e8faf4740feec3cedeb06d1dfc",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.0.*",
+                "illuminate/database": "5.0.*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Orchestra\\Database\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mior Muhammad Zaki",
+                    "email": "crynobone@gmail.com",
+                    "homepage": "https://github.com/crynobone"
+                },
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com",
+                    "homepage": "https://github.com/taylorotwell"
+                }
+            ],
+            "description": "Database Component for Orchestra Platform",
+            "time": "2015-02-07 05:27:44"
+        },
+        {
             "name": "orchestra/testbench",
             "version": "3.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench.git",
-                "reference": "a209cadc8a00ec7a3325677d95084aff94481b58"
+                "reference": "ab0fde7610985a689c19cf40c5daefdf633186e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench/zipball/a209cadc8a00ec7a3325677d95084aff94481b58",
-                "reference": "a209cadc8a00ec7a3325677d95084aff94481b58",
+                "url": "https://api.github.com/repos/orchestral/testbench/zipball/ab0fde7610985a689c19cf40c5daefdf633186e5",
+                "reference": "ab0fde7610985a689c19cf40c5daefdf633186e5",
                 "shasum": ""
             },
             "require": {
                 "laravel/framework": "5.0.*",
+                "orchestra/database": "3.0.*",
                 "php": ">=5.4.0"
             },
             "require-dev": {
@@ -2112,7 +2162,7 @@
                 "orchestral",
                 "testing"
             ],
-            "time": "2015-02-05 12:26:16"
+            "time": "2015-02-07 05:37:23"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
