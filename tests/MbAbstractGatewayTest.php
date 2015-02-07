@@ -74,6 +74,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
     protected function getPackageProviders($app)
     {
         return array(
+            'Chromabits\Purifier\PurifierServiceProvider',
             'MicheleAngioni\Support\SupportServiceProvider',
             'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
         );
@@ -417,6 +418,10 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     public function testBanUser()
     {
+        $app = $this->app;
+        $appPath = $app['path.base'];
+        $app['path.base'] = $appPath . '/..';
+
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
@@ -424,8 +429,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
-        $app = $this->app;
-
+        $app['path.base'] = $appPath;
         $app['config']['auth.model'] = 'User';
         $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
