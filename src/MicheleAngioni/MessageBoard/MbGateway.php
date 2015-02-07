@@ -44,7 +44,7 @@ class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
             $variables['user'] =  $this->getUserLink($user);
         }
 
-        return $this->mbText = Lang::get('message-board::messageboard.'."$code", $variables);
+        return $this->mbText = Lang::get('ma_messageboard::messageboard.'."$code", $variables);
     }
 
 }

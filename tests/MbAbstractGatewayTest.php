@@ -426,10 +426,16 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
+        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.posts_per_page'] = 20;
+        $app['config']['ma_messageboard.user_named_route'] = 'user';
+
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
 
         $user = new User;
+
         $user->id = 1;
         $user->save();
 
@@ -453,6 +459,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
         $app = $this->app;
+
+        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.posts_per_page'] = 20;
+        $app['config']['ma_messageboard.user_named_route'] = 'user';
 
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
@@ -484,6 +495,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
         $app = $this->app;
+
+        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.posts_per_page'] = 20;
+        $app['config']['ma_messageboard.user_named_route'] = 'user';
 
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
@@ -525,6 +541,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
+        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.posts_per_page'] = 20;
+        $app['config']['ma_messageboard.user_named_route'] = 'user';
+
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
 
@@ -561,6 +582,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
         $app = $this->app;
+
+        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.posts_per_page'] = 20;
+        $app['config']['ma_messageboard.user_named_route'] = 'user';
 
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
@@ -639,6 +665,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
+        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.posts_per_page'] = 20;
+        $app['config']['ma_messageboard.user_named_route'] = 'user';
+
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
                                                                 $purifier, $viewRepo, $app);
 
@@ -682,6 +713,8 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
+        Config::shouldReceive('get')->with('auth.model')->andReturn('User');
+
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
                                                                 $purifier, $viewRepo, $app);
 
@@ -715,10 +748,10 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->presenter = $this->mock('MicheleAngioni\Support\Presenters\Presenter');
         $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface');
 
-        Config::shouldReceive('get')->with('message-board::message_types')->andReturn(['public_mess','private_mess']);
-        Config::shouldReceive('get')->with('message-board::posts_per_page')->andReturn(20);
-        Config::shouldReceive('get')->with('message-board::user_named_route')->andReturn('user');
-
+        Config::shouldReceive('get')->with('ma_messageboard.message_types')->andReturn(['public_mess','private_mess']);
+        Config::shouldReceive('get')->with('ma_messageboard.posts_per_page')->andReturn(20);
+        Config::shouldReceive('get')->with('ma_messageboard.user_named_route')->andReturn('user');
+        
         return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
             [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->purifier,
                 $this->viewRepo]);

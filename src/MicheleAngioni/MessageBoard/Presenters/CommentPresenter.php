@@ -65,7 +65,7 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
     public function text()
     {
         if($this->escapeText) {
-            return $this->purifier->clean($this->object->text, Config::get('message-board::mb_purifier_conf'));
+            return $this->purifier->clean($this->object->text, Config::get('ma_messageboard.mb_purifier_conf'));
         }
 
         return $this->object->text;

@@ -9,3 +9,6 @@ Thumbs.db
 /.settings
 .env.*.php
 .env.php
+
+/src/storage/framework/services*.*
+/src/storage/logs/l*.*
