@@ -22,7 +22,7 @@ class Purifier implements PurifierInterface {
      *
      * @return string
      */
-    public function clean($dirtyText, array $configuration)
+    public function clean($dirtyText, $configuration = 'default')
     {
         return $this->purifier->clean($dirtyText, $configuration);
     }

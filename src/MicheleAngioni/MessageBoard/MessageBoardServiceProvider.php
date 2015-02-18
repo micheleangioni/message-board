@@ -49,7 +49,6 @@ class MessageBoardServiceProvider extends ServiceProvider {
         $this->registerRepositories();
 
         // Register the HTML Purifier
-
         $this->app->register('Chromabits\Purifier\PurifierServiceProvider');
     }
 

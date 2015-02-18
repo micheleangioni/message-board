@@ -2,6 +2,6 @@
 
 interface PurifierInterface {
 
-    function clean($dirtyText, array $configuration);
+    function clean($dirtyText, $config = 'default');
 
 }
