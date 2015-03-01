@@ -11,7 +11,11 @@ Bans and a roles and permission system is provided out of the box. Social featur
 
 ## Installation
 
-Message Board can be installed through Composer, first of all include `"michele-angioni/message-board": "dev-master"` to your composer.json and run `composer update` or `composer install`.  
+Message Board can be installed through Composer, first of all include 
+
+    `"michele-angioni/message-board": "dev-master"` 
+    
+into your composer.json and run `composer update` or `composer install`.  
 Then publish the Message Board conf and lang files through the artisan command `php artisan vendor:publish`. It will create the `ma_messageboard.php` file in your config directory.  
 Add the Message Board Service Provider in the app.php config file, under the providers array
 
