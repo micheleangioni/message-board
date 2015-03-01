@@ -76,21 +76,6 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
             throw new DatabaseException("DB error in ".__METHOD__.' at line '.__LINE__.':'. $e->getMessage());
         }
 
-        $posts->each(function($post)
-        {
-            $post->child_datetime = (string)$post->created_at;
-
-            if(!$post->comments->isEmpty())
-            {
-                $post->comments = $post->comments->sortBy('created_at');
-
-                if($post->child_datetime < $lastCommentDatetime = (string)$post->comments->last()->created_at)
-                {
-                    $post->child_datetime = $lastCommentDatetime;
-                };
-            }
-        });
-
         $posts = $posts->sortBy('child_datetime')->reverse();
 
         // Handle pagination

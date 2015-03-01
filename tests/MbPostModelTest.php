@@ -35,7 +35,7 @@ class MbPostModelTest extends Orchestra\Testbench\TestCase {
         $post->created_at = $datetime;
         $post->comments = new Illuminate\Support\Collection;
 
-        $this->assertEquals($datetime, $post->child_datetime);
+        $this->assertEquals($datetime, $post->childDatetime);
     }
 
     public function testPostWith1CommentGetChildDatetimeAttribute()
@@ -59,7 +59,7 @@ class MbPostModelTest extends Orchestra\Testbench\TestCase {
         $post->comments = new Illuminate\Support\Collection;
         $post->comments->push($comment);
 
-        $this->assertEquals($commentDatetime, $post->child_datetime);
+        $this->assertEquals($commentDatetime, $post->childDatetime);
     }
 
 

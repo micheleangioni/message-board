@@ -17,7 +17,7 @@ class Post extends \Illuminate\Database\Eloquent\Model {
     /**
      * @var string
      */
-    protected $child_datetime;
+    protected $childDatetime;
 
 
     public function comments()
@@ -44,29 +44,15 @@ class Post extends \Illuminate\Database\Eloquent\Model {
     // Custom Attributes
 
     /**
-     * Define the custom_datetime attribute, i.e. the most recent datetime of the post AND its comments.
-     * If the attribute is already defined, return it. Otherwise compute and then return it.
+     * Return the child datetime attribute.
      *
      * @return string
      */
     public function getChildDatetimeAttribute()
     {
-        if(!$this->child_datetime)
-        {
-            $this->child_datetime = (string)$this->created_at;
+        $this->setChildDatetime();
 
-            if(!$this->comments->isEmpty())
-            {
-                $comments = $this->comments->sortBy('created_at');
-
-                if($this->child_datetime < $lastCommentDatetime = (string)$comments->last()->created_at)
-                {
-                    $this->child_datetime = $lastCommentDatetime;
-                }
-            }
-        }
-
-        return $this->child_datetime;
+        return $this->childDatetime;
     }
 
     /**
@@ -83,6 +69,25 @@ class Post extends \Illuminate\Database\Eloquent\Model {
         $this->likes()->delete();
 
         parent::delete();
+    }
+
+    /**
+     * Set the custom_datetime attribute, i.e. the most recent datetime of the post AND its comments.
+     * If the attribute is already defined, return it. Otherwise compute and then return it.
+     */
+    public function setChildDatetime()
+    {
+        $this->childDatetime = (string)$this->created_at;
+
+        if(!$this->comments->isEmpty())
+        {
+            $comments = $this->comments->sortBy('created_at');
+
+            if($this->childDatetime < $lastCommentDatetime = (string)$comments->last()->created_at)
+            {
+                $this->childDatetime = $lastCommentDatetime;
+            }
+        }
     }
 
 }
