@@ -102,6 +102,10 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
             });
         }
 
+        if($this->isLiked) {
+            return true;
+        }
+
         return $this->isLiked = false;
     }
 
