@@ -173,10 +173,24 @@ A new permission can be created with `the createPermission($name)` method.
 
 ## Bans
 
-Message Boards supports also user bans. Through AbstractMbGateway's method `banUser(MbUserInterface $user, $days, $reason = '')` a user can be banned, i.e he/she won't be able to write new posts and comments.  
+Message Board supports also user bans. Through AbstractMbGateway's method `banUser(MbUserInterface $user, $days, $reason = '')` a user can be banned, i.e he/she won't be able to write new posts and comments.  
 $user is an instance of your User model (which must implement the MbUserInterface). He/she is the user who will get banned.    
 $days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative.  
 $reason is the reason of the ban. Can be left blank.    
+
+## Events
+
+Several events are fired when main operation occurs:
+
+ -  MicheleAngioni\MessageBoard\Events\CommentCreate
+ -  MicheleAngioni\MessageBoard\Events\CommentDelete
+ -  MicheleAngioni\MessageBoard\Events\LikeCreate
+ -  MicheleAngioni\MessageBoard\Events\LikeDestroy
+ -  MicheleAngioni\MessageBoard\Events\PostCreate
+ -  MicheleAngioni\MessageBoard\Events\PostDelete
+ -  MicheleAngioni\MessageBoard\Events\rBanned
+
+This way creating listeners in your application is straightforward.
 
 ## API Docs
 

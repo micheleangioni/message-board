@@ -12,6 +12,7 @@
     "require": {
         "php": ">=5.4.0",
         "chromabits/purifier": "dev-master",
+        "illuminate/html": "5.*",
         "laravel/framework": "~5.0",
         "michele-angioni/support": "~2.0"
     },

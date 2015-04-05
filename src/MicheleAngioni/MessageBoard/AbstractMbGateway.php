@@ -2,6 +2,13 @@
 
 use Helpers;
 use Illuminate\Support\Collection;
+use MicheleAngioni\MessageBoard\Events\CommentCreate;
+use MicheleAngioni\MessageBoard\Events\CommentDelete;
+use MicheleAngioni\MessageBoard\Events\LikeCreate;
+use MicheleAngioni\MessageBoard\Events\LikeDestroy;
+use MicheleAngioni\MessageBoard\Events\PostCreate;
+use MicheleAngioni\MessageBoard\Events\PostDelete;
+use MicheleAngioni\MessageBoard\Events\UserBanned;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\MessageBoard\Models\Post;
@@ -13,6 +20,7 @@ use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
 use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
+use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use InvalidArgumentException;
 use MicheleAngioni\Support\Exceptions\PermissionsException;
@@ -120,7 +128,12 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             $data['is_read'] = 1;
         }
 
-        return $this->postRepo->create($data);
+        $post = $this->postRepo->create($data);
+
+        // Fire event
+        Event::fire(new PostCreate($post));
+
+        return $post;
     }
 
     /**
@@ -173,7 +186,12 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             $data['is_read'] = 1;
         }
 
-        return $this->postRepo->create($data);
+        $post = $this->postRepo->create($data);
+
+        // Fire event
+        Event::fire(new PostCreate($post));
+
+        return $post;
     }
 
     /**
@@ -191,7 +209,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
     /**
      * Delete input Post. Return true on success.
-     * If a User is provided as second argument, first check if he/she can delete it.
+     * If a User is provided as second argument, a check will be performed if he/she can delete the Post.
      *
      * @param  int              $idPost
      * @param  MbUserInterface  $user
@@ -200,14 +218,18 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     public function deletePost($idPost, MbUserInterface $user = NULL)
     {
-        if($user) {
-            $post = $this->getPost($idPost);
+        $post = $this->getPost($idPost);
 
+        if($user) {
             if(!$this->userCanDeleteEntity($user, $post)) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " can not delete post with id $idPost.");
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot delete post with id $idPost.");
             }
         }
 
+        // Fire Event
+        Event::fire(new PostDelete($post));
+
+        // Delete Post
         $this->postRepo->destroy($idPost);
 
         return true;
@@ -232,11 +254,16 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             }
         }
 
-        return $this->commentRepo->create(array(
+        $comment = $this->commentRepo->create([
             'post_id' => $postId,
             'user_id' => $user->getPrimaryId(),
             'text' => $text,
-        ));
+        ]);
+
+        // Fire Event
+        Event::fire(new CommentCreate($comment));
+
+        return $comment;
     }
 
     /**
@@ -254,21 +281,27 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
 
     /**
      * Delete input Comment. Return true on success.
-     * If a User is provided as second argument, first check if he/she can delete it.
+     * If a User is provided as second argument, a check will be performed if he/she can delete the Comment.
      *
      * @param  int  $idComment
+     * @param  MbUserInterface  $user
+     *
      * @return bool
      */
     public function deleteComment($idComment, MbUserInterface $user = NULL)
     {
-        if($user) {
-            $comment = $this->getComment($idComment);
+        $comment = $this->getComment($idComment);
 
+        if($user) {
             if(!$this->userCanDeleteEntity($user, $comment)) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " can not delete comment with id $idComment.");
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot delete comment with id $idComment.");
             }
         }
 
+        // Fire Event
+        Event::fire(new CommentDelete($comment));
+
+        // Delete Comment
         $this->commentRepo->destroy($idComment);
 
         return true;
@@ -368,7 +401,12 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         $like = $this->likeRepo->getUserEntityLike($entity, $idUser);
 
         if(!$like) {
-            return $entity->likes()->create(['user_id' => $idUser]);
+            $like =  $entity->likes()->create(['user_id' => $idUser]);
+
+            // Fire Event
+            Event::fire(new LikeCreate($like));
+
+            return $like;
         }
         else {
             return $like;
@@ -391,6 +429,9 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         $like = $this->likeRepo->getUserEntityLike($entity, $idUser);
 
         if($like) {
+            // Fire Event
+            Event::fire(new LikeDestroy($like));
+
             $like->delete();
         }
 
@@ -537,11 +578,14 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             $ban->save();
         }
         else {
-            $user->mbBans()->create(array(
+            $ban = $user->mbBans()->create(array(
                 'reason' => $reason,
                 'until' => Helpers::getDate(max($days,0)),
             ));
         }
+
+        // Fire Event
+        Event::fire(new UserBanned($ban));
 
         return true;
     }

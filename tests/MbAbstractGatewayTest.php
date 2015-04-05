@@ -113,6 +113,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $stub = $this->getAbstractGatewayStub();
 
         $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
+        $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
 
         $user->shouldReceive('getPrimaryId')
             ->once()
@@ -124,9 +125,12 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $this->postRepo->shouldReceive('create')
             ->once()
-            ->andReturn(true);
+            ->andReturn($post);
 
-        $this->assertTrue($stub->createCodedPost($user, 'public_mess', 1, []));
+        Event::shouldReceive('fire')->once();
+
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post',
+            $stub->createCodedPost($user, 'public_mess', 1, []));
     }
 
     public function testCreatePost()
@@ -134,6 +138,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $stub = $this->getAbstractGatewayStub();
 
         $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
+        $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
 
         $user->shouldReceive('getPrimaryId')
             ->once()
@@ -141,7 +146,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $this->postRepo->shouldReceive('create')
             ->once()
-            ->andReturn(true);
+            ->andReturn($post);
 
         $poster = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
 
@@ -153,7 +158,10 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->once()
             ->andReturn(false);
 
-        $this->assertTrue($stub->createPost($user, $poster, 'public_mess', 'text'));
+        Event::shouldReceive('fire')->once();
+
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post',
+            $stub->createPost($user, $poster, 'public_mess', 'text'));
     }
 
     /**
@@ -180,30 +188,38 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     public function testGetPost()
     {
-        $isUser = 10;
+        $idPost = 10;
 
         $stub = $this->getAbstractGatewayStub();
 
         $this->postRepo->shouldReceive('findOrFail')
             ->once()
-            ->with($isUser)
+            ->with($idPost)
             ->andReturn(true);
 
-        $this->assertTrue($stub->getPost($isUser));
+        $this->assertTrue($stub->getPost($idPost));
     }
 
     public function testDeletePost()
     {
-        $isUser = 10;
+        $idPost = 10;
 
         $stub = $this->getAbstractGatewayStub();
+        $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
+
+        $this->postRepo->shouldReceive('findOrFail')
+            ->once()
+            ->with($idPost)
+            ->andReturn($post);
 
         $this->postRepo->shouldReceive('destroy')
             ->once()
-            ->with($isUser)
+            ->with($idPost)
             ->andReturn(true);
 
-        $this->assertTrue($stub->deletePost($isUser));
+        Event::shouldReceive('fire')->once();
+
+        $this->assertTrue($stub->deletePost($idPost));
     }
 
     public function testCreateComment()
@@ -211,6 +227,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $stub = $this->getAbstractGatewayStub();
 
         $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
+        $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
 
         $user->shouldReceive('getPrimaryId')
             ->once()
@@ -222,9 +239,12 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $this->commentRepo->shouldReceive('create')
             ->once()
-            ->andReturn(true);
+            ->andReturn($comment);
 
-        $this->assertTrue($stub->createComment($user, 1, 'ciao'));
+        Event::shouldReceive('fire')->once();
+
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Comment',
+            $stub->createComment($user, 1, 'ciao'));
     }
 
     /**
@@ -233,7 +253,6 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
     public function testCreateCommentByBannedUser()
     {
         $stub = $this->getAbstractGatewayStub();
-
         $user = $this->mock('MicheleAngioni\MessageBoard\MbUserInterface');
 
         $user->shouldReceive('getUsername')
@@ -266,11 +285,19 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $idComment = 10;
 
         $stub = $this->getAbstractGatewayStub();
+        $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
+
+        $this->commentRepo->shouldReceive('findOrFail')
+            ->once()
+            ->with($idComment)
+            ->andReturn($comment);
 
         $this->commentRepo->shouldReceive('destroy')
             ->once()
             ->with($idComment)
             ->andReturn(true);
+
+        Event::shouldReceive('fire')->once();
 
         $this->assertTrue($stub->deleteComment($idComment));
     }
@@ -281,8 +308,8 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $likableEntityId = 10;
 
         $stub = $this->getAbstractGatewayStub();
-
         $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
+        $like = $this->mock('MicheleAngioni\MessageBoard\Models\Like');
 
         $this->postRepo->shouldReceive('findOrFail')
             ->once()
@@ -298,13 +325,16 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $likesMock->shouldReceive('create')
             ->once()
-            ->andReturn(true);
+            ->andReturn($like);
 
         $post->shouldReceive('likes')
             ->once()
             ->andReturn($likesMock);
 
-        $this->assertTrue($stub->createLike($idUser, $likableEntityId, 'post'));
+        Event::shouldReceive('fire')->once();
+
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Like',
+            $stub->createLike($idUser, $likableEntityId, 'post'));
     }
 
     public function testCreatePostLikeAlreadyLiked()
@@ -335,8 +365,8 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $likableEntityId = 10;
 
         $stub = $this->getAbstractGatewayStub();
-
         $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
+        $like = $this->mock('MicheleAngioni\MessageBoard\Models\Like');
 
         $this->commentRepo->shouldReceive('findOrFail')
             ->once()
@@ -352,13 +382,16 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $likesMock->shouldReceive('create')
             ->once()
-            ->andReturn(true);
+            ->andReturn($like);
 
         $comment->shouldReceive('likes')
             ->once()
             ->andReturn($likesMock);
 
-        $this->assertTrue($stub->createLike($idUser, $likableEntityId, 'comment'));
+        Event::shouldReceive('fire')->once();
+
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Like',
+            $stub->createLike($idUser, $likableEntityId, 'comment'));
     }
 
     public function testDeletePostLike()
