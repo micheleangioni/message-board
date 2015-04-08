@@ -188,7 +188,7 @@ Several events are fired when main operation occurs:
  -  MicheleAngioni\MessageBoard\Events\LikeDestroy
  -  MicheleAngioni\MessageBoard\Events\PostCreate
  -  MicheleAngioni\MessageBoard\Events\PostDelete
- -  MicheleAngioni\MessageBoard\Events\rBanned
+ -  MicheleAngioni\MessageBoard\Events\UserBanned
 
 This way creating listeners in your application is straightforward.
 
