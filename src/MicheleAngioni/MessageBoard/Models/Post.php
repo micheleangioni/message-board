@@ -71,6 +71,32 @@ class Post extends \Illuminate\Database\Eloquent\Model {
         parent::delete();
     }
 
+
+    // Getters
+
+    public function getAuthor()
+    {
+        return $this->poster;
+    }
+
+    public function getAuthorId()
+    {
+        return $this->poster_id;
+    }
+
+    public function getOwner()
+    {
+        return $this->user;
+    }
+
+    public function getOwnerId()
+    {
+        return $this->user_id;
+    }
+
+
+    // Other Methods
+
     /**
      * Set the custom_datetime attribute, i.e. the most recent datetime of the post AND its comments.
      * If the attribute is already defined, return it. Otherwise compute and then return it.

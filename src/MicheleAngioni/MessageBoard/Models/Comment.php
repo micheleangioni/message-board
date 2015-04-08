@@ -40,4 +40,27 @@ class Comment extends \Illuminate\Database\Eloquent\Model {
         parent::delete();
     }
 
+
+    // Getters
+
+    public function getAuthor()
+    {
+        return $this->user;
+    }
+
+    public function getAuthorId()
+    {
+        return $this->user_id;
+    }
+
+    public function getOwner()
+    {
+        return $this->post->getOwner();
+    }
+
+    public function getOwnerId()
+    {
+        return $this->post->getOwnerId();
+    }
+
 }
