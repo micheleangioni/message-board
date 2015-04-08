@@ -12,7 +12,6 @@ class Like extends \Illuminate\Database\Eloquent\Model {
     protected $guarded = array('id');
 
 
-
     public function likable()
     {
         return $this->morphTo();
@@ -21,6 +20,17 @@ class Like extends \Illuminate\Database\Eloquent\Model {
     public function user()
     {
         return $this->belongsTo(\Config::get('auth.model'));
+    }
+
+
+    public function getLikableId()
+    {
+        return $this->likable_id;
+    }
+
+    public function getLikableType()
+    {
+        return $this->likable_type;
     }
 
 }
