@@ -16,7 +16,7 @@ class CreateTbMessboardRolesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name', 30)->unique('`mb_roles_name_unique`');
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

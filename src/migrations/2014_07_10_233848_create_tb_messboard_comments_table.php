@@ -18,7 +18,7 @@ class CreateTbMessboardCommentsTable extends Migration {
 			$table->integer('post_id')->unsigned();
 			$table->integer('user_id')->unsigned();
 			$table->text('text', 65535);
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

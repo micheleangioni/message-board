@@ -18,7 +18,7 @@ class CreateTbMessboardBansTable extends Migration {
 			$table->integer('user_id')->unsigned();
 			$table->text('reason');
 			$table->date('until');
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

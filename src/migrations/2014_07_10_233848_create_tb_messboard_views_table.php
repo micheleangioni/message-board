@@ -17,7 +17,7 @@ class CreateTbMessboardViewsTable extends Migration {
 			$table->increments('id');
 			$table->integer('user_id')->unsigned()->unique('`user_id`');
 			$table->dateTime('datetime');
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

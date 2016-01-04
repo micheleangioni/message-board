@@ -16,7 +16,7 @@ class CreateTbMessboardPermissionsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name', 30)->unique('`mb_permissions_name_unique`');
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

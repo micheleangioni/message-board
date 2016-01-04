@@ -20,7 +20,7 @@ class CreateTbMessboardPostsTable extends Migration {
 			$table->integer('poster_id')->unsigned()->nullable();
 			$table->text('text', 65535);
 			$table->boolean('is_read')->default(1);
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

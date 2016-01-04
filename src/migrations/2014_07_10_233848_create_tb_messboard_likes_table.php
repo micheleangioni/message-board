@@ -18,7 +18,7 @@ class CreateTbMessboardLikesTable extends Migration {
 			$table->integer('user_id')->unsigned();
 			$table->integer('likable_id')->unsigned();
 			$table->string('likable_type', 60);
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 
