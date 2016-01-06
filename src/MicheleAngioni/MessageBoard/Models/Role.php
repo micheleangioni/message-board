@@ -19,7 +19,7 @@ class Role extends \Illuminate\Database\Eloquent\Model {
 
     public function users()
     {
-        return $this->belongsToMany(\Config::get('auth.model'), 'tb_messboard_user_role', 'role_id')->withTimestamps();
+        return $this->belongsToMany(\Config::get('ma_messageboard.model'), 'tb_messboard_user_role', 'role_id')->withTimestamps();
     }
 
 }

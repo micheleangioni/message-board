@@ -12,7 +12,6 @@ class Comment extends \Illuminate\Database\Eloquent\Model {
     protected $guarded = array('id');
 
 
-
     public function likes()
     {
         return $this->morphMany('\MicheleAngioni\MessageBoard\Models\Like', 'likable');
@@ -25,7 +24,7 @@ class Comment extends \Illuminate\Database\Eloquent\Model {
 
     public function user()
     {
-        return $this->belongsTo(\Config::get('auth.model'));
+        return $this->belongsTo(\Config::get('ma_messageboard.model'));
     }
 
 

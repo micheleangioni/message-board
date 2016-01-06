@@ -4,6 +4,17 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
+    | Model
+    |--------------------------------------------------------------------------
+    |
+    | This is the Model used to send messages to and from.
+    |
+    */
+
+    'model' => App\User::class,
+
+    /*
+    |--------------------------------------------------------------------------
     | Message Types
     |--------------------------------------------------------------------------
     |
@@ -13,10 +24,10 @@ return array(
     |
     */
 
-    'message_types' => array(
+    'message_types' => [
         'public_mess',
         'private_mess'
-    ),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -52,11 +63,11 @@ return array(
     |
     */
 
-    'mb_purifier_conf' => array(
+    'mb_purifier_conf' => [
         'HTML.Doctype'             => 'XHTML 1.0 Strict',
         'HTML.Allowed'             => 'b,i,a[href|title]',
         'CSS.AllowedProperties'    => '',
         'AutoFormat.AutoParagraph' => false,
         'AutoFormat.RemoveEmpty'   => true,
-    ),
+    ]
 );

@@ -13,7 +13,7 @@ Bans and a roles and permission system is provided out of the box. Social featur
 
 Message Board can be installed through Composer, first of all include 
 
-    `"michele-angioni/message-board": "dev-master"` 
+    `"michele-angioni/message-board": "~0.3"` 
     
 into your composer.json and run `composer update` or `composer install`.  
 Then publish the Message Board conf and lang files through the artisan command `php artisan vendor:publish`. It will create the `ma_messageboard.php` file in your config directory.  
@@ -32,8 +32,9 @@ If you are looking for the Laravel 4 version, check the not-anymore-maintained [
 ## Configuration
 
 You can than edit the ma_messageboard.php file in your `app/config` directory.
+You need to set the correct Model you want to associate a Message Board. Usually it is the Auth model used by Laravel.
 
-In particular it can be useful to define a named route for your User page and write it the in the conf file.
+Additionally, it can be useful to define a named route for your User page.
 
 ## Usage
 

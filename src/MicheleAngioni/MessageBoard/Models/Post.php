@@ -32,12 +32,12 @@ class Post extends \Illuminate\Database\Eloquent\Model {
 
     public function poster()
     {
-        return $this->belongsTo(\Config::get('auth.model'));
+        return $this->belongsTo(\Config::get('ma_messageboard.model'));
     }
 
     public function user()
     {
-        return $this->belongsTo(\Config::get('auth.model'));
+        return $this->belongsTo(\Config::get('ma_messageboard.model'));
     }
 
 
@@ -105,12 +105,10 @@ class Post extends \Illuminate\Database\Eloquent\Model {
     {
         $this->childDatetime = (string)$this->created_at;
 
-        if(!$this->comments->isEmpty())
-        {
+        if(!$this->comments->isEmpty()) {
             $comments = $this->comments->sortBy('created_at');
 
-            if($this->childDatetime < $lastCommentDatetime = (string)$comments->last()->created_at)
-            {
+            if($this->childDatetime < $lastCommentDatetime = (string)$comments->last()->created_at) {
                 $this->childDatetime = $lastCommentDatetime;
             }
         }

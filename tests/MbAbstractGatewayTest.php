@@ -463,7 +463,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
 
         $app['path.base'] = $appPath;
-        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
@@ -497,7 +497,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
-        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
@@ -533,7 +533,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
-        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
@@ -578,7 +578,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
-        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
@@ -620,7 +620,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
-        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
@@ -702,7 +702,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
-        $app['config']['auth.model'] = 'User';
+        $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
@@ -750,7 +750,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app = $this->app;
 
-        Config::shouldReceive('get')->with('auth.model')->andReturn('User');
+        Config::shouldReceive('get')->with('ma_messageboard.model')->andReturn('User');
 
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
                                                                 $purifier, $viewRepo, $app);

@@ -19,7 +19,7 @@ class Like extends \Illuminate\Database\Eloquent\Model {
 
     public function user()
     {
-        return $this->belongsTo(\Config::get('auth.model'));
+        return $this->belongsTo(\Config::get('ma_messageboard.model'));
     }
 
 

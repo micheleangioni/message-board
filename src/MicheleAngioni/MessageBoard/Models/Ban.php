@@ -12,10 +12,9 @@ class Ban extends \Illuminate\Database\Eloquent\Model {
     protected $guarded = array('id', 'user_id');
 
 
-
     public function user()
     {
-        return $this->belongsTo(\Config::get('auth.model'));
+        return $this->belongsTo(\Config::get('ma_messageboard.model'));
     }
 
 }

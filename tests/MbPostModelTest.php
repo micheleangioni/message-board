@@ -17,7 +17,7 @@ class MbPostModelTest extends Orchestra\Testbench\TestCase {
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('auth.model', 'User');
+        $app['config']->set('ma_messageboard.model', 'User');
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', array(
             'driver' => 'sqlite',
