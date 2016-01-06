@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.9",
         "chromabits/purifier": "dev-master",
         "illuminate/html": "5.*",
         "laravel/framework": "~5.0",
