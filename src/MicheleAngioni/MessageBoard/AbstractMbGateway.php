@@ -24,6 +24,7 @@ use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use InvalidArgumentException;
 use MicheleAngioni\Support\Exceptions\PermissionsException;
+use RuntimeException;
 
 abstract class AbstractMbGateway implements MbGatewayInterface {
 
@@ -480,7 +481,11 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid post type.');
         }
 
-        $posts = $this->postRepo->getOrderedPosts($user->getPrimaryId(), $messageType, $page, $limit);
+        try {
+            $posts = $this->postRepo->getOrderedPosts($user->getPrimaryId(), $messageType, $page, $limit);
+        } catch (\Exception $e) {
+            throw new RuntimeException("Caught RuntimeException in ".__METHOD__.' at line '.__LINE__.':'. $e->getMessage());
+        }
 
         if($applyPresenter) {
             if($userVisiting) {
@@ -535,10 +540,10 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             return $collection;
         }
 
-        if($collection[0] instanceof Comment) {
+        if($collection->first() instanceof Comment) {
             return $this->presenter->collection($collection, new CommentPresenter($user, $escapeText, $this->purifier));
         }
-        elseif($collection[0] instanceof Post) {
+        elseif($collection->first() instanceof Post) {
 
             $newCollection = new Collection;
 

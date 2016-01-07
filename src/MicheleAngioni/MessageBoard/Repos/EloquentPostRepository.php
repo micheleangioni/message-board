@@ -81,7 +81,7 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
         // Handle pagination
 
         $offset = $limit * ($page - 1);
-        $pagedPosts = $posts->slice($offset, $limit);
+        $pagedPosts = $posts->slice($offset, $limit)->values();
 
         return $pagedPosts;
     }
