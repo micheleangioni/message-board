@@ -62,4 +62,9 @@ class Comment extends \Illuminate\Database\Eloquent\Model {
         return $this->post->getOwnerId();
     }
 
+    public function getText()
+    {
+        return $this->text;
+    }
+
 }

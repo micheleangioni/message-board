@@ -85,6 +85,26 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     }
 
     /**
+     * Return Post text, property escaped if requested
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text();
+    }
+
+    /**
+     * Return false if the Post has been read, false otherwise.
+     *
+     * @return bool
+     */
+    public function isRead()
+    {
+        return $this->object->isRead();
+    }
+
+    /**
      * Return if the post is liked by the input user
      *
      * @return bool
@@ -96,9 +116,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
         }
 
         if(!$this->object->likes->isEmpty()) {
-
-            $this->object->likes->each(function($like)
-            {
+            $this->object->likes->each(function($like) {
                 if($like->user_id == $this->user->getPrimaryId()) {
                     return $this->isLiked = true;
                 }

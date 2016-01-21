@@ -94,8 +94,28 @@ class Post extends \Illuminate\Database\Eloquent\Model {
         return $this->user_id;
     }
 
+    public function getText()
+    {
+        return $this->text;
+    }
+
 
     // Other Methods
+
+    /**
+     * Return false if the Post has been read, false otherwise.
+     *
+     * @return bool
+     */
+    public function isRead()
+    {
+        if($this->is_read) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
     /**
      * Set the custom_datetime attribute, i.e. the most recent datetime of the post AND its comments.

@@ -76,9 +76,15 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
         return $this->object->created_at;
     }
 
-    public function is_read()
+
+    /**
+     * Return Comment text, property escaped if requested
+     *
+     * @return string
+     */
+    public function getText()
     {
-        return $this->object->is_read;
+        return $this->text();
     }
 
     /**
@@ -93,9 +99,7 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
         }
 
         if(!$this->object->likes->isEmpty()) {
-
-            $this->object->likes->each(function($like)
-            {
+            $this->object->likes->each(function($like) {
                 if($like->user_id == $this->user->getPrimaryId()) {
                     return $this->isLiked = true;
                 }
