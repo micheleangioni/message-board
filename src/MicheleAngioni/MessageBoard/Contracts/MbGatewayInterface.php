@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard\Contracts;
+
+use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 
 interface MbGatewayInterface {
 

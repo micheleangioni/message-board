@@ -1,7 +1,7 @@
 <?php namespace MicheleAngioni\MessageBoard\Presenters;
 
-use MicheleAngioni\MessageBoard\PurifierInterface;
-use MicheleAngioni\MessageBoard\MbUserInterface;
+use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
+use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
 use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\Support\Presenters\AbstractPresenter;
 use MicheleAngioni\Support\Presenters\PresentableInterface;

@@ -1,6 +1,7 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
 use Chromabits\Purifier\Contracts\Purifier as HtmlPurifier;
+use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
 
 class Purifier implements PurifierInterface {
 

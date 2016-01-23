@@ -1,10 +1,12 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
-use MicheleAngioni\MessageBoard\PurifierInterface;
-use MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface as CommentRepo;
-use MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface as LikeRepo;
-use MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface as PostRepo;
-use MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface as ViewRepo;
+use MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface as CommentRepo;
+use MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface as LikeRepo;
+use MicheleAngioni\MessageBoard\Contracts\MbGatewayInterface;
+use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
+use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface as PostRepo;
+use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
+use MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface as ViewRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
 use Lang;
 use InvalidArgumentException;

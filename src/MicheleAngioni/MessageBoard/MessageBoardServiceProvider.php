@@ -58,37 +58,37 @@ class MessageBoardServiceProvider extends ServiceProvider {
     protected function registerRepositories()
     {
         $this->app->bind(
-            'MicheleAngioni\MessageBoard\Repos\CommentRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository'
         );
 
         $this->app->bind(
-            'MicheleAngioni\MessageBoard\Repos\LikeRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository'
         );
 
         $this->app->bind(
-            'MicheleAngioni\MessageBoard\Repos\PermissionRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Contracts\PermissionRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentPermissionRepository'
         );
 
         $this->app->bind(
-            'MicheleAngioni\MessageBoard\Repos\PostRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentPostRepository'
         );
 
         $this->app->bind(
-            'MicheleAngioni\MessageBoard\Repos\RoleRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Contracts\RoleRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentRoleRepository'
         );
 
         $this->app->bind(
-            'MicheleAngioni\MessageBoard\Repos\ViewRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentViewRepository'
         );
 
         $this->app->bind(
-            'MicheleAngioni\MessageBoard\PurifierInterface',
+            'MicheleAngioni\MessageBoard\Contracts\PurifierInterface',
             'MicheleAngioni\MessageBoard\Purifier'
         );
     }

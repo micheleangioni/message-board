@@ -3,6 +3,7 @@
 use Helpers;
 use Illuminate\Support\Collection;
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
+use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface;
 use MicheleAngioni\MessageBoard\Models\Post;
 use MicheleAngioni\Support\Exceptions\DatabaseException;
 use Exception;

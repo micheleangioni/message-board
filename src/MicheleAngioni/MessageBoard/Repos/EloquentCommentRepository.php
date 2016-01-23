@@ -1,6 +1,7 @@
 <?php namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
+use MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface;
 use MicheleAngioni\MessageBoard\Models\Comment;
 
 class EloquentCommentRepository extends AbstractEloquentRepository implements CommentRepositoryInterface

@@ -42,8 +42,8 @@ First of all add the `MbTrait` to your User model, which has also to implement t
 
     <?php
 
+    use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
     use MicheleAngioni\MessageBoard\MbTrait; // Message Board Trait
-    use MicheleAngioni\MessageBoard\MbUserInterface;
 
     class User extends Eloquent implements MbUserInterface {
 
@@ -98,7 +98,7 @@ In the config file you find the default rules used by Message Board under the `m
 If you want to use your own text purifier, create your own class which must implement the `MicheleAngioni\MessageBoard\PurifierInterface` interface. You then have to override the binding in the `MessageBoardServiceProvider`, that is define is a custom service provider
 
     $this->app->bind(
-            'MicheleAngioni\MessageBoard\PurifierInterface',
+            'MicheleAngioni\MessageBoard\Contracts\PurifierInterface',
             'Namespace\YourOwnPurifier'
         );
 

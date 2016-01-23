@@ -1,6 +1,7 @@
 <?php namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
+use MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface;
 use MicheleAngioni\MessageBoard\Models\Like;
 
 class EloquentLikeRepository extends AbstractEloquentRepository implements LikeRepositoryInterface

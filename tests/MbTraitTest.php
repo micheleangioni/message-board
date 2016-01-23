@@ -136,7 +136,7 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
 /**
  * A stub class that implements MbUserInterface and uses the MbTrait trait.
  */
-class UserMb extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\MbUserInterface
+class UserMb extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\Contracts\MbUserInterface
 {
     use MicheleAngioni\MessageBoard\MbTrait;
 

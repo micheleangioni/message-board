@@ -1,6 +1,7 @@
 <?php namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
+use MicheleAngioni\MessageBoard\Contracts\RoleRepositoryInterface;
 use MicheleAngioni\MessageBoard\Models\Role;
 
 class EloquentRoleRepository extends AbstractEloquentRepository implements RoleRepositoryInterface

@@ -1,4 +1,4 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard\Contracts;
 
 interface PurifierInterface {
 
