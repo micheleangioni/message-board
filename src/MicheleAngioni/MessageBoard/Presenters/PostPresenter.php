@@ -2,9 +2,9 @@
 
 use MicheleAngioni\MessageBoard\PurifierInterface;
 use MicheleAngioni\MessageBoard\MbUserInterface;
+use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\Support\Presenters\AbstractPresenter;
 use MicheleAngioni\Support\Presenters\PresentableInterface;
-use Config;
 
 class PostPresenter extends AbstractPresenter implements PresentableInterface {
 
@@ -68,7 +68,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     public function text()
     {
         if($this->escapeText) {
-            return $this->purifier->clean($this->object->text, Config::get('ma_messageboard.mb_purifier_conf'));
+            return $this->purifier->clean($this->object->text, config('ma_messageboard.mb_purifier_conf'));
         }
 
         return $this->object->text;
@@ -95,7 +95,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     }
 
     /**
-     * Return false if the Post has been read, false otherwise.
+     * Return false if the Post has been read, false otherwise
      *
      * @return bool
      */
@@ -116,7 +116,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
         }
 
         if(!$this->object->likes->isEmpty()) {
-            $this->object->likes->each(function($like) {
+            $this->object->likes->each(function(Like $like) {
                 if($like->user_id == $this->user->getPrimaryId()) {
                     return $this->isLiked = true;
                 }

@@ -1,7 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
 use Helpers;
-use MicheleAngioni\MessageBoard\Models\Role;
 
 trait MbTrait {
 
@@ -55,7 +54,7 @@ trait MbTrait {
     /**
      * Checks if the user has a Role by its name.
      *
-     * @param string $name
+     * @param  string  $name
      * @return bool
      */
     public function hasMbRole($name)
@@ -72,7 +71,7 @@ trait MbTrait {
     /**
      * Check if user has a Permission by its name.
      *
-     * @param string $permission
+     * @param  string  $permission
      * @return bool
      */
     public function canMb($permission)
@@ -91,7 +90,7 @@ trait MbTrait {
     /**
      * Attach input Role to the user.
      *
-     * @param Role|array $role
+     * @param \MicheleAngioni\MessageBoard\Models\Role|array  $role
      * @return void
      */
     public function attachMbRole($role)
@@ -110,7 +109,7 @@ trait MbTrait {
     /**
      * Detach input Role from the user.
      *
-     * @param Role $role
+     * @param \MicheleAngioni\MessageBoard\Models\Role  $role
      * @return void
      */
     public function detachMbRole($role)

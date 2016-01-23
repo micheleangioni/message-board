@@ -1,12 +1,10 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
 use Illuminate\Support\Collection;
-use MicheleAngioni\MessageBoard\PurifierInterface;
 use MicheleAngioni\MessageBoard\Models\Permission;
 use MicheleAngioni\MessageBoard\Models\Role;
 use MicheleAngioni\MessageBoard\Repos\PermissionRepositoryInterface as PermissionRepo;
 use MicheleAngioni\MessageBoard\Repos\RoleRepositoryInterface as RoleRepo;
-use InvalidArgumentException;
 
 class PermissionManager
 {
