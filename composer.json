@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "chromabits/purifier": "dev-master",
+        "chromabits/purifier": "~2.1",
         "illuminate/html": "5.*",
         "laravel/framework": "~5.0",
         "michele-angioni/support": "~2.0"
