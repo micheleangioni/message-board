@@ -31,7 +31,7 @@ If you are looking for the Laravel 4 version, check the not-anymore-maintained [
 
 ## Configuration
 
-You can than edit the ma_messageboard.php file in your `app/config` directory.
+You can than edit the `ma_messageboard.php` file in your `app/config` directory.
 You need to set the correct Model you want to associate a Message Board. Usually it is the Auth model used by Laravel.
 
 Additionally, it can be useful to define a named route for your User page.
@@ -82,11 +82,12 @@ A simple concrete class is provided as well and can be used out of the box. To u
 ### Managing a User Message Board
 
 The AbstractMbGateway method `getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20, , $applyPresenter = false, $escapeText = false, , MbUserInterface $userVisiting = NULL)` returns a Collection of posts, ordered by datetime, posted in the $user message board.$user is an instance of the User model (which must implement the MbUserInterface)     
-$messageType defines the type of the messages you want to retrieve, 'all' will retrieve all posts in the User message board.  
-$page and $limit handle pagination.  
-$applyPresenter states if posts and comments must be passed to the presenter before being returned.  
-$escateText states if post and comment texts must be escaped before being returned.  
-$userVisiting is the instance of the User model (which must implement the MbUserInterface) of the user who is requesting the posts. Leave it null if $user is requesting its own posts.  
+
+ - $messageType defines the type of the messages you want to retrieve, 'all' will retrieve all posts in the User message board.  
+ - $page and $limit handle pagination.  
+ - $applyPresenter states if posts and comments must be passed to the presenter before being returned.  
+ - $escateText states if post and comment texts must be escaped before being returned.  
+ - $userVisiting is the instance of the User model (which must implement the MbUserInterface) of the user who is requesting the posts. Leave it null if $user is requesting its own posts.  
 
 A particularly useful feature is the "user last view datetime", that is when a user sees his own message board the datetime of the visit can be saved to remember which posts have been already seen and which not.  
 To achieve that, just call the `updateUserLastView(MbUserInterface $user)` method, where $user is an instance of your User model.  
@@ -107,20 +108,24 @@ You can also manually pass a single model to the presenter by using the `present
 ### Managing posts
 
 Use the `createPost(MbUserInterface $user, MbUserInterface $poster = NULL, $messageType = 'public_mess', $text, $banCheck = true)` method to create a new post.
-$user and $poster are instances of your User model (which must implement the MbUserInterface) of the owner of the message board where the post will be posted and the poster. If a use writes a post on his/her own messageboard, use the same User instance of both first and second parameters. 
-$messageType defines the type of the message will be posted and $text is the test of the post. Messages of type 'private_mess' are marked as unread by default. Other messages are datetime based (see below).
-$banCheck states if a ban check on the poster user will be performed.  
+
+ - $user and $poster are instances of your User model (which must implement the MbUserInterface) of the owner of the message board where the post will be posted and the poster. If a use writes a post on his/her own messageboard, use the same User instance of both first and second parameters. 
+ - $messageType defines the type of the message will be posted and $text is the test of the post. Messages of type 'private_mess' are marked as unread by default. Other messages are datetime based (see below).
+ - $banCheck states if a ban check on the poster user will be performed.  
 
 Use the `getPost($idPost)` and `deletePost($idPost, MbUserInterface $user = NULL)` methods to respectively retrieve and delete a post.  
 In the `deletePost` method, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Post or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
 
+The allowed message types can be customized in the `ma_messageboard.php` configuration file. If the given message type is not listed in the `message_types` array, an exception will be thrown. If the `message_types` array is empty, all message types will be allowed. 
+
 ### Managing comments
 
 Use the `createComment(MbUserInterface $user, $postId, $text, $banCheck = true)` method to create a new comment.  
-$user is an instance of your User model (which must implement the MbUserInterface) which will own the comment.  
-$postId is the post where the comment belongs.  
-$text is the text of the comment.  
-$banCheck states if a ban check on the user will be performed.  
+
+ - $user is an instance of your User model (which must implement the MbUserInterface) which will own the comment.  
+ - $postId is the post where the comment belongs.  
+ - $text is the text of the comment.  
+ - $banCheck states if a ban check on the user will be performed.  
 
 Use the `getComment($idComment)` and `deleteComment($idComment, MbUserInterface $user = NULL)` methods to respectively get and delete a comment.  
 In the `deleteComment` method, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Comment or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
@@ -135,13 +140,14 @@ The `deleteLike($idUser, $likableEntityId, $likableEntity)` method works in the 
 
 ### (optional) Coded posts
 
-Message Board supports also coded posts, that is in the messageboard.php lang file you can define codes with pre-defined messages.
+Message Board supports also coded posts, that is in the `messageboard.php` lang file you can define codes with pre-defined messages.
 
 You can use the `createCodedPost(MbUserInterface $user, $messageType = 'public_mess', $code, array $attributes = array())` method to access the coded messages.  
-$user is an instance of your User model (which must implement the MbUserInterface) where the post will be posted.  
-$messageType defines the type of the message will be posted.  
-$code is the key of the lang file array which identifies the coded message.  
-$attributes defines a list of variables can be injected in the coded message. See the [Laravel localization documentation](http://laravel.com/docs/5.0/localization) for further details.
+
+ - $user is an instance of your User model (which must implement the MbUserInterface) where the post will be posted.  
+ - $messageType defines the type of the message will be posted.  
+ - $code is the key of the lang file array which identifies the coded message.  
+ - $attributes defines a list of variables can be injected in the coded message. See the [Laravel localization documentation](http://laravel.com/docs/5.0/localization) for further details.
 
 If you want a deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
 
@@ -161,11 +167,12 @@ To retrieve one or all available permissions, call the `getPermission($idPermiss
 If you want to test an user against a permission, use `$user->canMb($permission)` where $permission is the name of the permission.
 
 Default provided permissions are:
-- 'Edit Posts'
-- 'Delete Posts'
-- 'Ban Users'
-- 'Add Moderators'
-- 'Remove Moderators'
+
+ - 'Edit Posts'
+ - 'Delete Posts'
+ - 'Ban Users'
+ - 'Add Moderators'
+ - 'Remove Moderators'
 
 A new role can be created with the `createRole($name, $permissions = NULL)` method.  
 $permissions can be a collection or permissions or an array of permission ids.
@@ -175,9 +182,10 @@ A new permission can be created with `the createPermission($name)` method.
 ## Bans
 
 Message Board supports also user bans. Through AbstractMbGateway's method `banUser(MbUserInterface $user, $days, $reason = '')` a user can be banned, i.e he/she won't be able to write new posts and comments.  
-$user is an instance of your User model (which must implement the MbUserInterface). He/she is the user who will get banned.    
-$days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative.  
-$reason is the reason of the ban. Can be left blank.    
+
+ - $user is an instance of your User model (which must implement the MbUserInterface). He/she is the user who will get banned.    
+ - $days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative.  
+ - $reason is the reason of the ban. Can be left blank.    
 
 ## Events
 
@@ -206,6 +214,7 @@ Pull requests are welcome, especially for the to do list below.
 
 ## To do list
 
+- notifications
 - editing posts/comments
 - soft delete
 - "report"/"abuse" feature
