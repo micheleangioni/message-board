@@ -20,17 +20,11 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
     }
 
     /**
-     * Delete mb posts of input date, older than input date. Return true on success.
-     *
-     * @param  string    $type
-     * @param  string    $datetime
-     * @throws InvalidArgumentException
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function deleteOldMessages($type, $datetime)
     {
-        if( !Helpers::checkDatetime($datetime) ) {
+        if(!Helpers::checkDatetime($datetime)) {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $datetime is not a valid datetime.');
         }
 
@@ -46,17 +40,7 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
     }
 
     /**
-     * Return posts of input type of the input user, ordered by post AND comment datetime.
-     * It also sets the child_datetime post attribute.
-     *
-     * @param  int     $idUser
-     * @param  string  $messageType = 'public_mess'
-     * @param  int     $page = 1
-     * @param  int     $limit = 20
-     * @throws InvalidArgumentException
-     * @throws DatabaseException
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function getOrderedPosts($idUser, $messageType = 'public_mess', $page = 1, $limit = 20)
     {

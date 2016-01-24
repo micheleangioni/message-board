@@ -2,9 +2,13 @@
 
 use Helpers;
 use Illuminate\Support\Collection;
+use MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface as CommentRepo;
+use MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Contracts\MbGatewayInterface;
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
+use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface as PostRepo;
 use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
+use MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface as ViewRepo;
 use MicheleAngioni\MessageBoard\Events\CommentCreate;
 use MicheleAngioni\MessageBoard\Events\CommentDelete;
 use MicheleAngioni\MessageBoard\Events\LikeCreate;
@@ -12,15 +16,12 @@ use MicheleAngioni\MessageBoard\Events\LikeDestroy;
 use MicheleAngioni\MessageBoard\Events\PostCreate;
 use MicheleAngioni\MessageBoard\Events\PostDelete;
 use MicheleAngioni\MessageBoard\Events\UserBanned;
+use MicheleAngioni\MessageBoard\Exceptions\InvalidMessageTypeException;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\MessageBoard\Models\Post;
 use MicheleAngioni\MessageBoard\Presenters\CommentPresenter;
 use MicheleAngioni\MessageBoard\Presenters\PostPresenter;
-use MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface as CommentRepo;
-use MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface as LikeRepo;
-use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface as PostRepo;
-use MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface as ViewRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
 use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -35,7 +36,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @var array
      */
-    protected $allowedMessageTypes = array();
+    protected $allowedMessageTypes = [];
 
     /**
      * Laravel application.
@@ -44,6 +45,9 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     protected $app;
 
+    /**
+     * @var CommentRepo
+     */
     protected $commentRepo;
 
     /**
@@ -51,11 +55,14 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @var array
      */
-    protected $likableEntities = array(
+    protected $likableEntities = [
         'comment' => 'commentRepo',
         'post' => 'postRepo'
-    );
+    ];
 
+    /**
+     * @var LikeRepo
+     */
     protected $likeRepo;
 
     /**
@@ -65,17 +72,23 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     protected $postsPerPage;
 
+    /**
+     * @var PostRepo
+     */
     protected $postRepo;
 
     protected $presenter;
 
     protected $purifier;
 
+    /**
+     * @var ViewRepo
+     */
     protected $viewRepo;
 
 
     function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
-                         PurifierInterface $purifier, ViewRepo $viewRepo, $app = NULL)
+                         PurifierInterface $purifier, ViewRepo $viewRepo, $app = null)
     {
         $this->app = $app ?: app();
 
@@ -105,24 +118,30 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Create a new Post from a coded text.
      *
      * @param  MbUserInterface  $user
-     * @param  string           $messageType
-     * @param  string|bool      $code
-     * @param  array            $attributes
+     * @param  string  $messageType
+     * @param  string|bool  $code
+     * @param  array  $attributes
      *
      * @return Post
      */
-    public function createCodedPost(MbUserInterface $user, $messageType = 'public_mess', $code, array $attributes = array())
+    public function createCodedPost(MbUserInterface $user, $messageType = 'public_mess', $code, array $attributes = [])
     {
-        $data = array(
+        $data = [
             'post_type' => $messageType,
-            'user_id' => $user->getPrimaryId(),
-        );
+            'user_id' => $user->getPrimaryId()
+        ];
 
         // Take post text
 
         $data['text'] = $this->getCodedPostText($code, $user, $attributes);
 
-        // Check if the message is private or not
+        // Check if the message type is allowed
+
+        if(!$this->isMessageTypeAllowed($messageType)) {
+            throw new InvalidMessageTypeException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid message type.');
+        }
+
+        // Check if the message is to be set private or not
 
         if($messageType == 'private_mess') {
             $data['is_read'] = 0;
@@ -142,16 +161,16 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     /**
      * Create a new Post. By default, check if the poster is actually banned.
      *
-     * @param  MbUserInterface       $user
-     * @param  MbUserInterface|NULL  $poster = NULL
-     * @param  string                $messageType = 'public_mess'
-     * @param  string                $text
-     * @param  bool                  $banCheck = true
+     * @param  MbUserInterface  $user
+     * @param  MbUserInterface|null  $poster = null
+     * @param  string  $messageType = 'public_mess'
+     * @param  string  $text
+     * @param  bool  $banCheck = true
      * @throws InvalidArgumentException
      *
      * @return Post
      */
-    public function createPost(MbUserInterface $user, MbUserInterface $poster = NULL, $messageType = 'public_mess', $text, $banCheck = true)
+    public function createPost(MbUserInterface $user, MbUserInterface $poster = null, $messageType = 'public_mess', $text, $banCheck = true)
     {
         // Check if the poster is banned and take poster id
         if($poster) {
@@ -164,20 +183,20 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             $posterId = $poster->getPrimaryId();
         }
         else {
-            $posterId = NULL;
+            $posterId = null;
         }
 
-        $data = array(
+        $data = [
             'post_type' => $messageType,
             'user_id' => $user->getPrimaryId(),
             'poster_id' => $posterId,
-            'text' => $text,
-        );
+            'text' => $text
+        ];
 
         // Check if the message type is allowed
 
-        if(!in_array($messageType, $this->app['config']->get('ma_messageboard.message_types'))) {
-            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid message type.');
+        if(!$this->isMessageTypeAllowed($messageType)) {
+            throw new InvalidMessageTypeException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid message type.');
         }
 
         // Check if the message is private or not
@@ -219,7 +238,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @return bool
      */
-    public function deletePost($idPost, MbUserInterface $user = NULL)
+    public function deletePost($idPost, MbUserInterface $user = null)
     {
         $post = $this->getPost($idPost);
 
@@ -243,7 +262,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @param  MbUserInterface  $user
      * @param  int              $postId
-     * @param  string           $text
+     * @param  string  $text
      * @param  bool             $banCheck = true
      *
      * @return Comment
@@ -291,7 +310,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @return bool
      */
-    public function deleteComment($idComment, MbUserInterface $user = NULL)
+    public function deleteComment($idComment, MbUserInterface $user = null)
     {
         $comment = $this->getComment($idComment);
 
@@ -449,10 +468,10 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     public function updateUserLastView(MbUserInterface $user)
     {
         if(!$user->mbLastView) {
-            $user->mbLastView()->create(['datetime' => date('Y-m-d H:i:s')]);
+       $user->mbLastView()->create(['datetime' => date('Y-m-d H:i:s')]);
         }
         else {
-            $user->mbLastView()->update(['datetime' => date('Y-m-d H:i:s')]);
+       $user->mbLastView()->update(['datetime' => date('Y-m-d H:i:s')]);
         }
     }
 
@@ -467,13 +486,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  int     $limit = 2
      * @param  bool    $applyPresenter = false
      * @param  bool    $escapeText = false
-     * @param  MbUserInterface|bool  $userVisiting = NULL
+     * @param  MbUserInterface|bool  $userVisiting = null
      * @throws InvalidArgumentException
      *
      * @return Collection
      */
     public function getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20,
-                                        $applyPresenter = false, $escapeText = false, MbUserInterface $userVisiting = NULL)
+                                        $applyPresenter = false, $escapeText = false, MbUserInterface $userVisiting = null)
     {
         if(!$limit) {
             $limit = $this->postsPerPage;
@@ -567,7 +586,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @param  MbUserInterface  $user
      * @param  int              $days
-     * @param  string           $reason = ''
+     * @param  string  $reason = ''
      *
      * @return bool
      */
@@ -595,6 +614,25 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         Event::fire(new UserBanned($ban));
 
         return true;
+    }
+
+    /**
+     * Check if input $messageType is allowed. In no message_types are defined in the config files, all types are allowed.
+     *
+     * @param  string  $messageType
+     * @return bool
+     */
+    protected function isMessageTypeAllowed($messageType)
+    {
+        if(count($this->app['config']->get('ma_messageboard.message_types')) === 0) {
+            return true;
+        }
+
+        if(in_array($messageType, $this->app['config']->get('ma_messageboard.message_types'))) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

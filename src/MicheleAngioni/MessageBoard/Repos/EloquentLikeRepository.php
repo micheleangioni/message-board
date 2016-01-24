@@ -15,17 +15,19 @@ class EloquentLikeRepository extends AbstractEloquentRepository implements LikeR
     }
 
     /**
-     * Return the Like of input entity and user. Return null if no Like is found.
-     *
-     * @param  object  $entity
-     * @param  int     $userId
-     *
-     * @return Like|bool
+     * {@inheritdoc}
      */
     public function getUserEntityLike($entity, $userId)
     {
+        if(is_string($entity)) {
+            $type = $entity;
+        }
+        else {
+            $type = get_class($entity);
+        }
+
         return $entity->likes()
-            ->where(['user_id' => $userId, 'likable_type' => get_class($entity)])->first();
+            ->where(['user_id' => $userId, 'likable_type' => $type])->first();
     }
 
 }

@@ -56,11 +56,15 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('database.default', 'testbench');
-        $app['config']->set('database.connections.testbench', array(
+        $app['config']->set('database.connections.testbench', [
             'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix' => '',
-        ));
+            'prefix' => ''
+        ]);
+        $app['config']->set('ma_messageboard.message_types', [
+            'public_mess',
+            'private_mess'
+        ]);
     }
 
     /**
