@@ -19,7 +19,7 @@ class Purifier implements PurifierInterface {
      * Clean the input text and return it clean
      *
      * @param  string  $dirtyText
-     * @param  array  $configuration
+     * @param  string  $configuration
      *
      * @return string
      */

@@ -38,7 +38,7 @@ class MessageBoardServiceProvider extends ServiceProvider {
         ]);
 
         // Load translations
-        $this->loadTranslationsFrom(__DIR__.'/../../seeds/', 'ma_messageboard');
+        $this->loadTranslationsFrom(__DIR__.'/../../lang/', 'ma_messageboard');
 	}
 
     /**

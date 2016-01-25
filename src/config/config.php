@@ -70,5 +70,20 @@ return array(
         'CSS.AllowedProperties'    => '',
         'AutoFormat.AutoParagraph' => false,
         'AutoFormat.RemoveEmpty'   => true,
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    |
+    | The following settings activate and customize the Notificationsservice.
+    |
+    */
+
+    'notifications' => [
+        'enabled' => false
     ]
+
 );

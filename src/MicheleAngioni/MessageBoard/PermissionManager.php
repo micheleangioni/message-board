@@ -22,6 +22,7 @@ class PermissionManager
     /**
      * Return input Role.
      *
+     * @param  int  $idRole
      * @return Role
      */
     public function getRole($idRole)
@@ -68,7 +69,7 @@ class PermissionManager
      *
      * @return Role
      */
-    public function createRole($name, $permissions = NULL)
+    public function createRole($name, $permissions = null)
     {
         $role = $this->roleRepo->create(['name' => $name]);
 
