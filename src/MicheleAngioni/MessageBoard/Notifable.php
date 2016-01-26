@@ -1,7 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
 use Closure;
-use MicheleAngioni\MessageBoard\Models\Notification;
 
 trait Notifable
 {
@@ -24,7 +23,6 @@ trait Notifable
      */
     public function readAllNotifications()
     {
-        //TODO Use a command
         return $this->notifications()->where('read', false)->update('read', true);
     }
 
@@ -127,7 +125,7 @@ trait Notifable
      * @param  string|null  $type
      * @param  Closure  $filterScope
      *
-     * @return Notification|null
+     * @return \MicheleAngioni\MessageBoard\Models\Notification|null
      */
     public function getLastNotification($type = null, Closure $filterScope = null)
     {

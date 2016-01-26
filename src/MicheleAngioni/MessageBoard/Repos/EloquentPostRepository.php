@@ -1,7 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard\Repos;
 
 use Helpers;
-use Illuminate\Support\Collection;
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface;
 use MicheleAngioni\MessageBoard\Models\Post;

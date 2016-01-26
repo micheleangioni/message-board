@@ -1,5 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use MicheleAngioni\MessageBoard\Contracts\CommentEventInterface;
 use MicheleAngioni\MessageBoard\Contracts\LikeEventInterface;
 use MicheleAngioni\MessageBoard\Contracts\PostEventInterface;
@@ -187,10 +188,10 @@ class MessageBoardEventHandler {
     /**
      * Register the listeners for the subscriber.
      *
-     * @param  \Illuminate\Events\Dispatcher  $events
+     * @param  Dispatcher  $events
      * @return array
      */
-    public function subscribe($events)
+    public function subscribe(Dispatcher $events)
     {
         // Check if the notifications on new post, comments and likes are enabled in the config file
 
