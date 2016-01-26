@@ -233,7 +233,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Delete input Post. Return true on success.
      * If a User is provided as second argument, a check will be performed if he/she can delete the Post.
      *
-     * @param  int              $idPost
+     * @param  int  $idPost
      * @param  MbUserInterface  $user
      *
      * @return bool
@@ -261,9 +261,9 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Create a new Comment. Check if the user is actually banned.
      *
      * @param  MbUserInterface  $user
-     * @param  int              $postId
+     * @param  int  $postId
      * @param  string  $text
-     * @param  bool             $banCheck = true
+     * @param  bool  $banCheck = true
      *
      * @return Comment
      */
@@ -333,7 +333,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Check if input User can edit input Post/Comment.
      *
      * @param  MbUserInterface  $user
-     * @param  Post|Comment     $entity
+     * @param  Post|Comment  $entity
      *
      * @return bool
      */
@@ -371,7 +371,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Check if input User can delete input Post/Comment.
      *
      * @param  MbUserInterface  $user
-     * @param  Post|Comment     $entity
+     * @param  Post|Comment  $entity
      *
      * @return bool
      */
@@ -403,8 +403,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     /**
      * Assign a new Like to input entity and user.
      *
-     * @param  int     $idUser
-     * @param  int     $likableEntityId
+     * @param  int  $idUser
+     * @param  int  $likableEntityId
      * @param  string  $likableEntity
      * @throws InvalidArgumentException
      *
@@ -438,8 +438,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     /**
      * Delete input like. Return true on success.
      *
-     * @param  int     $idUser
-     * @param  int     $likableEntityId
+     * @param  int  $idUser
+     * @param  int  $likableEntityId
      * @param  string  $likableEntity
      *
      * @return bool
@@ -468,10 +468,10 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     public function updateUserLastView(MbUserInterface $user)
     {
         if(!$user->mbLastView) {
-       $user->mbLastView()->create(['datetime' => date('Y-m-d H:i:s')]);
+            $user->mbLastView()->create(['datetime' => date('Y-m-d H:i:s')]);
         }
         else {
-       $user->mbLastView()->update(['datetime' => date('Y-m-d H:i:s')]);
+            $user->mbLastView()->update(['datetime' => date('Y-m-d H:i:s')]);
         }
     }
 
@@ -482,10 +482,10 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @param  MbUserInterface  $user
      * @param  string  $messageType = 'all'
-     * @param  int     $page = 1
-     * @param  int     $limit = 2
-     * @param  bool    $applyPresenter = false
-     * @param  bool    $escapeText = false
+     * @param  int  $page = 1
+     * @param  int  $limit = 2
+     * @param  bool  $applyPresenter = false
+     * @param  bool  $escapeText = false
      * @param  MbUserInterface|bool  $userVisiting = null
      * @throws InvalidArgumentException
      *
@@ -498,7 +498,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             $limit = $this->postsPerPage;
         }
 
-        if( !in_array($messageType, array_merge(['all'], $this->allowedMessageTypes)) ) {
+        if(!in_array($messageType, array_merge(['all'], $this->allowedMessageTypes))) {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $messageType is not a valid post type.');
         }
 
@@ -524,8 +524,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Pass a Post or Comment model to the corresponding presenter and return it
      *
      * @param  MbUserInterface  $user
-     * @param  Post|Comment     $model
-     * @param  bool             $escapeText = false
+     * @param  Post|Comment  $model
+     * @param  bool  $escapeText = false
      * @throws InvalidArgumentException
      *
      * @return PostPresenter|CommentPresenter
@@ -549,8 +549,8 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Pass a Post or Comment collection to the corresponding presenter and return it
      *
      * @param  MbUserInterface  $user
-     * @param  Collection       $collection
-     * @param  bool             $escapeText = false
+     * @param  Collection  $collection
+     * @param  bool  $escapeText = false
      * @throws InvalidArgumentException
      *
      * @return Collection
@@ -585,7 +585,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Return true on success.
      *
      * @param  MbUserInterface  $user
-     * @param  int              $days
+     * @param  int  $days
      * @param  string  $reason = ''
      *
      * @return bool
@@ -604,10 +604,10 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             $ban->save();
         }
         else {
-            $ban = $user->mbBans()->create(array(
+            $ban = $user->mbBans()->create([
                 'reason' => $reason,
                 'until' => Helpers::getDate(max($days,0)),
-            ));
+            ]);
         }
 
         // Fire Event
@@ -617,7 +617,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
-     * Check if input $messageType is allowed. In no message_types are defined in the config files, all types are allowed.
+     * Check if input $messageType is allowed. If no message_types are defined in the config files, all types are allowed.
      *
      * @param  string  $messageType
      * @return bool

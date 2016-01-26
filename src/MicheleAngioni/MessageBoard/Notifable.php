@@ -1,11 +1,9 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
-use Closure;
+use Illuminate\Support\Collection;
 
 trait Notifable
 {
-    // Relationships
-
     /**
      * Notification Relation
      *
@@ -13,7 +11,7 @@ trait Notifable
      */
     public function notifications()
     {
-        return $this->hasMany('\TopGames\TopGames\Models\Notification', 'to_id');
+        return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Notification', 'to_id');
     }
 
     /**
@@ -23,14 +21,15 @@ trait Notifable
      */
     public function readAllNotifications()
     {
-        return $this->notifications()->where('read', false)->update('read', true);
+        return $this->notifications()->where('read', false)->update(['read' => true]);
     }
 
     /**
      * Read Limiting Notifications
      *
      * @param  int    $numbers
-     * @param  string $order
+     * @param  string  $order
+     *
      * @return mixed
      */
     public function readLimitNotifications($numbers = 10, $order = 'desc')
@@ -61,7 +60,7 @@ trait Notifable
     /**
      * Delete all Notifications
      *
-     * @return Bool
+     * @return mixed
      */
     public function deleteAllNotifications()
     {
@@ -74,13 +73,11 @@ trait Notifable
      * @param  int|null  $limit
      * @param  int  $page
      * @param  string   $order
-     * @param  Closure   $filterScope
-     * @return mixed
+     *
+     * @return Collection
      */
-    public function getNotificationsNotRead($limit = null, $page = 1, $order = 'desc', Closure $filterScope = null)
+    public function getNotificationsNotRead($limit = null, $page = 1, $order = 'desc')
     {
-        //TODO Implement Closure filter
-
         $query = $this->notifications()
             ->where('read', false)
             ->orderBy('created_at', $order);
@@ -97,16 +94,14 @@ trait Notifable
     /**
      * Get all notifications
      *
-     * @param  null     $limit
-     * @param  int|null  $paginate
+     * @param  null|null  $limit
+     * @param  int  $page
      * @param  string   $order
-     * @param  Closure   $filterScope
-     * @return mixed
+     *
+     * @return Collection
      */
-    public function getNotifications($limit = null, $page = 1, $order = 'desc', Closure $filterScope = null)
+    public function getNotifications($limit = null, $page = 1, $order = 'desc')
     {
-        //TODO Implement Closure filter
-
         $query = $this->notifications()
             ->orderBy('created_at', $order);
 
@@ -123,14 +118,11 @@ trait Notifable
      * Get last notification
      *
      * @param  string|null  $type
-     * @param  Closure  $filterScope
      *
      * @return \MicheleAngioni\MessageBoard\Models\Notification|null
      */
-    public function getLastNotification($type = null, Closure $filterScope = null)
+    public function getLastNotification($type = null)
     {
-        //TODO Implement Closure filter
-
         $query = $this->notifications()
             ->orderBy('created_at', 'desc');
 
@@ -142,16 +134,14 @@ trait Notifable
     }
 
     /**
-     * Count Not read notification
+     * Count unread notification
      *
      * @param  string|null  $type
-     * @param  Closure  $filterScope
+     *
      * @return int
      */
-    public function countNotificationsNotRead($type = null, Closure $filterScope = null)
+    public function countNotificationsNotRead($type = null)
     {
-        //TODO Implement Closure filter
-
         $query = $this->notifications()
             ->where('read', false);
 
