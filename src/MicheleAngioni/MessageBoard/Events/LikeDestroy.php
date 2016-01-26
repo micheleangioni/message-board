@@ -1,9 +1,10 @@
 <?php namespace MicheleAngioni\MessageBoard\Events;
 
+use MicheleAngioni\MessageBoard\Contracts\LikeEventInterface;
 use MicheleAngioni\MessageBoard\Models\Like;
 use Illuminate\Queue\SerializesModels;
 
-class LikeDestroy {
+class LikeDestroy implements LikeEventInterface {
 
 	use SerializesModels;
 
@@ -18,6 +19,14 @@ class LikeDestroy {
     public function __construct(Like $like)
     {
         $this->like = $like;
+    }
+
+    /**
+     * {inheritdoc}
+     */
+    public function getLike()
+    {
+        return $this->like;
     }
 
 }

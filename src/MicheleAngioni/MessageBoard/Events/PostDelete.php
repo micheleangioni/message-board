@@ -1,9 +1,10 @@
 <?php namespace MicheleAngioni\MessageBoard\Events;
 
+use MicheleAngioni\MessageBoard\Contracts\PostEventInterface;
 use MicheleAngioni\MessageBoard\Models\Post;
 use Illuminate\Queue\SerializesModels;
 
-class PostDelete {
+class PostDelete implements PostEventInterface {
 
 	use SerializesModels;
 
@@ -18,6 +19,14 @@ class PostDelete {
     public function __construct(Post $post)
     {
         $this->post = $post;
+    }
+
+    /**
+     * {inheritdoc}
+     */
+    public function getPost()
+    {
+        return $this->post;
     }
 
 }

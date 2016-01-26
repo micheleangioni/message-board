@@ -1,25 +1,28 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
 use Illuminate\Support\ServiceProvider;
+use Event;
 
 class NotificationsServiceProvider extends ServiceProvider {
 
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
-	/**
-	 * Bootstrap the application events.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+		// Register the Message Board events handler
 
-	}
+        Event::subscribe('MicheleAngioni\MessageBoard\Listeners\MessageBoardEventHandler');
+    }
 
     /**
      * Register the service provider.

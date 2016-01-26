@@ -1,9 +1,10 @@
 <?php namespace MicheleAngioni\MessageBoard\Events;
 
+use MicheleAngioni\MessageBoard\Contracts\CommentEventInterface;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use Illuminate\Queue\SerializesModels;
 
-class CommentUpdate {
+class CommentUpdate implements CommentEventInterface {
 
 	use SerializesModels;
 
@@ -18,6 +19,14 @@ class CommentUpdate {
     public function __construct(Comment $comment)
     {
         $this->comment = $comment;
+    }
+
+    /**
+     * {inheritdoc}
+     */
+    public function getComment()
+    {
+        return $this->comment;
     }
 
 }

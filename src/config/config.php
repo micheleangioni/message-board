@@ -43,7 +43,7 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | User page named route
+    | Message Board User page named route
     |--------------------------------------------------------------------------
     |
     | This is the named route to the user page. It will use a GET parameter
@@ -78,12 +78,17 @@ return array(
     | Notifications
     |--------------------------------------------------------------------------
     |
-    | The following settings activate and customize the Notificationsservice.
+    | The following settings activate and customize the Notifications service.
     |
     */
 
     'notifications' => [
-        'enabled' => false
+
+        /**
+         * If set to true, notifications are created after new mb posts, comments
+         * and likes events are fired.
+         */
+        'after_mb_events' => false,
     ]
 
 );
