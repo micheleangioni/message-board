@@ -145,10 +145,10 @@ class MbNotificationServiceTest extends Orchestra\Testbench\TestCase {
         $notificationService = $this->app->make('MicheleAngioni\MessageBoard\Services\NotificationService');
 
         $notification = $notificationService->sendNotification(1, 'from_type', 2, null, 'Notification text', null, null, []);
-        $notification->created_at = \Helpers::getDate(-10, $format = 'Y-m-d : H:i:s');
+        $notification->created_at = \Helpers::getDate(-10, $format = 'Y-m-d H:i:s');
         $notification->save();
 
-        $notificationService->deleteOldNotifications(\Helpers::getDate(-5, $format = 'Y-m-d : H:i:s'));
+        $notificationService->deleteOldNotifications(\Helpers::getDate(-5, $format = 'Y-m-d H:i:s'));
 
         $this->assertEquals(0, $notificationService->getNotifications()->count());
     }

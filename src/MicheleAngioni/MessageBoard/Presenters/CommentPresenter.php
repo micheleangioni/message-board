@@ -88,6 +88,16 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
     }
 
     /**
+     * Check if the Comment author wrote on a Post owned by him/herself
+     *
+     * @return bool
+     */
+    public function isInAuthorPost()
+    {
+        return $this->object->isInAuthorPost();
+    }
+
+    /**
      * Return if the post is liked by the input user
      *
      * @return bool

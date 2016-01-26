@@ -23,6 +23,33 @@ class Like extends \Illuminate\Database\Eloquent\Model {
     }
 
 
+    // Getters
+
+    public function getAuthor()
+    {
+        return $this->user;
+    }
+
+    public function getAuthorId()
+    {
+        return $this->user_id;
+    }
+
+    public function getOwner()
+    {
+        return $this->likable->getOwner();
+    }
+
+    public function getOwnerId()
+    {
+        return $this->likable->getOwnerId();
+    }
+
+    public function getLikable()
+    {
+        return $this->likable;
+    }
+
     public function getLikableId()
     {
         return $this->likable_id;
@@ -31,6 +58,24 @@ class Like extends \Illuminate\Database\Eloquent\Model {
     public function getLikableType()
     {
         return $this->likable_type;
+    }
+
+
+    // Others
+
+    /**
+     * Check if the Post author wrote on his own message board.
+     *
+     * @return bool
+     */
+    public function authorLikesOwnEntity()
+    {
+        if($this->getAuthorId() == $this->getOwnerId()) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }

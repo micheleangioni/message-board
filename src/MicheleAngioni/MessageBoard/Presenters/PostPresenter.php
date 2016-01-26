@@ -105,6 +105,16 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     }
 
     /**
+     * Check if the Post author wrote on his own message board.
+     *
+     * @return bool
+     */
+    public function isInAuthorMb()
+    {
+        return $this->object->isInAuthorMb();
+    }
+
+    /**
      * Return if the post is liked by the input user
      *
      * @return bool

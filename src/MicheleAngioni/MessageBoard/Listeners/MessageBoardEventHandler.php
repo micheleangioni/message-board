@@ -1,5 +1,8 @@
 <?php namespace MicheleAngioni\MessageBoard\Listeners;
 
+use MicheleAngioni\MessageBoard\Contracts\CommentEventInterface;
+use MicheleAngioni\MessageBoard\Contracts\LikeEventInterface;
+use MicheleAngioni\MessageBoard\Contracts\PostEventInterface;
 use MicheleAngioni\MessageBoard\Services\NotificationService;
 use UnexpectedValueException;
 
@@ -13,33 +16,35 @@ class MessageBoardEventHandler {
         $this->notificationService = $notificationService;
     }
 
-    public function onPostCreate($event)
+    public function onPostCreate(PostEventInterface $event)
     {
         // Check if the Post has been created on the own author's message board
 
-        if(!($event->post->getAuthorId() == $event->post->getOwnerId())) {
-            if($event->post->getAuthor()) {
-                $username = $event->post->getAuthor()->getUsername();
-                $picUrl = 'images/profiles/' . $event->post->getAuthor()->getProfileImageFilename();
+        $post = $event->getPost();
+
+        if(!$post->isInAuthorMb()) {
+            if($post->getAuthor()) {
+                $username = $post->getAuthor()->getUsername();
+                $picUrl = 'images/profiles/' . $post->getAuthor()->getProfileImageFilename();
                 $text = trans('notifications.mb_post_new', ['username' => $username]);
             }
             else {
                 //TODO ADD CHOICE BASED ON FROM_TYPE COLUMN OF POST
                 $username = 'Default Username';
                 $picUrl = 'images/profiles/default.png';
-                $text = substr($event->post->text, 0, min(strlen($event->post->text), 100));
+                $text = substr($post->getText(), 0, min(strlen($post->getText()), 100));
             }
 
             $this->notificationService->sendNotification(
-                $event->post->getOwnerId(),
+                $post->getOwnerId(),
                 null,
-                $event->post->getAuthorId(),
+                $post->getAuthorId(),
                 'mb_post_new',
                 $text,
                 $picUrl,
-                $this->getUserNamedRoute($event->post->getOwnerId()),
+                $this->getUserNamedRoute($post->getOwnerId()),
                 [
-                    'url_reference' => $this->getUrlReference('post', $event->post->id)
+                    'url_reference' => $this->getUrlReference('post', $post->id)
                 ]
             );
         }
@@ -47,33 +52,35 @@ class MessageBoardEventHandler {
         return true;
     }
 
-    public function onCommentCreate($event)
+    public function onCommentCreate(CommentEventInterface $event)
     {
+        $comment = $event->getComment();
+
         // Check if the Comment has been created on a Post owned by another user (i.e. stays in the mb of another user)
 
-        if(!($event->comment->getAuthorId() == $event->comment->getOwnerId())) {
-            if($event->comment->getAuthor()) {
-                $username = $event->comment->getAuthor()->getUsername();
-                $picUrl = 'images/profiles/' . $event->comment->getAuthor()->getProfileImageFilename();
+        if(!$comment->isInAuthorPost()) {
+            if($comment->getAuthor()) {
+                $username = $comment->getAuthor()->getUsername();
+                $picUrl = 'images/profiles/' . $comment->getAuthor()->getProfileImageFilename();
                 $text = trans('notifications.mb_comment_new', ['username' => $username]);
             }
             else {
                 //TODO ADD CHOICE BASED ON FROM_TYPE COLUMN OF COMMENT'S POST
                 $username = 'Default Username';
                 $picUrl = 'images/profiles/default.png';
-                $text = substr($event->post->text, 0, min(strlen($event->post->text), 100));
+                $text = substr($comment->getText(), 0, min(strlen($comment->getText()), 100));
             }
 
             $this->notificationService->sendNotification(
-                $event->comment->getOwnerId(),
+                $comment->getOwnerId(),
                 null,
-                $event->comment->getAuthorId(),
+                $comment->getAuthorId(),
                 'mb_comment_new',
                 $text,
                 $picUrl,
-                $this->getUserNamedRoute($event->comment->getOwnerId()),
+                $this->getUserNamedRoute($comment->getOwnerId()),
                 [
-                    'url_reference' => $this->getUrlReference('comment', $event->comment->id)
+                    'url_reference' => $this->getUrlReference('comment', $comment->id)
                 ]
             );
         }
@@ -81,89 +88,69 @@ class MessageBoardEventHandler {
         return true;
     }
 
-    public function onLikeCreate($event)
+    public function onLikeCreate(LikeEventInterface $event)
     {
-        // See if the like is on a Post or a Comment
+        $like = $event->getLike();
 
-        $likableType = $event->like->getLikableType();
+        // Check if the user likes an own post
 
-        if(strpos($likableType, 'Post') !== false) {
-            // Check if the user likes an own post
+        if(!$like->authorLikesOwnEntity()) {
+            $likableType = $like->getLikableType();
 
-            if(!($event->like->likable->getAuthorId() == $event->like->user->id)) {
-                if($event->like->user) {
-                    $username = $event->like->user->getUsername();
-                    $picUrl = 'images/profiles/' . $event->like->user->getProfileImageFilename();
+            // See if the like is on a Post or a Comment
+
+            if(strpos($likableType, 'Post') !== false) {
+                if($like->getAuthor()) {
+                    $username = $like->getAuthor()->getUsername();
+                    $picUrl = 'images/profiles/' . $like->getAuthor()->getProfileImageFilename();
                     $text = trans('notifications.mb_like_post', ['username' => $username]);
-                }
-                else {
+                } else {
                     $username = null;
                     $picUrl = null;
                     $text = null;
                 }
 
                 $this->notificationService->sendNotification(
-                    $event->like->likable->getOwnerId(),
+                    $like->getLikable()->getOwnerId(),
                     null,
-                    $event->like->likable->getAuthorId(),
+                    $like->getLikable()->getAuthorId(),
                     'mb_like_post',
                     $text,
                     $picUrl,
-                    $this->getUserNamedRoute($event->like->likable->getOwnerId()),
+                    $this->getUserNamedRoute($like->getLikable()->getOwnerId()),
                     [
-                        'url_reference' => $this->getUrlReference('post', $event->post->id)
+                        'url_reference' => $this->getUrlReference('post', $event->getPost()->id)
                     ]
                 );
-            }
-        }
-        elseif(strpos($likableType, 'Comment') !== false) {
-            // Check if the user likes an own comment
-
-            if(!($event->like->likable->getAuthorId() == $event->like->user->id)) {
-                if($event->like->user) {
-                    $username = $event->like->user->getUsername();
-                    $picUrl = 'images/profiles/' . $event->like->user->getProfileImageFilename();
+            } elseif(strpos($likableType, 'Comment') !== false) {
+                if($like->getAuthor()) {
+                    $username = $like->getAuthor()->getUsername();
+                    $picUrl = 'images/profiles/' . $like->getAuthor()->getProfileImageFilename();
                     $text = trans('notifications.mb_like_comment', ['username' => $username]);
-                }
-                else {
+                } else {
                     $username = null;
                     $picUrl = null;
                     $text = null;
                 }
 
                 $this->notificationService->sendNotification(
-                    $event->like->likable->getOwnerId(),
+                    $like->getLikable()->getOwnerId(),
                     null,
-                    $event->like->likable->getAuthorId(),
+                    $like->getLikable()->getAuthorId(),
                     'mb_like_comment',
                     $text,
                     $picUrl,
-                    $this->getUserNamedRoute($event->like->likable->getOwnerId()),
+                    $this->getUserNamedRoute($like->getLikable()->getOwnerId()),
                     [
-                        'url_reference' => $this->getUrlReference('comment', $event->comment->id)
+                        'url_reference' => $this->getUrlReference('comment', $event->getComment()->id)
                     ]
                 );
+            } else {
+                throw new UnexpectedValueException("UnexpectedValueException in " . __METHOD__ . ' at line ' . __LINE__ . ': Invalid likable type :' . e($likableType));
             }
-        }
-        else {
-            throw new UnexpectedValueException("UnexpectedValueException in ".__METHOD__.' at line '.__LINE__.': Invalid likable type :'. e($likableType));
         }
 
         return true;
-    }
-
-    /**
-     * @param  $event
-     * @return bool
-     */
-    protected function isPostOwnedByAuthor($event)
-    {
-        if($event->post->getAuthorId() == $event->post->getOwnerId()) {
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
     /**

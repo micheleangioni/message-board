@@ -134,4 +134,19 @@ class Post extends \Illuminate\Database\Eloquent\Model {
         }
     }
 
+    /**
+     * Check if the Post author wrote on his own message board.
+     *
+     * @return bool
+     */
+    public function isInAuthorMb()
+    {
+        if($this->getAuthorId() == $this->getOwnerId()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }

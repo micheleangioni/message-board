@@ -98,7 +98,7 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
     }
 
 
-	public function testNotificationCreatedAfterNewPost()
+	public function testNotificationCreatedAfterNewPostAndComment()
 	{
         // Following path for base path is needed by Chromabits/Purifier package
         $this->app['path.base'] .= '/..';
@@ -107,9 +107,11 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
         $this->app['config']['ma_messageboard.posts_per_page'] = 20;
         $this->app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $sender = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
+        // Create a new Post
 
-        $sender->shouldReceive('getPrimaryId')
+        $senderPost = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
+
+        $senderPost->shouldReceive('getPrimaryId')
             ->once()
             ->andReturn(1);
 
@@ -120,10 +122,21 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
             ->andReturn(2);
 
         $mbGateway = $this->app->make('MicheleAngioni\MessageBoard\MbGateway');
-        $mbGateway->createPost($receiver,  $sender, 'public_mess', 'text', false);
+        $post = $mbGateway->createPost($receiver,  $senderPost, 'public_mess', 'text', false);
 
         $notificationService = $this->app->make('MicheleAngioni\MessageBoard\Services\NotificationService');
         $this->assertEquals(1, $notificationService->getNotifications()->count());
+
+        // Create a new Comment
+
+        $senderComment = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
+
+        $senderComment->shouldReceive('getPrimaryId')
+            ->once()
+            ->andReturn(3);
+
+        $mbGateway->createComment($senderComment, $post->getkey(), 'text', false);
+        $this->assertEquals(2, $notificationService->getNotifications()->count());
     }
 
 

@@ -67,4 +67,22 @@ class Comment extends \Illuminate\Database\Eloquent\Model {
         return $this->text;
     }
 
+
+    // Others
+
+    /**
+     * Check if the Comment author wrote on a Post owned by him/herself
+     *
+     * @return bool
+     */
+    public function isInAuthorPost()
+    {
+        if($this->getAuthorId() == $this->getOwnerId()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }
