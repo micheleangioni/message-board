@@ -4,6 +4,6 @@ use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 
 interface MbGatewayInterface {
 
-    function createCodedPost(MbUserInterface $user, $messageType, $code, array $attributes);
+    function createCodedPost(MbUserInterface $user, $categoryId, $code, array $attributes);
 
 }

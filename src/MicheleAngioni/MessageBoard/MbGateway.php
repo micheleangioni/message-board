@@ -1,5 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
+use MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface as CategoryRepo;
 use MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Contracts\MbGatewayInterface;
@@ -17,24 +18,17 @@ class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
 
     protected $mbText;
 
-    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
+    function __construct(CategoryRepo $categoryRepo, CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
                          PurifierInterface $purifier, ViewRepo $viewRepo)
     {
-        parent::__construct($commentRepo, $likeRepo, $postRepo, $presenter, $purifier, $viewRepo);
+        parent::__construct($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter, $purifier, $viewRepo);
     }
 
     /**
-     * Create the coded text of the mb post.
-     * Keys in the messageboard.php lang file will be used for localization.
-     *
-     * @param  string           $code
-     * @param  MbUserInterface  $user
-     * @param  array            $attributes
+     * {inheritdoc}
      * @throws InvalidArgumentException
-     *
-     * @return string
      */
-    protected function getCodedPostText($code, MbUserInterface $user = NULL, array $attributes)
+    protected function getCodedPostText($code, MbUserInterface $user = NULL, array $attributes = [])
     {
         if(!$code) {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': No input code.');

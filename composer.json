@@ -1,7 +1,7 @@
 {
     "name": "michele-angioni/message-board",
     "description": "A message board package for Laravel.",
-    "keywords": ["laravel", "message board"],
+    "keywords": ["laravel", "message board", "notifications"],
     "license": "Apache-2.0",
     "authors": [
         {
@@ -14,11 +14,11 @@
         "chromabits/purifier": "~2.1",
         "illuminate/html": "5.*",
         "laravel/framework": "~5.0",
-        "michele-angioni/support": "~2.0"
+        "michele-angioni/support": "~2.10"
     },
     "require-dev": {
         "mockery/mockery": "dev-master",
-        "orchestra/testbench": "3.0.*",
+        "orchestra/testbench": "3.0.x",
         "phpunit/phpunit": "~4.1",
         "sami/sami": "dev-master"
     },

@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTbMessboardCommentsTable extends Migration {
+class CreateTbMessboardCategoriesTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,12 +12,12 @@ class CreateTbMessboardCommentsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('tb_messboard_comments', function(Blueprint $table)
+        Schema::create('tb_messboard_categories', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->integer('post_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->text('text', 65535);
+            $table->string('name', 30)->unique();
+            $table->string('default_pic', 100)->nullable()->default(null);
+            $table->boolean('private')->default(false);
             $table->nullableTimestamps();
         });
     }
@@ -29,7 +29,7 @@ class CreateTbMessboardCommentsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('tb_messboard_comments');
+        Schema::drop('tb_messboard_categories');
     }
 
 }

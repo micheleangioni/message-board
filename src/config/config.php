@@ -15,23 +15,6 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Message Types
-    |--------------------------------------------------------------------------
-    |
-    | List of the different message types which can be posted in the message
-    | board. Default values are public_mess and private_mess, but new ones
-    | can be added.
-    | If the array is empty, all message_types are allowed.
-    |
-    */
-
-    'message_types' => [
-        'public_mess',
-        'private_mess'
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Posts per page
     |--------------------------------------------------------------------------
     |
@@ -89,6 +72,11 @@ return array(
          * and likes events are fired.
          */
         'after_mb_events' => false,
+
+        /**
+         * This is the relative path where models' pictures are saved on the server.
+         */
+        'pic_path' => 'pics'
     ]
 
 );

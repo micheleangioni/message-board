@@ -47,7 +47,7 @@ class MbPostModelTest extends Orchestra\Testbench\TestCase {
         $post = new MicheleAngioni\MessageBoard\Models\Post;
         $post->id = 1;
         $post->user_id = 1;
-        $post->post_type = 'public_mess';
+        $post->category_id = null;
         $post->text = 'text';
         $post->created_at = $postdatetime;
 

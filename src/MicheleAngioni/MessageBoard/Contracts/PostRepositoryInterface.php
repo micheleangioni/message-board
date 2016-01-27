@@ -16,10 +16,14 @@ interface PostRepositoryInterface {
 
     /**
      * Return posts of input type of the input user, ordered by post AND comment datetime.
+     * If $category is FALSE, no check will be made on categories. If set to NULL, only Posts with no categories
+     *  will be retrieved. Otherwise $category can be the Category id or name.
+     * If $private is NULL, no checks will be made. If TRUE/FALSE, only private/public posts will be retrieved.
      * It also sets the child_datetime post attribute.
      *
      * @param  int  $idUser
-     * @param  string  $messageType
+     * @param  int|string|bool|null  $category
+     * @param  bool|null  $private
      * @param  int  $page
      * @param  int  $limit
      * @throws \InvalidArgumentException
@@ -27,6 +31,6 @@ interface PostRepositoryInterface {
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getOrderedPosts($idUser, $messageType, $page, $limit);
+    public function getOrderedPosts($idUser, $category, $private, $page, $limit);
 
 }

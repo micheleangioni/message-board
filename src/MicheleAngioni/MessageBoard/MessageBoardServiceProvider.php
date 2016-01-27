@@ -58,6 +58,11 @@ class MessageBoardServiceProvider extends ServiceProvider {
     protected function registerRepositories()
     {
         $this->app->bind(
+            'MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface',
+            'MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository'
+        );
+
+        $this->app->bind(
             'MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository'
         );

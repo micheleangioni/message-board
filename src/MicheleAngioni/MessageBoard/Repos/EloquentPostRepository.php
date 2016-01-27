@@ -41,20 +41,62 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
     /**
      * {@inheritdoc}
      */
-    public function getOrderedPosts($idUser, $messageType = 'public_mess', $page = 1, $limit = 20)
+    public function getOrderedPosts($idUser, $category = false, $private = null, $page = 1, $limit = 20)
     {
-        if( !(Helpers::isInt($idUser,1) && Helpers::isInt($page,1) && Helpers::isInt($limit,1))) {
+        if(!(Helpers::isInt($idUser,1) && Helpers::isInt($page,1) && Helpers::isInt($limit,1))) {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $idUser, $page or $limit are not valid integers.');
         }
 
         // Take all posts in the mb, ordered by Post AND Comment datetime.
 
         try {
-            if($messageType != 'all') {
-                $posts = $this->getBy(array('user_id' => $idUser, 'post_type' => $messageType), array('likes', 'poster', 'comments.likes.user', 'comments.user'));
+            if($category === false) {
+                // No Category constraints
+                $posts = $this->getBy(
+                    ['user_id' => $idUser],
+                    ['likes', 'poster', 'comments.likes.user', 'comments.user']
+                );
             }
-            else {
-                $posts = $this->getBy(array('user_id' => $idUser), array('likes', 'poster', 'comments.likes', 'comments.user'));
+            elseif(is_null($category)) {
+                // Only Posts with no Category relationships
+                $posts = $this->getBy(
+                    ['user_id' => $idUser, 'category_id' => null],
+                    ['likes', 'poster', 'comments.likes.user', 'comments.user']
+                );
+            }
+            elseif(Helpers::isInt($category,1)) {
+                if(is_null($private)) {
+                    $posts = $this->getBy(
+                        ['user_id' => $idUser, 'category_id' => $category],
+                        ['likes', 'poster', 'comments.likes.user', 'comments.user']
+                    );
+                }
+                else {
+                    $posts = $this->whereHas(
+                        'category',
+                        ['user_id' => $idUser],
+                        ['private' => $private],
+                        ['likes', 'poster', 'comments.likes.user', 'comments.user']
+                    );
+                }
+            }
+            else{
+                if(is_null($private)) {
+                    $posts = $this->whereHas(
+                        'category',
+                        ['user_id' => $idUser],
+                        ['name' => $category],
+                        ['likes', 'poster', 'comments.likes.user', 'comments.user']
+                    );
+                }
+                else {
+                    $posts = $this->whereHas(
+                        'category',
+                        ['user_id' => $idUser],
+                        ['name' => $category, 'private' => $private],
+                        ['likes', 'poster', 'comments.likes.user', 'comments.user']
+                    );
+                }
             }
         } catch (Exception $e) {
             throw new DatabaseException("DB error in ".__METHOD__.' at line '.__LINE__.':'. $e->getMessage());

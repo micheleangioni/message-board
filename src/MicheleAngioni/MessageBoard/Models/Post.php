@@ -20,6 +20,11 @@ class Post extends \Illuminate\Database\Eloquent\Model {
     protected $childDatetime;
 
 
+    public function category()
+    {
+        return $this->belongsTo('\MicheleAngioni\MessageBoard\Models\Category');
+    }
+
     public function comments()
     {
         return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Comment');

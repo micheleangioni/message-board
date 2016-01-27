@@ -2,6 +2,8 @@
 
 class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
+    protected $categoryRepo;
+
     protected $commentRepo;
 
     protected $likeRepo;
@@ -62,7 +64,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             'prefix' => ''
         ]);
         $app['config']->set('ma_messageboard.message_types', [
-            'public_mess',
+            null,
             'private_mess'
         ]);
     }
@@ -134,7 +136,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Event::shouldReceive('fire')->once();
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post',
-            $stub->createCodedPost($user, 'public_mess', 1, []));
+            $stub->createCodedPost($user, null, 1, []));
     }
 
     public function testCreatePost()
@@ -165,7 +167,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Event::shouldReceive('fire')->once();
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post',
-            $stub->createPost($user, $poster, 'public_mess', 'text'));
+            $stub->createPost($user, $poster, null, 'text'));
     }
 
     /**
@@ -187,7 +189,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->once()
             ->andReturn('Username');
 
-        $stub->createPost($user, $poster, 'public_mess', 'text');
+        $stub->createPost($user, $poster, null, 'text');
     }
 
     public function testGetPost()
@@ -459,6 +461,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $appPath = $app['path.base'];
         $app['path.base'] = $appPath . '/..';
 
+        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
@@ -468,11 +471,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $app['path.base'] = $appPath;
         $app['config']['ma_messageboard.model'] = 'User';
-        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.message_types'] = [null,'private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
 
         $user = new User;
@@ -492,6 +495,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
      */
     public function testDeletePostByOtherUser()
     {
+        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
@@ -502,11 +506,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
-        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.message_types'] = [null,'private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
 
         $user = new User;
@@ -518,7 +522,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $user2->save();
 
         $post = $user->mbPosts()->create(array(
-            'post_type' => 'public_mess',
+            'category_id' => null,
             'poster_id' => $user->id,
             'text' => 'text'
         ));
@@ -528,6 +532,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     public function testDeletePostByAdmin()
     {
+        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
@@ -538,11 +543,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
-        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.message_types'] = [null,'private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
 
         $user = new User;
@@ -559,7 +564,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $user2->attachMbRole($role);
 
         $post = $user->mbPosts()->create(array(
-            'post_type' => 'public_mess',
+            'category_id' => null,
             'user_id' => $user->id,
             'poster_id' => $user->id,
             'text' => 'text'
@@ -573,6 +578,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
      */
     public function testDeleteCommentByOtherUser()
     {
+        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
@@ -583,11 +589,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
-        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.message_types'] = [null,'private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
 
         $user = new User;
@@ -599,7 +605,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $user2->save();
 
         $post = $user->mbPosts()->create(array(
-            'post_type' => 'public_mess',
+            'category_id' => null,
             'user_id' => $user->id,
             'poster_id' => $user->id,
             'text' => 'text'
@@ -615,6 +621,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     public function testDeleteCommentByAdmin()
     {
+        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
@@ -625,11 +632,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
-        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.message_types'] = [null,'private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
             $purifier, $viewRepo, $app);
 
         $user = new User;
@@ -646,7 +653,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $user2->attachMbRole($role);
 
         $post = $user->mbPosts()->create(array(
-            'post_type' => 'public_mess',
+            'category_id' => null,
             'user_id' => $user->id,
             'poster_id' => $user->id,
             'text' => 'text'
@@ -660,6 +667,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->assertTrue($mbGateway->deleteComment($comment->id, $user2));
     }
 
+
     public function testGetOrderedUserPosts()
     {
         date_default_timezone_set('UTC');
@@ -670,7 +678,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $post = new MicheleAngioni\MessageBoard\Models\Post;
         $post->id = 1;
         $post->user_id = 1;
-        $post->post_type = 'public_mess';
+        $post->category_id = null;
         $post->text = 'text';
         $post->created_at = $postdatetime;
         $post->save();
@@ -685,7 +693,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $post2 = new MicheleAngioni\MessageBoard\Models\Post;
         $post2->id = 2;
         $post2->user_id = 1;
-        $post2->post_type = 'public_mess';
+        $post2->category_id = null;
         $post2->text = 'text';
         $post2->created_at = $postdatetime;
         $post2->save();
@@ -697,6 +705,21 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $comment2->created_at = $comment2Datetime;
         $comment2->save();
 
+        $post3 = new MicheleAngioni\MessageBoard\Models\Post;
+        $post3->id = 3;
+        $post3->user_id = 1;
+        $post3->category_id = 10;
+        $post3->text = 'text';
+        $post3->created_at = $postdatetime;
+        $post3->save();
+
+        $category = new MicheleAngioni\MessageBoard\Models\Category;
+        $category->id = 10;
+        $category->name = 'category';
+        $category->created_at = $postdatetime;
+        $category->save();
+
+        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
@@ -707,19 +730,26 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
-        $app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
+        $app['config']['ma_messageboard.message_types'] = [null,'private_mess'];
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
                                                                 $purifier, $viewRepo, $app);
 
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
         $user->shouldReceive('getPrimaryId')->andReturn(1);
 
-        $posts = $mbGateway->getOrderedUserPosts($user, 'all');
-
+        $posts = $mbGateway->getOrderedUserPosts($user, false);
         $this->assertEquals(2, $posts[0]->id);
+
+        $posts = $mbGateway->getOrderedUserPosts($user, 10);
+        $this->assertEquals(3, $posts[0]->id);
+        $this->assertEquals(1, $posts->count());
+
+        $posts = $mbGateway->getOrderedUserPosts($user, 'category');
+        $this->assertEquals(3, $posts[0]->id);
+        $this->assertEquals(1, $posts->count());
     }
     /*
     public function testGetOrderedUserPostsWithPresenter()
@@ -731,7 +761,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $post = new MicheleAngioni\MessageBoard\Models\Post;
         $post->id = 1;
         $post->user_id = 1;
-        $post->post_type = 'public_mess';
+        $post->category_id = null;
         $post->text = 'text <?';
         $post->created_at = $postdatetime;
         $post->save();
@@ -745,6 +775,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         //unset($post); unset($comment); unset($comment2);
 
+        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
         $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
@@ -756,7 +787,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         Config::shouldReceive('get')->with('ma_messageboard.model')->andReturn('User');
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($commentRepo, $likeRepo, $postRepo, $presenter,
+        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
                                                                 $purifier, $viewRepo, $app);
 
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
@@ -782,6 +813,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
     protected function getAbstractGatewayStub()
     {
+        $this->categoryRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface');
         $this->commentRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface');
         $this->likeRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface');
         $this->postRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
@@ -789,12 +821,12 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->presenter = $this->mock('MicheleAngioni\Support\Presenters\Presenter');
         $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface');
 
-        Config::shouldReceive('get')->with('ma_messageboard.message_types')->andReturn(['public_mess','private_mess']);
+        Config::shouldReceive('get')->with('ma_messageboard.message_types')->andReturn([null,'private_mess']);
         Config::shouldReceive('get')->with('ma_messageboard.posts_per_page')->andReturn(20);
         Config::shouldReceive('get')->with('ma_messageboard.user_named_route')->andReturn('user');
         
         return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
-            [$this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->purifier,
+            [$this->categoryRepo, $this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->purifier,
                 $this->viewRepo]);
     }
 
