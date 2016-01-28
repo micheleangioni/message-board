@@ -10,14 +10,14 @@ trait MbTrait {
         return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Ban', 'user_id')->orderBy('updated_at', 'desc');
     }
 
-    public function mbPosts()
-    {
-        return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Post');
-    }
-
     public function mbLastView()
     {
         return $this->hasOne('\MicheleAngioni\MessageBoard\Models\View');
+    }
+
+    public function mbPosts()
+    {
+        return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Post');
     }
 
     public function mbRoles()

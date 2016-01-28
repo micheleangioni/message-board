@@ -13,34 +13,20 @@ class MbNotificationServiceTest extends Orchestra\Testbench\TestCase {
     {
         parent::setUp();
 
-        // Create an artisan object for calling migrations
-        $artisan = $this->app->make('Illuminate\Contracts\Console\Kernel');
-
         // Call migrations
-        $artisan->call('migrate', [
+        $this->artisan('migrate', [
             '--database' => 'testbench',
-            '--path' => 'migrations',
+            '--realpath' => realpath(__DIR__.'/../src/migrations'),
         ]);
 
         // Call migrations specific to our tests
-        $artisan->call('migrate', array(
+        $this->artisan('migrate', array(
             '--database' => 'testbench',
-            '--path' => '../tests/migrations',
+            '--realpath' => realpath(__DIR__.'/migrations'),
         ));
 
         // Call seeding
-        Artisan::call('db:seed', ['--class' => 'MessageBoardSeeder']);
-    }
-
-    /**
-     * Get base path.
-     *
-     * @return string
-     */
-    protected function getBasePath()
-    {
-        // reset base path to point to our package's src directory
-        return __DIR__.'/../src';
+        $this->artisan('db:seed', ['--class' => 'MessageBoardSeeder']);
     }
 
     /**

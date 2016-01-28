@@ -26,7 +26,7 @@ class MessageBoardEventHandler {
         if(!$post->isInAuthorMb()) {
             if($post->getAuthor()) {
                 $username = $post->getAuthor()->getUsername();
-                $picUrl = 'images/profiles/' . $post->getAuthor()->getProfileImageFilename();
+                $picUrl = config('ma_messageboard.pic_path') . DIRECTORY_SEPARATOR . $post->getAuthor()->getProfileImageFilename();
                 $text = trans('notifications.mb_post_new', ['username' => $username]);
             }
             else {

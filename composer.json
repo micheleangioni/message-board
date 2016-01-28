@@ -17,8 +17,8 @@
         "michele-angioni/support": "~2.10"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master",
-        "orchestra/testbench": "3.0.x",
+        "mockery/mockery": "^0.9",
+        "orchestra/testbench": "~3.0",
         "phpunit/phpunit": "~4.1",
         "sami/sami": "dev-master"
     },

@@ -36,6 +36,18 @@ return array(
 
     'user_named_route' => '',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default pictures path
+    |--------------------------------------------------------------------------
+    |
+    | This is the relative path where models' pictures are saved on the server.
+    | A NULL value means no pictures will be used.
+    | N.B. do NOT put directory separator at the end of the path.
+    |
+    */
+
+    'pic_path' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -74,9 +86,11 @@ return array(
         'after_mb_events' => false,
 
         /**
-         * This is the relative path where models' pictures are saved on the server.
+         * If set to true, the pic url will be added to the notifications.
+         * Model must implement the MbModelNotifableInterface
          */
-        'pic_path' => 'pics'
+        'use_model_pics' => false
+
     ]
 
 );

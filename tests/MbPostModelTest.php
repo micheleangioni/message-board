@@ -2,13 +2,6 @@
 
 class MbPostModelTest extends Orchestra\Testbench\TestCase {
 
-    /*
-    protected function getPackageProviders($app)
-    {
-        return ['MicheleAngioni\MessageBoard\MessageBoardServiceProvider'];
-    }
-    */
-
     /**
      * Define environment setup.
      *
