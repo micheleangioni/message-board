@@ -55,17 +55,4 @@ class MbPostModelTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals($commentDatetime, $post->childDatetime);
     }
 
-
-    public function mock($class)
-    {
-        $mock = Mockery::mock($class);
-
-        return $mock;
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
 }

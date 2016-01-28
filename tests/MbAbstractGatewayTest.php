@@ -66,7 +66,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
     protected function getPackageProviders($app)
     {
         return array(
-            'Chromabits\Purifier\PurifierServiceProvider',
+            'Mews\Purifier\PurifierServiceProvider',
             'MicheleAngioni\Support\SupportServiceProvider',
             'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
         );

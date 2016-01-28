@@ -106,6 +106,16 @@ class Notification extends \Illuminate\Database\Eloquent\Model {
     // Other Methods
 
     /**
+     * Return the purified Notification text.
+     *
+     * @return string
+     */
+    public function getCleanText()
+    {
+        return clean($this->getText());
+    }
+
+    /**
      * Check if the Notification hasbeen read.
      *
      * @return bool
