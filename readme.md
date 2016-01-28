@@ -214,7 +214,6 @@ Pull requests are welcome, especially for the to do list below.
 
 ## To do list
 
-- notifications
 - editing posts/comments
 - soft delete
 - "report"/"abuse" feature

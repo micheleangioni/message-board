@@ -87,9 +87,14 @@ return array(
 
         /**
          * If set to true, the pic url will be added to the notifications.
-         * Model must implement the MbModelNotifableInterface
+         * Model must implement the MbUserNotifableInterface.
          */
-        'use_model_pics' => false
+        'use_model_pic' => false,
+
+        /**
+         * Used to set the max length for notifications without a User sender.
+         */
+        'notification_max_length' => 100
 
     ]
 

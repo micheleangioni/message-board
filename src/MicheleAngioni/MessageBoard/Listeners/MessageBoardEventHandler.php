@@ -3,9 +3,11 @@
 use Illuminate\Events\Dispatcher;
 use MicheleAngioni\MessageBoard\Contracts\CommentEventInterface;
 use MicheleAngioni\MessageBoard\Contracts\LikeEventInterface;
+use MicheleAngioni\MessageBoard\Contracts\MbUserNotifableInterface;
 use MicheleAngioni\MessageBoard\Contracts\PostEventInterface;
+use MicheleAngioni\MessageBoard\Models\Post;
 use MicheleAngioni\MessageBoard\Services\NotificationService;
-use UnexpectedValueException;
+use MicheleAngioni\MessageBoard\Exceptions\InvalidLikableTypeException;
 
 class MessageBoardEventHandler {
 
@@ -26,14 +28,12 @@ class MessageBoardEventHandler {
         if(!$post->isInAuthorMb()) {
             if($post->getAuthor()) {
                 $username = $post->getAuthor()->getUsername();
-                $picUrl = config('ma_messageboard.pic_path') . DIRECTORY_SEPARATOR . $post->getAuthor()->getProfileImageFilename();
+                $picUrl = $this->getUserPicPath($post->getAuthor());
                 $text = trans('notifications.mb_post_new', ['username' => $username]);
             }
             else {
-                //TODO ADD CHOICE BASED ON FROM_TYPE COLUMN OF POST
-                $username = 'Default Username';
-                $picUrl = 'images/profiles/default.png';
-                $text = substr($post->getText(), 0, min(strlen($post->getText()), 100));
+                $picUrl = $this->getCategoryPicUrl($post);
+                $text = substr($post->getText(), 0, min(strlen($post->getText()), config('ma_messageboard.notification_max_length')));
             }
 
             $this->notificationService->sendNotification(
@@ -62,14 +62,12 @@ class MessageBoardEventHandler {
         if(!$comment->isInAuthorPost()) {
             if($comment->getAuthor()) {
                 $username = $comment->getAuthor()->getUsername();
-                $picUrl = 'images/profiles/' . $comment->getAuthor()->getProfileImageFilename();
+                $picUrl = $this->getUserPicPath($comment->getAuthor());
                 $text = trans('notifications.mb_comment_new', ['username' => $username]);
             }
             else {
-                //TODO ADD CHOICE BASED ON FROM_TYPE COLUMN OF COMMENT'S POST
-                $username = 'Default Username';
-                $picUrl = 'images/profiles/default.png';
-                $text = substr($comment->getText(), 0, min(strlen($comment->getText()), 100));
+                $picUrl = '';
+                $text = substr($comment->getText(), 0, min(strlen($comment->getText()), config('ma_messageboard.notification_max_length')));
             }
 
             $this->notificationService->sendNotification(
@@ -96,6 +94,7 @@ class MessageBoardEventHandler {
         // Check if the user likes an own post
 
         if(!$like->authorLikesOwnEntity()) {
+            $likable = $like->getLikable();
             $likableType = $like->getLikableType();
 
             // See if the like is on a Post or a Comment
@@ -103,55 +102,88 @@ class MessageBoardEventHandler {
             if(strpos($likableType, 'Post') !== false) {
                 if($like->getAuthor()) {
                     $username = $like->getAuthor()->getUsername();
-                    $picUrl = 'images/profiles/' . $like->getAuthor()->getProfileImageFilename();
+                    $picUrl = $this->getUserPicPath($like->getAuthor());
                     $text = trans('notifications.mb_like_post', ['username' => $username]);
                 } else {
-                    $username = null;
-                    $picUrl = null;
-                    $text = null;
+                    $picUrl = '';
+                    $text = '';
                 }
 
                 $this->notificationService->sendNotification(
-                    $like->getLikable()->getOwnerId(),
+                    $likable->getOwnerId(),
                     null,
-                    $like->getLikable()->getAuthorId(),
+                    $like->getAuthorId(),
                     'mb_like_post',
                     $text,
                     $picUrl,
-                    $this->getUserNamedRoute($like->getLikable()->getOwnerId()),
+                    $this->getUserNamedRoute($likable->getOwnerId()),
                     [
-                        'url_reference' => $this->getUrlReference('post', $event->getPost()->id)
+                        'url_reference' => $this->getUrlReference('post', $like->getLikableId())
                     ]
                 );
             } elseif(strpos($likableType, 'Comment') !== false) {
                 if($like->getAuthor()) {
                     $username = $like->getAuthor()->getUsername();
-                    $picUrl = 'images/profiles/' . $like->getAuthor()->getProfileImageFilename();
+                    $picUrl = $this->getUserPicPath($like->getAuthor());
                     $text = trans('notifications.mb_like_comment', ['username' => $username]);
                 } else {
-                    $username = null;
-                    $picUrl = null;
-                    $text = null;
+                    $picUrl = '';
+                    $text = '';
                 }
 
                 $this->notificationService->sendNotification(
-                    $like->getLikable()->getOwnerId(),
+                    $likable->getOwnerId(),
                     null,
-                    $like->getLikable()->getAuthorId(),
+                    $like->getAuthorId(),
                     'mb_like_comment',
                     $text,
                     $picUrl,
-                    $this->getUserNamedRoute($like->getLikable()->getOwnerId()),
+                    $this->getUserNamedRoute($likable->getOwnerId()),
                     [
-                        'url_reference' => $this->getUrlReference('comment', $event->getComment()->id)
+                        'url_reference' => $this->getUrlReference('comment', $like->getLikableId())
                     ]
                 );
             } else {
-                throw new UnexpectedValueException("UnexpectedValueException in " . __METHOD__ . ' at line ' . __LINE__ . ': Invalid likable type :' . e($likableType));
+                throw new InvalidLikableTypeException("UnexpectedValueException in " . __METHOD__ . ' at line ' . __LINE__ . ': Invalid likable type :' . e($likableType));
             }
         }
 
         return true;
+    }
+
+    /**
+     * Return the pic file path of input User.
+     * Return an empty string if user pics are disabled in config file.
+     *
+     * @param  MbUserNotifableInterface  $user
+     * @return string
+     */
+    protected function getUserPicPath(MbUserNotifableInterface $user)
+    {
+        if(config('ma_messageboard.use_model_pic')) {
+            $picPath = config('ma_messageboard.pic_path') . DIRECTORY_SEPARATOR . $user->getProfileImageFilename();
+        }
+        else {
+            $picPath = '';
+        }
+
+        return $picPath;
+    }
+
+    /**
+     * Return the Category pic path on input Post.
+     * If the Post has no Category, return an empty string.
+     *
+     * @param  Post  $post
+     * @return string
+     */
+    protected function getCategoryPicUrl(Post $post)
+    {
+        if(!$post->category) {
+            return '';
+        }
+
+        return config('ma_messageboard.pic_path') . DIRECTORY_SEPARATOR . $post->category->getDefaultPic();
     }
 
     /**
