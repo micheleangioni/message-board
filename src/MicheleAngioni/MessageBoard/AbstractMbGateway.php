@@ -123,7 +123,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Create a new Post from a coded text.
      *
      * @param  MbUserInterface  $user
-     * @param  string|null  $categoryId
+     * @param  int|null  $categoryId
      * @param  string  $code
      * @param  array  $attributes
      *
@@ -150,7 +150,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @param  MbUserInterface  $user
      * @param  MbUserInterface|null  $poster
-     * @param  string  $categoryId
+     * @param  int|null  $categoryId
      * @param  string  $text
      * @param  bool  $banCheck
      * @throws InvalidArgumentException
@@ -542,6 +542,12 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
             else {
                 $posts = $this->presentCollection($user, $posts, $escapeText);
             }
+        }
+
+        // Check if a User is requesting his own Message Board, in case update his last view
+
+        if(is_null($userVisiting)) {
+            $this->updateUserLastView($user);
         }
 
         return $posts;

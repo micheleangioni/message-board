@@ -14,13 +14,17 @@ Bans and a roles and permission system is provided out of the box. Social featur
 
 Message Board can be installed through Composer, first of all include 
 
-    "michele-angioni/message-board": "~0.3"
+    "michele-angioni/message-board": "~1.0"
     
 into your composer.json and run `composer update` or `composer install`.  
 Then publish the Message Board conf and lang files through the artisan command `php artisan vendor:publish`. It will create the `ma_messageboard.php` file in your config directory.  
-Add the Message Board Service Provider in the app.php config file, under the providers array
+Add the Message Board Service Provider in the `app.php` config file, under the providers array
 
     'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
+
+and the MessageBoard facade in the aliases array
+
+    'MessageBoard' => 'MicheleAngioni\MessageBoard\Facades\MessageBoard'
 
 You can now run migrations and seeding through `php artisan migrate --path="database/migrations/messageboard"` and `php artisan db:seed --class="MessageBoardSeeder"` and you are done.
 
@@ -35,64 +39,56 @@ If you are looking for the Laravel 4 version, check the not-anymore-maintained [
 You can than edit the `ma_messageboard.php` file in your `app/config` directory.
 You need to set the correct Model you want to associate a Message Board. Usually it is the Auth model used by Laravel.
 
-Additionally, it can be useful to define a named route for your User page.
+Additionally, it can be useful to define a named route for your User page. An id parameters will be used as well calling `/named_route/{id}` url.
 
 ## Usage
 
-First of all add the `MbTrait` to your User model, which has also to implement the `MbUserInterface` so that Message Board classes can type hint it
+First of all add the `MbTrait` to your User model, which has also to implement the `MbUserInterface` 
 
     <?php
 
     use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
-    use MicheleAngioni\MessageBoard\MbTrait; // Message Board Trait
+    use MicheleAngioni\MessageBoard\MbTrait;
 
-    class User extends Eloquent implements MbUserInterface {
+    class User extends \Illuminate\Database\Eloquent\Model implements MbUserInterface {
 
-        use MbTrait; // Message Board Trait
+        use MbTrait;
 
         /**
          * The database table used by the model.
          *
          * @var string
          */
-        protected $table = 'tb_users';
+        protected $table = 'users';
 
         [...]
-
-The `MicheleAngioni\MessageBoard\AbstractMbGateway` class is a prototype of the Message Board Gateway which can be used to access all main features of the message board.
-
-A simple concrete class is provided as well and can be used out of the box. To use it, just create a new instance of `MicheleAngioni\MessageBoard\MbGateway` by using Laravel dependency injection, for example in your controller
- 
-    <?php
-
-    use MicheleAngioni\MessageBoard\MbGateway;
-
-    class MbController extends BaseController {
-
-        private $mbGateway;
-
-        function __construct(MbGateway $mbGateway)
+        
+        public function getPrimaryId()
         {
-            $this->mbGateway = $mbGateway;
+            //
         }
         
-        // OTHER METHODS
+        public function getUsername()
+        {
+            //
+        }
+        
+        [...]
 
-    }
+The `MessageBoard` Facade is provided with all methods you need to efficiently use the Message Board.
+  
+### Retrieving Posts
 
-### Managing a User Message Board
+    MessageBoard::getOrderedUserPosts(MbUserInterface $user, $category = false, $private = null, $page = 1, $limit = 20, $applyPresenter = false, $escapeText = false, MbUserInterface $userVisiting = null)
+    
+returns a Collection of posts, ordered by datetime, posted in the $user message board, where $user is an instance of the User model (which must implement the MbUserInterface):     
 
-The AbstractMbGateway method `getOrderedUserPosts(MbUserInterface $user, $messageType = 'all', $page = 1, $limit = 20, , $applyPresenter = false, $escapeText = false, , MbUserInterface $userVisiting = NULL)` returns a Collection of posts, ordered by datetime, posted in the $user message board.$user is an instance of the User model (which must implement the MbUserInterface)     
-
- - $messageType defines the type of the messages you want to retrieve, 'all' will retrieve all posts in the User message board.  
- - $page and $limit handle pagination.  
- - $applyPresenter states if posts and comments must be passed to the presenter before being returned.  
- - $escateText states if post and comment texts must be escaped before being returned.  
+ - $category defines the Category to which the Post belongs. Posts can belong to any Category;
+ - $private defines is retrieved Posts must be private (=true), public (=false) or doesn't matter (=null);
+ - $page and $limit handle pagination;
+ - $applyPresenter states if Posts and Comments must be passed to the presenter before being returned;  
+ - $escateText states if post and comment texts must be escaped before being returned;
  - $userVisiting is the instance of the User model (which must implement the MbUserInterface) of the user who is requesting the posts. Leave it null if $user is requesting its own posts.  
-
-A particularly useful feature is the "user last view datetime", that is when a user sees his own message board the datetime of the visit can be saved to remember which posts have been already seen and which not.  
-To achieve that, just call the `updateUserLastView(MbUserInterface $user)` method, where $user is an instance of your User model.  
-You can then retrieve the saved datetime by calling the `getLastViewDatetime()` method from your user model. You can than use it in your classes or views.  
 
 By setting $applyPresenter to true, the posts will also be passed to a `PostPresenter` before being returned.   
 By setting $escapeText to true, the Post and Comment text will be escaped by [HtmlPurifier](https://github.com/mewebstudio/Purifier) so that can be securely echoed in your views.  
@@ -108,34 +104,40 @@ You can also manually pass a single model to the presenter by using the `present
 
 ### Managing posts
 
-Use the `createPost(MbUserInterface $user, MbUserInterface $poster = NULL, $messageType = 'public_mess', $text, $banCheck = true)` method to create a new post.
+To create a new Post use the createPost() method
 
- - $user and $poster are instances of your User model (which must implement the MbUserInterface) of the owner of the message board where the post will be posted and the poster. If a use writes a post on his/her own messageboard, use the same User instance of both first and second parameters. 
- - $messageType defines the type of the message will be posted and $text is the test of the post. Messages of type 'private_mess' are marked as unread by default. Other messages are datetime based (see below).
+    createPost(MbUserInterface $user, MbUserInterface $poster = null, $categoryId = null, $text, $banCheck = true) 
+    
+ - $user and $poster are instances of your User model (which must implement the MbUserInterface) of the owner of the message board where the post will be posted and the poster. If a User writes a post on his/her own messageboard, use the same User instance of both first and second parameters; 
+ - $categoryId defines the Category of the Post;
+ - $text is the text of the message;
  - $banCheck states if a ban check on the poster user will be performed.  
 
-Use the `getPost($idPost)` and `deletePost($idPost, MbUserInterface $user = NULL)` methods to respectively retrieve and delete a post.  
-In the `deletePost` method, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Post or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
+Use the `getPost($idPost)`, `updatePost($idPost, $text, MbUserInterface $user = null)` and the `deletePost($idPost, MbUserInterface $user = NULL)` methods to respectively retrieve, update and delete a Post.  
 
-The allowed message types can be customized in the `ma_messageboard.php` configuration file. If the given message type is not listed in the `message_types` array, an exception will be thrown. If the `message_types` array is empty, all message types will be allowed. 
+In the `updatePost` and `deletePost` methods, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Post or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
 
 ### Managing comments
 
-Use the `createComment(MbUserInterface $user, $postId, $text, $banCheck = true)` method to create a new comment.  
+The `createComment(`) method can be used to create a new Comment 
 
- - $user is an instance of your User model (which must implement the MbUserInterface) which will own the comment.  
- - $postId is the post where the comment belongs.  
- - $text is the text of the comment.  
- - $banCheck states if a ban check on the user will be performed.  
+    `createComment(MbUserInterface $user, $postId, $text, $banCheck = true)`  
 
-Use the `getComment($idComment)` and `deleteComment($idComment, MbUserInterface $user = NULL)` methods to respectively get and delete a comment.  
-In the `deleteComment` method, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Comment or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
+ - $user is an instance of your User model (which must implement the MbUserInterface) which will own the comment;
+ - $postId is the post where the comment belongs;
+ - $text is the text of the comment;
+ - $banCheck states if a ban check on the user will be performed.
+
+Use the `getComment($idComment)`, the `updateComment($idComment, $text, MbUserInterface $user = null)` and `deleteComment($idComment, MbUserInterface $user = NULL)` methods to respectively get, update and delete a Comment.
+  
+In the `updateComment` `deleteComment` methods, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Comment or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
 
 ### Managing likes
 
 Use the `createLike($idUser, $likableEntityId, $likableEntity)` method to add a like.  
-$isUser is the User who gives the like. $likableEntity is the entity which is liked: 'post' and 'comment' are supported by default.  
-$likableEntityId is the primary id of the entity which is liked.  
+
+ - $idUser is the User who gives the like. $likableEntity is the entity which is liked: 'post' and 'comment' are supported by default.  
+ - $likableEntityId is the primary id of the entity which is liked, i.e. a Post or a Comment.  
 
 The `deleteLike($idUser, $likableEntityId, $likableEntity)` method works in the same way, but instead it deletes the like.
 
@@ -143,12 +145,20 @@ The `deleteLike($idUser, $likableEntityId, $likableEntity)` method works in the 
 
 Message Board supports also coded posts, that is in the `messageboard.php` lang file you can define codes with pre-defined messages.
 
-You can use the `createCodedPost(MbUserInterface $user, $messageType = 'public_mess', $code, array $attributes = array())` method to access the coded messages.  
+You can use the `createCodedPost(MbUserInterface $user, $categoryId = null, $code, array $attributes = [])` method to access the coded messages.  
 
  - $user is an instance of your User model (which must implement the MbUserInterface) where the post will be posted.  
- - $messageType defines the type of the message will be posted.  
+ - $categoryId defines the Category of the Post;  
  - $code is the key of the lang file array which identifies the coded message.  
  - $attributes defines a list of variables can be injected in the coded message. See the [Laravel localization documentation](http://laravel.com/docs/5.0/localization) for further details.
+
+The codes are defined in the `messageboard.php` lang file. More codes can be defined this way:
+
+    return [
+    
+        'code' => "The user is :user.",
+    
+    ];
 
 If you want a deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
 
@@ -157,15 +167,17 @@ If you want a deeper level of customization for your coded posts, you can extend
 Message Board comes with a role and permission system out of the box.  
 You can manage them through the `MicheleAngioni\MessageBoard\PermissionManager` class.
 
-Default roles are `Admin` and `Moderator`. The first one can edit and delete posts and comments, ban users, add and remove moderators.    
-The Moderator has the same permissions of the admin, but adding and remove other moderators.
+Default roles are `Admin` and `Moderator`. The first one can edit and delete posts and comments, ban users, add and remove moderators, manage Categories.    
+The Moderator has the same Permissions of the admin, but manage moderators and categories.
 
 In order to retrieve one or all available roles, just call the `getRole($idRole)` and `getRoles()` methods of the PermissionManager. Each role returns its permissions through the `permissions` property.  
 Thanks to the `MbTrait`, you can easily add a role to an user with `$user->attachMbRole($role)` and detach it by using `$user->attachMbRole($role)`.  
-To test a user against a role, call `$user->hasMbRole($name)` where $name is the name of the role.  
+
+To test a user against a Role, call `$user->hasMbRole($name)` where $name is the name of the role.  
 
 To retrieve one or all available permissions, call the `getPermission($idPermission)` and `getPermissions()` methods of the PermissionManager.
-If you want to test an user against a permission, use `$user->canMb($permission)` where $permission is the name of the permission.
+
+If you want to test an user against a Permission, use `$user->canMb($permission)` where $permission is the name of the permission.
 
 Default provided permissions are:
 
@@ -174,23 +186,27 @@ Default provided permissions are:
  - 'Ban Users'
  - 'Add Moderators'
  - 'Remove Moderators'
+ - 'Manage Permissions'
 
-A new role can be created with the `createRole($name, $permissions = NULL)` method.  
-$permissions can be a collection or permissions or an array of permission ids.
+A new Role can be created with the `createRole($name, $permissions = NULL)` method  
+ - $permissions can be a collection of permissions or an array of permission ids.
 
-A new permission can be created with `the createPermission($name)` method.
+A new Permission can be created with `the createPermission($name)` method.
 
 ## Bans
 
-Message Board supports also user bans. Through AbstractMbGateway's method `banUser(MbUserInterface $user, $days, $reason = '')` a user can be banned, i.e he/she won't be able to write new posts and comments.  
+Message Board supports also user bans (i.e Users won't be able to write new posts and comments). 
+A user can be banned Through MbGateway's banUser() method 
 
- - $user is an instance of your User model (which must implement the MbUserInterface). He/she is the user who will get banned.    
- - $days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative.  
- - $reason is the reason of the ban. Can be left blank.    
+    banUser(MbUserInterface $user, $days, $reason = '')  
 
-## Events
+ - $user is an instance of your User model (which must implement the MbUserInterface). He/she is the user who will get banned;
+ - $days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative;  
+ - $reason is the reason of the ban. Can be left blank.
 
-Several events are fired when main operation occurs:
+## Message Board Events
+
+Several events are fired when main operations occur:
 
  -  MicheleAngioni\MessageBoard\Events\CommentCreate
  -  MicheleAngioni\MessageBoard\Events\CommentDelete

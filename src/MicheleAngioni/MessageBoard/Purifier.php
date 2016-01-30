@@ -23,9 +23,9 @@ class Purifier implements PurifierInterface {
      *
      * @return string
      */
-    public function clean($dirtyText, $configuration = 'default')
+    public function clean($dirtyText, $configuration = 'mb_purifier_conf')
     {
-        return $this->purifier->clean($dirtyText, $configuration);
+        return $this->purifier->clean($dirtyText, config('ma_messageboard.' . $configuration));
     }
 
 }

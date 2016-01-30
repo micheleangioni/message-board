@@ -39,64 +39,71 @@ class MessageBoardSeeder extends Illuminate\Database\Seeder {
 
     protected function addRoles()
     {
-        $this->adminModel = Role::create(array(
+        $this->adminModel = Role::create([
             'id' => 1,
             'name' => 'Admin',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
-        ));
+        ]);
 
-        $this->moderatorModel = Role::create(array(
+        $this->moderatorModel = Role::create([
             'id' => 2,
             'name' => 'Moderator',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
-        ));
+        ]);
     }
 
     protected function addPermissions()
     {
-        Permission::create(array(
+        Permission::create([
             'id' => 1,
             'name' => 'Edit Posts',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
-        ));
+        ]);
 
-        Permission::create(array(
+        Permission::create([
             'id' => 2,
             'name' => 'Delete Posts',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
-        ));
+        ]);
 
-        Permission::create(array(
+        Permission::create([
             'id' => 3,
             'name' => 'Ban Users',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
-        ));
+        ]);
 
-        Permission::create(array(
-            'id' => 10,
+        Permission::create([
+            'id' => 11,
             'name' => 'Add Moderators',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
-        ));
+        ]);
 
-        Permission::create(array(
-            'id' => 11,
+        Permission::create([
+            'id' => 12,
             'name' => 'Remove Moderators',
             'created_at' => $this->datetime,
             'updated_at' => $this->datetime,
-        ));
+        ]);
+
+        Permission::create([
+            'id' => 21,
+            'name' => 'Manage Categories',
+            'created_at' => $this->datetime,
+            'updated_at' => $this->datetime,
+        ]);
     }
 
     protected function assignPermissions()
     {
-        $this->adminModel->permissions()->sync(array(1, 2, 3, 10, 11), false);
+        $this->adminModel->permissions()->sync([1, 2, 3, 11, 12, 21], false);
 
-        $this->moderatorModel->permissions()->sync(array(1, 2, 3), false);
+        $this->moderatorModel->permissions()->sync([1, 2, 3], false);
     }
 
 }

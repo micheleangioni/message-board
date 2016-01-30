@@ -755,8 +755,13 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
                                                                 $purifier, $viewRepo, $app);
 
+        $queryMock = $this->mock('QueryMock');
+        $queryMock->shouldReceive('update')->andReturn(true);
+
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
+        $user->mbLastView = true;
         $user->shouldReceive('getPrimaryId')->andReturn(1);
+        $user->shouldReceive('mbLastView')->andReturn($queryMock);
 
         $posts = $mbGateway->getOrderedUserPosts($user, false);
         $this->assertEquals(2, $posts[0]->id);
@@ -769,6 +774,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals(3, $posts[0]->id);
         $this->assertEquals(1, $posts->count());
     }
+
     /*
     public function testGetOrderedUserPostsWithPresenter()
     {

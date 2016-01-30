@@ -43,6 +43,7 @@ class PermissionManager
     /**
      * Return input Permission.
      *
+     * @param  int  $idPermission
      * @return Permission
      */
     public function getPermission($idPermission)
