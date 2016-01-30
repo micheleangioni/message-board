@@ -2,10 +2,6 @@
 
 class MbEventsTest extends Orchestra\Testbench\TestCase {
 
-    protected $permissionRepo;
-
-    protected $roleRepo;
-
     /**
      * Setup the test environment.
      */
@@ -43,10 +39,6 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
             'database' => ':memory:',
             'prefix' => '',
         ));
-        $app['config']->set('ma_messageboard.message_types', [
-            'public_mess',
-            'private_mess'
-        ]);
         $app['config']->set('ma_messageboard.notifications.after_mb_events', true);
     }
 
@@ -88,7 +80,6 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
         // Following path for base path is needed by Purifier package
         $this->app['path.base'] .= '/../../../..';
         $this->app['config']['ma_messageboard.model'] = 'UserEvent';
-        $this->app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $this->app['config']['ma_messageboard.posts_per_page'] = 20;
         $this->app['config']['ma_messageboard.user_named_route'] = 'user';
 
@@ -150,7 +141,6 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
         // Following path for base path is needed by Purifier package
         $this->app['path.base'] .= '/../../../..';
         $this->app['config']['ma_messageboard.model'] = 'UserEvent';
-        $this->app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $this->app['config']['ma_messageboard.posts_per_page'] = 20;
         $this->app['config']['ma_messageboard.user_named_route'] = 'user';
 
@@ -199,7 +189,6 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
         // Following path for base path is needed by Purifier package
         $this->app['path.base'] .= '/../../../..';
         $this->app['config']['ma_messageboard.model'] = 'UserEvent';
-        $this->app['config']['ma_messageboard.message_types'] = ['public_mess','private_mess'];
         $this->app['config']['ma_messageboard.posts_per_page'] = 20;
         $this->app['config']['ma_messageboard.user_named_route'] = 'user';
 

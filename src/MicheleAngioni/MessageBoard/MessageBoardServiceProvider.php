@@ -50,6 +50,8 @@ class MessageBoardServiceProvider extends ServiceProvider {
 
         // Register the HTML Purifier
         $this->app->register('Mews\Purifier\PurifierServiceProvider');
+
+        $this->registerFacades();
     }
 
     /**
@@ -96,6 +98,24 @@ class MessageBoardServiceProvider extends ServiceProvider {
             'MicheleAngioni\MessageBoard\Contracts\PurifierInterface',
             'MicheleAngioni\MessageBoard\Purifier'
         );
+    }
+
+    /**
+     * Register the package facades.
+     */
+    protected function registerFacades()
+    {
+        $this->app->singleton('messageboard', function ($app) {
+            $categoryRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface');
+            $commentRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface');
+            $likeRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface');
+            $postRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
+            $purifier = $app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
+            $presenter = $app->make('MicheleAngioni\Support\Presenters\Presenter');
+            $viewRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface');
+            
+            return new MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter, $purifier, $viewRepo);
+        });
     }
 
 }
