@@ -1,7 +1,8 @@
 # MESSAGE BOARD
 
+[![License](https://poser.pugx.org/michele-angioni/message-board/license.svg)](https://packagist.org/packages/michele-angioni/message-board)
+[![Latest Stable Version](https://poser.pugx.org/michele-angioni/message-board/v/stable)](https://packagist.org/packages/michele-angioni/message-board)
 [![Build Status](https://travis-ci.org/micheleangioni/message-board.svg)](https://travis-ci.org/micheleangioni/message-board)
-[![License](https://poser.pugx.org/michele-angioni/message-board/license.svg)](https://packagist.org/packages/michele-angioni/message-board) 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/e277b232-bef0-4576-bc1a-83b2d1d6a1f5/small.png)](https://insight.sensiolabs.com/projects/e277b232-bef0-4576-bc1a-83b2d1d6a1f5)
 
 ## Introduction
@@ -220,7 +221,7 @@ Pull requests are welcome, especially for the to do list below.
 
 ## License
 
-Message Board is distributed under the terms of the Apache 2.0 license.
+Message Board is free software distributed under the terms of the MIT license.
 
 ## Contacts
 
