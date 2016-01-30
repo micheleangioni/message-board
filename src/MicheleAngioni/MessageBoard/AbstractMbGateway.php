@@ -203,6 +203,33 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
+     * Updated text of input Post.
+     * If a User is provided as third argument, a check will be performed if he/she can delete the Post.
+     * Return bool on success.
+     *
+     * @param  int  $idPost
+     * @param  string  $text
+     * @param  MbUserInterface  $user
+     * @throws ModelNotFoundException
+     *
+     * @return Post
+     */
+    public function updatePost($idPost, $text, MbUserInterface $user = null)
+    {
+        $post = $this->postRepo->findOrFail($idPost);
+
+        if($user) {
+            if(!$this->userCanDeleteEntity($user, $post)) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot updated post with id $idPost.");
+            }
+        }
+
+        $post->updateText($text);
+
+        return true;
+    }
+
+    /**
      * Delete input Post. Return true on success.
      * If a User is provided as second argument, a check will be performed if he/she can delete the Post.
      *
@@ -225,7 +252,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         Event::fire(new PostDelete($post));
 
         // Delete Post
-        $this->postRepo->destroy($idPost);
+        $post->delete($idPost);
 
         return true;
     }
@@ -275,11 +302,38 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
+     * Updated text of input Comment. Return true on success.
+     * If a User is provided as second argument, a check will be performed if he/she can delete the Comment.
+     *
+     * @param  int  $idComment
+     * @param  string  $text
+     * @param  MbUserInterface  $user
+     * @throws ModelNotFoundException
+     *
+     * @return bool
+     */
+    public function updateComment($idComment, $text, MbUserInterface $user = null)
+    {
+        $comment = $this->getComment($idComment);
+
+        if($user) {
+            if(!$this->userCanDeleteEntity($user, $comment)) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot delete comment with id $idComment.");
+            }
+        }
+
+        $comment->updateText($text);
+
+        return true;
+    }
+
+    /**
      * Delete input Comment. Return true on success.
      * If a User is provided as second argument, a check will be performed if he/she can delete the Comment.
      *
      * @param  int  $idComment
      * @param  MbUserInterface  $user
+     * @throws ModelNotFoundException
      *
      * @return bool
      */
@@ -297,7 +351,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         Event::fire(new CommentDelete($comment));
 
         // Delete Comment
-        $this->commentRepo->destroy($idComment);
+        $comment->delete();
 
         return true;
     }

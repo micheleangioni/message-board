@@ -3,7 +3,7 @@
 use Illuminate\Events\Dispatcher;
 use MicheleAngioni\MessageBoard\Contracts\CommentEventInterface;
 use MicheleAngioni\MessageBoard\Contracts\LikeEventInterface;
-use MicheleAngioni\MessageBoard\Contracts\MbUserNotifableInterface;
+use MicheleAngioni\MessageBoard\Contracts\MbUserWithImageInterface;
 use MicheleAngioni\MessageBoard\Contracts\PostEventInterface;
 use MicheleAngioni\MessageBoard\Models\Post;
 use MicheleAngioni\MessageBoard\Services\NotificationService;
@@ -155,10 +155,10 @@ class MessageBoardEventHandler {
      * Return the pic file path of input User.
      * Return an empty string if user pics are disabled in config file.
      *
-     * @param  MbUserNotifableInterface  $user
+     * @param  MbUserWithImageInterface  $user
      * @return string
      */
-    protected function getUserPicPath(MbUserNotifableInterface $user)
+    protected function getUserPicPath(MbUserWithImageInterface $user)
     {
         if(config('ma_messageboard.use_model_pic')) {
             $picPath = config('ma_messageboard.pic_path') . DIRECTORY_SEPARATOR . $user->getProfileImageFilename();

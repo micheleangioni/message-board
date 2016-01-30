@@ -214,10 +214,8 @@ Pull requests are welcome, especially for the to do list below.
 
 ## To do list
 
-- editing posts/comments
 - soft delete
 - "report"/"abuse" feature
-- images handling
 - emoticons management
 
 ## License

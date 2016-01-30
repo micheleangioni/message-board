@@ -192,6 +192,28 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->assertTrue($stub->getPost($idPost));
     }
 
+    public function testUpdatePost()
+    {
+        $idPost = 10;
+        $newText = 'New Text';
+
+        $stub = $this->getAbstractGatewayStub();
+        $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
+
+        $this->postRepo->shouldReceive('findOrFail')
+            ->once()
+            ->with($idPost)
+            ->andReturn($post);
+
+
+        $post->shouldReceive('updateText')
+            ->once()
+            ->with($newText)
+            ->andReturn(true);
+
+        $this->assertTrue($stub->updatePost($idPost, $newText));
+    }
+
     public function testDeletePost()
     {
         $idPost = 10;
@@ -204,7 +226,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->with($idPost)
             ->andReturn($post);
 
-        $this->postRepo->shouldReceive('destroy')
+        $post->shouldReceive('delete')
             ->once()
             ->with($idPost)
             ->andReturn(true);
@@ -272,6 +294,27 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->assertTrue($stub->getComment($idComment));
     }
 
+    public function testUpdateComment()
+    {
+        $idComment = 10;
+        $newText = 'New Text';
+
+        $stub = $this->getAbstractGatewayStub();
+        $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
+
+        $this->commentRepo->shouldReceive('findOrFail')
+            ->once()
+            ->with($idComment)
+            ->andReturn($comment);
+
+        $comment->shouldReceive('updateText')
+            ->once()
+            ->with($newText)
+            ->andReturn(true);
+
+        $this->assertTrue($stub->updateComment($idComment, $newText));
+    }
+
     public function testDeleteComment()
     {
         $idComment = 10;
@@ -284,9 +327,8 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->with($idComment)
             ->andReturn($comment);
 
-        $this->commentRepo->shouldReceive('destroy')
+        $comment->shouldReceive('delete')
             ->once()
-            ->with($idComment)
             ->andReturn(true);
 
         Event::shouldReceive('fire')->once();

@@ -108,6 +108,21 @@ class Post extends \Illuminate\Database\Eloquent\Model {
     // Other Methods
 
     /**
+     * Update the Post text.
+     * Return true on success.
+     *
+     * @param  string  $text
+     * @return bool
+     */
+    public function updateText($text)
+    {
+        $this->text = $text;
+        $this->save();
+
+        return true;
+    }
+
+    /**
      * Return false if the Post has been read, false otherwise.
      *
      * @return bool

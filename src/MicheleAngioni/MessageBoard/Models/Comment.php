@@ -71,6 +71,21 @@ class Comment extends \Illuminate\Database\Eloquent\Model {
     // Others
 
     /**
+     * Update the Comment text.
+     * Return true on success.
+     *
+     * @param  string  $text
+     * @return bool
+     */
+    public function updateText($text)
+    {
+        $this->text = $text;
+        $this->save();
+
+        return true;
+    }
+
+    /**
      * Check if the Comment author wrote on a Post owned by him/herself
      *
      * @return bool

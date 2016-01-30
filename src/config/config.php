@@ -87,7 +87,7 @@ return array(
 
         /**
          * If set to true, the pic url will be added to the notifications.
-         * Model must implement the MbUserNotifableInterface.
+         * Model must implement the MbUserWithImageInterface.
          */
         'use_model_pic' => false,
 
