@@ -4,6 +4,7 @@ use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface as CategoryRepo;
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 use MicheleAngioni\MessageBoard\Models\Category;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use MicheleAngioni\Support\Exceptions\PermissionsException;
 
 class CategoryService
@@ -29,6 +30,8 @@ class CategoryService
      * Return input Category.
      *
      * @param  int  $idCategory
+     * @throws ModelNotFoundException
+     *
      * @return Category
      */
     public function getCategory($idCategory)

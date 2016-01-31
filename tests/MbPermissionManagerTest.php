@@ -122,4 +122,28 @@ class MbPermissionManagerTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals($permissionsNumberBefore + 1, $permissionsNumberAfter);
     }
 
+    public function testAttachPermission()
+    {
+        $permissionManager = $this->app->make('MicheleAngioni\MessageBoard\PermissionManager');
+
+        $permission1 = $permissionManager->createPermission('New Permission 1');
+        $permission2 = $permissionManager->createPermission('New Permission 2');
+        $permission3 = $permissionManager->createPermission('New Permission 3');
+
+        $permissions = new \Illuminate\Database\Eloquent\Collection();
+        $permissions->add($permission1);
+        $permissions->add($permission2);
+        $permissions->add($permission3);
+
+        $newRole = $permissionManager->createRole('New Role', $permissions);
+        $this->assertEquals(3, $newRole->permissions()->count());
+
+        $permission4 = $permissionManager->createPermission('New Permission 4');
+        $permissionManager->attachPermission($newRole, $permission4);
+        $this->assertEquals(4, $newRole->permissions()->count());
+
+        $permissionManager->detachPermission($newRole, $permission1);
+        $this->assertEquals(3, $newRole->permissions()->count());
+    }
+
 }

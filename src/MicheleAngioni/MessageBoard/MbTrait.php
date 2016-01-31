@@ -4,7 +4,6 @@ use Helpers;
 
 trait MbTrait {
 
-
     public function mbBans()
     {
         return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Ban', 'user_id')->orderBy('updated_at', 'desc');
@@ -96,14 +95,14 @@ trait MbTrait {
     public function attachMbRole($role)
     {
         if( is_object($role)) {
-            $role = $role->getKey();
+            $idRole = $role->getKey();
         }
 
         if( is_array($role)) {
-            $role = $role['id'];
+            $idRole = $role['id'];
         }
 
-        $this->mbRoles()->attach( $role );
+        $this->mbRoles()->sync([$idRole], false);
     }
 
     /**
@@ -115,14 +114,14 @@ trait MbTrait {
     public function detachMbRole($role)
     {
         if (is_object($role)) {
-            $role = $role->getKey();
+            $idRole = $role->getKey();
         }
 
         if (is_array($role)) {
-            $role = $role['id'];
+            $idRole = $role['id'];
         }
 
-        $this->mbRoles()->detach($role);
+        $this->mbRoles()->detach($idRole);
     }
 
 }

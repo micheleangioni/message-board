@@ -4,7 +4,6 @@ use Helpers;
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface as CommentRepo;
 use MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface as LikeRepo;
-use MicheleAngioni\MessageBoard\Contracts\MbGatewayInterface;
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface as PostRepo;
 use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
