@@ -22,8 +22,9 @@ Add the Message Board Service Provider in the `app.php` config file, under the p
 
     'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
 
-and the MessageBoard facade in the aliases array
+and the MessageBoard facades in the aliases array
 
+    'MbPermissions' => 'MicheleAngioni\MessageBoard\Facades\MbPermissions',
     'MessageBoard' => 'MicheleAngioni\MessageBoard\Facades\MessageBoard'
 
 You can now run migrations and seeding through `php artisan migrate --path="database/migrations/messageboard"` and `php artisan db:seed --class="MessageBoardSeeder"` and you are done.

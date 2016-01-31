@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Facade;
 
-
 class MessageBoard extends Facade {
 
 	protected static function getFacadeAccessor() { return 'messageboard'; }

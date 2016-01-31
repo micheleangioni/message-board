@@ -1,6 +1,6 @@
 <?php
 
-class MbFacadeTest extends Orchestra\Testbench\TestCase {
+class MbFacadesTest extends Orchestra\Testbench\TestCase {
 
     /**
      * Setup the test environment.
@@ -75,6 +75,7 @@ class MbFacadeTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'Helpers' => 'MicheleAngioni\Support\Facades\Helpers',
+            'MbPermissions' => 'MicheleAngioni\MessageBoard\Facades\MbPermissions',
             'MessageBoard' => 'MicheleAngioni\MessageBoard\Facades\MessageBoard',
         );
     }
@@ -105,6 +106,28 @@ class MbFacadeTest extends Orchestra\Testbench\TestCase {
         $this->assertTrue(\MessageBoard::deleteCategory($category->getKey()));
         $categories = \MessageBoard::getCategories();
         $this->assertEquals(0, $categories->count());
+    }
+
+    public function testPermissionManagement()
+    {
+        $permission1 = MbPermissions::createPermission('New Permission 1');
+        $permission2 = MbPermissions::createPermission('New Permission 2');
+        $permission3 = MbPermissions::createPermission('New Permission 3');
+
+        $permissions = new \Illuminate\Database\Eloquent\Collection();
+        $permissions->add($permission1);
+        $permissions->add($permission2);
+        $permissions->add($permission3);
+
+        $newRole = MbPermissions::createRole('New Role', $permissions);
+        $this->assertEquals(3, $newRole->permissions()->count());
+
+        $permission4 = MbPermissions::createPermission('New Permission 4');
+        MbPermissions::attachPermission($newRole, $permission4);
+        $this->assertEquals(4, $newRole->permissions()->count());
+
+        MbPermissions::detachPermission($newRole, $permission1);
+        $this->assertEquals(3, $newRole->permissions()->count());
     }
 
 }

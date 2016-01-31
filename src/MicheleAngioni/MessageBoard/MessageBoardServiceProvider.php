@@ -119,6 +119,13 @@ class MessageBoardServiceProvider extends ServiceProvider {
             
             return new MbGateway($categoryService, $messageBoardService);
         });
+
+        $this->app->singleton('mbpermissions', function ($app) {
+            $permissionRepository = $app->make('MicheleAngioni\MessageBoard\Contracts\PermissionRepositoryInterface');
+            $roleRepository = $app->make('MicheleAngioni\MessageBoard\Contracts\RoleRepositoryInterface');
+
+            return new PermissionManager($permissionRepository, $roleRepository);
+        });
     }
 
 }
