@@ -55,13 +55,6 @@ First of all add the `MbTrait` to your User model, which has also to implement t
 
         use MbTrait;
 
-        /**
-         * The database table used by the model.
-         *
-         * @var string
-         */
-        protected $table = 'users';
-
         [...]
         
         public function getPrimaryId()
@@ -155,7 +148,7 @@ Likes can be created by using the methods:
 
 Message Board supports also coded posts, that is in the `messageboard.php` lang file you can define codes with pre-defined messages.
 
-You can use the `createCodedPost(MbUserInterface $user, $categoryId = null, $code, array $attributes = [])` method to access the coded messages.  
+You can use the `MessageBoard::createCodedPost(MbUserInterface $user, $categoryId = null, $code, array $attributes = [])` method to access the coded messages.  
 
  - $user is an instance of your User model (which must implement the MbUserInterface) where the post will be posted.  
  - $categoryId defines the Category of the Post;  
@@ -167,25 +160,63 @@ The codes are defined in the `messageboard.php` lang file. More codes can be def
     return [
     
         'code' => "The user is :user.",
+        
+        'another_code' => "User :user is coded.",
+        
+        '42' => ":user , remember: the answer is 42."
     
     ];
 
 If you want a deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
 
-### Roles and Permissions
+## Bans
+
+Message Board supports also user bans (i.e a banned User won't be able to write new posts and comments). 
+A user can be banned through the banUser() method 
+
+    MessageBoard::banUser(MbUserInterface $user, $days, $reason = '')  
+
+ - $user is an instance of your User model (which must implement the MbUserInterface). He/she is the user who will get banned;
+ - $days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative;  
+ - $reason is the reason of the ban. Can be left blank.
+
+## Roles and Permissions
 
 Message Board comes with a role and permission system out of the box.  
-You can manage them through the `MicheleAngioni\MessageBoard\PermissionManager` class.
+You can manage them through the `MbPermissions` facade.
 
 Default roles are `Admin` and `Moderator`. The first one can edit and delete posts and comments, ban users, add and remove moderators, manage Categories.    
 The Moderator has the same Permissions of the admin, but manage moderators and categories.
 
-In order to retrieve one or all available roles, just call the `getRole($idRole)` and `getRoles()` methods of the PermissionManager. Each role returns its permissions through the `permissions` property.  
-Thanks to the `MbTrait`, you can easily add a role to an user with `$user->attachMbRole($role)` and detach it by using `$user->attachMbRole($role)`.  
+The following straightforward methods are available:
 
-To test a user against a Role, call `$user->hasMbRole($name)` where $name is the name of the role.  
+    MbPermissions::getRole($idRole)
 
-To retrieve one or all available permissions, call the `getPermission($idPermission)` and `getPermissions()` methods of the PermissionManager.
+    MbPermissions::getRoles()
+
+    MbPermissions::getPermission($idPermission)
+
+    MbPermissions::getPermissions($idPermission)
+
+    MbPermissions::createRole($name, $permissions = [])
+    
+    - $name is the name of the new Role
+    - $permissions can be an array of Permission ids or a Collection of Permissions
+
+    MbPermissions::createPermission($name)
+
+    MbPermissions::attachPermission($role, $permission)
+    
+    - $role can be an id or a Role model
+    - $permission can be an id or a Permission model 
+    
+    MbPermissions::detachPermission($role, $permission)
+    
+    - $role can be an id or a Role model
+    - $permission can be an id or a Permission model 
+    
+
+To test an User against a Role, call `$user->hasMbRole($name)` where $name is the name of the role.  
 
 If you want to test an user against a Permission, use `$user->canMb($permission)` where $permission is the name of the permission.
 
@@ -198,23 +229,6 @@ Default provided permissions are:
  - 'Remove Moderators'
  - 'Manage Permissions'
  - 'Manage Categories'
-
-A new Role can be created with the `createRole($name, $permissions = NULL)` method  
-
- - $permissions can be a collection of permissions or an array of permission ids.
-
-A new Permission can be created with `the createPermission($name)` method.
-
-## Bans
-
-Message Board supports also user bans (i.e Users won't be able to write new posts and comments). 
-A user can be banned Through MbGateway's banUser() method 
-
-    banUser(MbUserInterface $user, $days, $reason = '')  
-
- - $user is an instance of your User model (which must implement the MbUserInterface). He/she is the user who will get banned;
- - $days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative;  
- - $reason is the reason of the ban. Can be left blank.
 
 ## Message Board Events
 
@@ -232,12 +246,114 @@ This way creating listeners in your application is straightforward.
 
 ## Notifications
 
-The Message Board package includes a Notification Service which creates notifications where several main events occur.
+The Message Board package includes a Notification system out of the box.  
 
+In order to use it, you need to add the `Notifable` trait to your User model.
+
+    <?php
+
+    use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
+    use MicheleAngioni\MessageBoard\MbTrait;
+    use MicheleAngioni\MessageBoard\Notifable;
+
+    class User extends \Illuminate\Database\Eloquent\Model implements MbUserInterface {
+
+        use MbTrait;
+        use Notifable;
+
+        [...]
+        
+        public function getPrimaryId()
+        {
+            //
+        }
+        
+        public function getUsername()
+        {
+            //
+        }
+        
+        [...]
+
+There is also a Notifications facade available, just include it in the aliases array of your `app.php` file
+
+    'MbNotifications' => 'MicheleAngioni\MessageBoard\Facades\MbNotifications'
+
+**Create a new Notification**
+
+    MbNotifications::sendNotification($receiverId, $fromType = null, $senderId = null, $type = null, $text, $picUrl = null, $url = null, array $extra = [])
+    
+ - $receiverId is the id of the User who receives the notification;
+ - $fromType can be used to identity the type of sender. Can be null;
+ - $senderId is the id of the User who sent the notification. It can be left null to indicate a "system" notification;
+ - $type can be used indicate the type of notification. Can be null;
+ - $text is the text of the notification;
+ - $picUrl can be used to send an image url of the sender for the notification. In order to use this feature, the User model must implement the `MicheleAngioni\MessageBoard\Contracts\MbUserWithImageInterface` interface;
+ - $url can be used to set an url associated with the notification;
+ - $extra is an array of extra information that will be converted to json and saved in the database.
+
+**Read a Notification**
+
+    MbNotifications::readNotification($idNotification)
+    
+**Retrieve all Notifications of a given User**
+
+    MbNotifications::getUserNotifications($toId)
+    
+**Read all Notifications of a given User**
+
+    MbNotifications::readAllNotifications($toId)
+    
+If you want to create a cron which regularly deletes old Notifications, you can use the following method
+
+    MbNotifications::deleteOldNotifications($datetime)
+    
+ - $datetime is a datetime in 'Y-m-d H:i:s' format
+
+Given a $user model, you have the following methods available
+
+**Retrieve all User Notifications**
+
+    $user->getNotifications($limit = null, $page = 1, $order = 'desc')
+    
+**Retrieve unread User Notifications**
+
+    $user->getNotificationsNotRead($limit = null, $page = 1, $order = 'desc')
+    
+**Retrieve last User Notification**
+
+    $user->getLastNotification($type = null)
+    
+**Count User unread Notifications**
+
+    $user->countNotificationsNotRead($type = null)
+
+**Read last Notifications**
+
+    $user->readLimitNotifications($numbers = 10, $order = 'desc')
+    
+**Read all User Notifications**
+
+    $user->readAllNotifications()
+
+**Delete last Notifications**
+
+    $user->deleteLimitNotifications($numbers = 10, $order = 'desc')
+
+**Delete all User Notifications**
+
+    $user->deleteAllNotifications()
+
+The package can automatically create notifications where several main events occur, that is after new Posts, new Comments and new Likes.
+To activate the default notifications:
+ 
+ 1) set `'after_mb_events'` to TRUE in the `ma_messageboard.php` config file;
+ 2) set 'use_model_pic' to TRUE in the `ma_messageboard.php` config file and the User model must implement the `MicheleAngioni\MessageBoard\Contracts\MbUserWithImageInterface` interface if you want pics to be used;
+ 
 ## API Docs
 
 You can browse the Message Board [API Documentation](http://micheleangioni.github.io/message-board/master/index.html).
-(outdated ATM)
+(currently outdated)
 
 ## Contribution guidelines
 
@@ -250,12 +366,7 @@ Pull requests are welcome, especially for the to do list below.
 
 - soft delete
 - "report"/"abuse" feature
-- emoticons management
 
 ## License
 
 Message Board is free software distributed under the terms of the MIT license.
-
-## Contacts
-
-Fell free to contact me.

@@ -75,8 +75,9 @@ class MbFacadesTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'Helpers' => 'MicheleAngioni\Support\Facades\Helpers',
+            'MbNotifications' => 'MicheleAngioni\MessageBoard\Facades\MbNotifications',
             'MbPermissions' => 'MicheleAngioni\MessageBoard\Facades\MbPermissions',
-            'MessageBoard' => 'MicheleAngioni\MessageBoard\Facades\MessageBoard',
+            'MessageBoard' => 'MicheleAngioni\MessageBoard\Facades\MessageBoard'
         );
     }
 
@@ -128,6 +129,21 @@ class MbFacadesTest extends Orchestra\Testbench\TestCase {
 
         MbPermissions::detachPermission($newRole, $permission1);
         $this->assertEquals(3, $newRole->permissions()->count());
+    }
+
+    public function testNotifications()
+    {
+        $this->assertEquals(0, \MbNotifications::getNotifications()->count());
+
+        $notification = \MbNotifications::sendNotification(1, 'from_type', 2, null, 'Notification text', null, null, []);
+
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Notification', $notification);
+
+        $this->assertEquals(1, \MbNotifications::getNotifications()->count());
+
+        $notification = \MbNotifications::getNotification($notification->getKey());
+
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Notification', $notification);
     }
 
 }

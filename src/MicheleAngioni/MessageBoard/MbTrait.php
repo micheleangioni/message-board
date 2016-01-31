@@ -35,6 +35,16 @@ trait MbTrait {
     }
 
     /**
+     * Return the User Posts.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getPosts()
+    {
+        return $this->mbPosts;
+    }
+
+    /**
      * Check if the user is actually banned.
      *
      * @return bool

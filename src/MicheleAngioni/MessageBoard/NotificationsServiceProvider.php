@@ -30,6 +30,8 @@ class NotificationsServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->registerRepositories();
+
+        $this->registerFacade();
     }
 
     /**
@@ -41,6 +43,18 @@ class NotificationsServiceProvider extends ServiceProvider {
             'MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentNotificationRepository'
         );
+    }
+
+    /**
+     * Register the Notification facade
+     */
+    protected function registerFacade()
+    {
+        $this->app->singleton('mbnotifications', function ($app) {
+            $notificationRepository = $app->make('MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface');
+
+            return new \MicheleAngioni\MessageBoard\Services\NotificationService($notificationRepository);
+        });
     }
 
 }

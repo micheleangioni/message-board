@@ -116,21 +116,6 @@ class NotifableTraitTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals(0, $user->getNotifications()->count());
     }
 
-
-    public function mock($class)
-    {
-        $mock = Mockery::mock($class);
-
-        $this->app->instance($class, $mock);
-
-        return $mock;
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
 }
 
 /**
