@@ -92,6 +92,21 @@ class MbFacadeTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals($postRetrieved->getKey(), $post->getKey());
     }
 
+    public function testCategoryManagement()
+    {
+        $categories = \MessageBoard::getCategories();
+        $this->assertEquals(0, $categories->count());
+
+        $category = \MessageBoard::createCategory('category', 'pic');
+        $this->assertInstanceOf('\MicheleAngioni\MessageBoard\Models\Category', $category);
+        $categories = \MessageBoard::getCategories();
+        $this->assertEquals(1, $categories->count());
+
+        $this->assertTrue(\MessageBoard::deleteCategory($category->getKey()));
+        $categories = \MessageBoard::getCategories();
+        $this->assertEquals(0, $categories->count());
+    }
+
 }
 
 

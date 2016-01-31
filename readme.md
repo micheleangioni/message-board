@@ -106,7 +106,7 @@ You can also manually pass a single model to the presenter by using the `present
 
 To create a new Post use the createPost() method
 
-    createPost(MbUserInterface $user, MbUserInterface $poster = null, $categoryId = null, $text, $banCheck = true) 
+    MessageBoard::createPost(MbUserInterface $user, MbUserInterface $poster = null, $categoryId = null, $text, $banCheck = true) 
     
  - $user and $poster are instances of your User model (which must implement the MbUserInterface) of the owner of the message board where the post will be posted and the poster. If a User writes a post on his/her own messageboard, use the same User instance of both first and second parameters; 
  - $categoryId defines the Category of the Post;
@@ -117,29 +117,38 @@ Use the `getPost($idPost)`, `updatePost($idPost, $text, MbUserInterface $user = 
 
 In the `updatePost` and `deletePost` methods, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Post or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
 
+### (optional)
+
+Posts can behave to Categories. You can manage Categories through the following methods
+
+    MessageBoard::
+
 ### Managing comments
 
 The `createComment(`) method can be used to create a new Comment 
 
-    `createComment(MbUserInterface $user, $postId, $text, $banCheck = true)`  
+    MessageBoard::createComment(MbUserInterface $user, $postId, $text, $banCheck = true)
 
  - $user is an instance of your User model (which must implement the MbUserInterface) which will own the comment;
  - $postId is the post where the comment belongs;
  - $text is the text of the comment;
  - $banCheck states if a ban check on the user will be performed.
 
-Use the `getComment($idComment)`, the `updateComment($idComment, $text, MbUserInterface $user = null)` and `deleteComment($idComment, MbUserInterface $user = NULL)` methods to respectively get, update and delete a Comment.
+Use the `MessageBoard::getComment($idComment)`, the `MessageBoard::updateComment($idComment, $text, MbUserInterface $user = null)` and `MessageBoard::deleteComment($idComment, MbUserInterface $user = NULL)` methods to respectively get, update and delete a Comment.
   
-In the `updateComment` `deleteComment` methods, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Comment or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
+In the `updateComment` and `deleteComment` methods, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Comment or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
 
 ### Managing likes
 
-Use the `createLike($idUser, $likableEntityId, $likableEntity)` method to add a like.  
+Likes can be created by using the methods:
+ 
+    MessageBoard::createLike($idUser, $likableEntityId, $likableEntity)
 
- - $idUser is the User who gives the like. $likableEntity is the entity which is liked: 'post' and 'comment' are supported by default.  
- - $likableEntityId is the primary id of the entity which is liked, i.e. a Post or a Comment.  
+    MessageBoard::deleteLike($idUser, $likableEntityId, $likableEntity)
 
-The `deleteLike($idUser, $likableEntityId, $likableEntity)` method works in the same way, but instead it deletes the like.
+ - $idUser is the User who gives the like. $likableEntity is the entity which is liked: 'post' and 'comment' are supported by default;  
+ - $likableEntityId is the primary id of the entity which is liked, i.e. a Post or a Comment;
+ - $likableEntity is a string and can have the values `'post'` or `'comment'`.
 
 ### (optional) Coded posts
 
@@ -187,8 +196,10 @@ Default provided permissions are:
  - 'Add Moderators'
  - 'Remove Moderators'
  - 'Manage Permissions'
+ - 'Manage Categories'
 
 A new Role can be created with the `createRole($name, $permissions = NULL)` method  
+
  - $permissions can be a collection of permissions or an array of permission ids.
 
 A new Permission can be created with `the createPermission($name)` method.
@@ -218,9 +229,14 @@ Several events are fired when main operations occur:
 
 This way creating listeners in your application is straightforward.
 
+## Notifications
+
+The Message Board package includes a Notification Service which creates notifications where several main events occur.
+
 ## API Docs
 
 You can browse the Message Board [API Documentation](http://micheleangioni.github.io/message-board/master/index.html).
+(outdated ATM)
 
 ## Contribution guidelines
 

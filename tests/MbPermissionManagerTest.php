@@ -122,19 +122,4 @@ class MbPermissionManagerTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals($permissionsNumberBefore + 1, $permissionsNumberAfter);
     }
 
-
-    public function mock($class)
-    {
-        $mock = Mockery::mock($class);
-
-        $this->app->instance($class, $mock);
-
-        return $mock;
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
 }

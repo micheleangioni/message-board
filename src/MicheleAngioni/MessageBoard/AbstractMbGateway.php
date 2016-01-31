@@ -34,6 +34,78 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     }
 
     /**
+     * Return a collection of all available Categories.
+     *
+     * @return Collection
+     */
+    public function getCategories()
+    {
+        return $this->categoryService->getCategories();
+    }
+
+    /**
+     * Return input Category.
+     *
+     * @param  int  $idCategory
+     * @return \MicheleAngioni\MessageBoard\Models\Category
+     */
+    public function getCategory($idCategory)
+    {
+        return $this->categoryService->getCategory($idCategory);
+    }
+
+    /**
+     * Create a new Category.
+     * If $user is provided, it will be checked if he/she can manage Categories.
+     *
+     *
+     * @param  string  $name
+     * @param  string|null  $defaultPic
+     * @param  bool  $private
+     * @param  MbUserInterface|null  $user
+     * @throws \MicheleAngioni\Support\Exceptions\PermissionsException
+     *
+     * @return \MicheleAngioni\MessageBoard\Models\Category
+     *
+     */
+    public function createCategory($name, $defaultPic = null, $private = false, MbUserInterface $user = null)
+    {
+        return $this->categoryService->createCategory($name, $defaultPic, $private, $user);
+    }
+
+    /**
+     * Update input Category.
+     * If $user is provided, it will be checked if he/she can manage Categories.
+     * Return true on success.
+     *
+     * @param  int  $idCategory
+     * @param  array  $attributes
+     * @param  MbUserInterface|null  $user
+     *
+     * @return bool
+     */
+    public function updateCategory($idCategory, array $attributes, MbUserInterface $user = null)
+    {
+        return $this->categoryService->updateCategory($idCategory, $attributes, $user);
+    }
+
+    /**
+     * Delete input Category.
+     * If $user is provided, it will be checked if he/she can manage Categories.
+     *
+     * @param  int  $idCategory
+     * @param  MbUserInterface|null  $user
+     * @throws \MicheleAngioni\Support\Exceptions\PermissionsException
+     *
+     * @return bool
+     */
+    public function deleteCategory($idCategory, MbUserInterface $user = null)
+    {
+        return $this->categoryService->deleteCategory($idCategory, $user);
+    }
+
+
+    /**
      * Create the coded text of the mb post.
      * Keys in the messageboard.php lang file will be used for localization.
      *

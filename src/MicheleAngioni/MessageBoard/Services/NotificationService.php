@@ -3,6 +3,7 @@
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface as NotificationRepo;
 use MicheleAngioni\MessageBoard\Models\Notification;
+use RuntimeException;
 
 class NotificationService
 {
