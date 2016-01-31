@@ -51,17 +51,11 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
 		$this->user = $user;
 	}
 
-
-    public function post_id()
-    {
-        return $this->object->post_id;
-    }
-
-    public function user_id()
-    {
-        return $this->object->user_id;
-    }
-
+    /**
+     * Return Comment text, property escaped if requested
+     *
+     * @return string
+     */
     public function text()
     {
         if($this->escapeText) {
@@ -70,12 +64,6 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
 
         return $this->object->text;
     }
-
-    public function created_at()
-    {
-        return $this->object->created_at;
-    }
-
 
     /**
      * Return Comment text, property escaped if requested

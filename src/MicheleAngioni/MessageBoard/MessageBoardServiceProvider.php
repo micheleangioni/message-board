@@ -113,14 +113,14 @@ class MessageBoardServiceProvider extends ServiceProvider {
      */
     protected function registerFacades()
     {
-        $this->app->singleton('messageboard', function ($app) {
+        $this->app->singleton('messageboard', function (\Illuminate\Contracts\Foundation\Application $app) {
             $categoryService = $app->make('MicheleAngioni\MessageBoard\Services\CategoryService');
             $messageBoardService = $app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
             
             return new MbGateway($categoryService, $messageBoardService);
         });
 
-        $this->app->singleton('mbpermissions', function ($app) {
+        $this->app->singleton('mbpermissions', function (\Illuminate\Contracts\Foundation\Application $app) {
             $permissionRepository = $app->make('MicheleAngioni\MessageBoard\Contracts\PermissionRepositoryInterface');
             $roleRepository = $app->make('MicheleAngioni\MessageBoard\Contracts\RoleRepositoryInterface');
 

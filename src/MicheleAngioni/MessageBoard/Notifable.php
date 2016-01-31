@@ -1,7 +1,5 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
-use Illuminate\Support\Collection;
-
 trait Notifable
 {
     /**
@@ -74,7 +72,7 @@ trait Notifable
      * @param  int  $page
      * @param  string   $order
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     public function getNotificationsNotRead($limit = null, $page = 1, $order = 'desc')
     {
@@ -98,7 +96,7 @@ trait Notifable
      * @param  int  $page
      * @param  string   $order
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     public function getNotifications($limit = null, $page = 1, $order = 'desc')
     {

@@ -540,7 +540,7 @@ class MessageBoardService {
             }
         }
 
-        // Check if a User is requesting his own Message Board, in case update his last view
+        // Check if an User is requesting his own Message Board, in case update his last view
 
         if(is_null($userVisiting)) {
             $this->updateUserLastView($user);

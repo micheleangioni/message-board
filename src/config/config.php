@@ -38,19 +38,6 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Default pictures path
-    |--------------------------------------------------------------------------
-    |
-    | This is the relative path where models' pictures are saved on the server.
-    | A NULL value means no pictures will be used.
-    | N.B. do NOT put directory separator at the end of the path.
-    |
-    */
-
-    'pic_path' => null,
-
-    /*
-    |--------------------------------------------------------------------------
     | MessageBoard Purifier Configuration
     |--------------------------------------------------------------------------
     |
@@ -67,31 +54,47 @@ return array(
         'AutoFormat.RemoveEmpty'   => true,
     ],
 
-
     /*
     |--------------------------------------------------------------------------
     | Notifications
     |--------------------------------------------------------------------------
     |
     | The following settings activate and customize the Notifications service.
+    | If you do not use the Notificatons, you can leave them to their default
+    | values.
     |
     */
 
     'notifications' => [
 
-        /**
+        /*
          * If set to true, notifications are created after new mb posts, comments
          * and likes events are fired.
          */
         'after_mb_events' => false,
 
-        /**
+        /*
          * If set to true, the pic url will be added to the notifications.
          * Model must implement the MbUserWithImageInterface.
          */
         'use_model_pic' => false,
 
-        /**
+        /*
+         * This is the relative path where users pictures are saved on the server.
+         * A NULL value means no pictures will be used.
+         * N.B. do NOT put a directory separator at the end of the path.
+         */
+
+        'user_pic_path' => null,
+
+        /*
+         * This is the relative path where category pictures are saved on the server.
+         * A NULL value means no pictures will be used.
+         * N.B. do NOT put a directory separator at the end of the path.
+         */
+        'category_pic_path' => null,
+
+        /*
          * Used to set the max length for notifications without a User sender.
          */
         'notification_max_length' => 100

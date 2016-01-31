@@ -7,17 +7,19 @@
 
 ## Introduction
 
-Message Board is a [Laravel 5](http://laravel.com) package which assigns a message board to each User, where posts and comments can be posted.  
+Message Board is a [Laravel 5](http://laravel.com) package which assigns a message board to each User, where posts and comments can be posted.
+
 Bans and a roles and permission system is provided out of the box. Social features such as "likes" are included as well.
 
 ## Installation
 
-Message Board can be installed through Composer, first of all include 
+Message Board can be installed through Composer, first of all include
 
     "michele-angioni/message-board": "~1.0"
     
 into your composer.json and run `composer update` or `composer install`.  
-Then publish the Message Board conf and lang files through the artisan command `php artisan vendor:publish`. It will create the `ma_messageboard.php` file in your config directory.  
+Then publish the Message Board conf and lang files through the artisan command `php artisan vendor:publish`. It will create the `ma_messageboard.php` file in your config directory.
+  
 Add the Message Board Service Provider in the `app.php` config file, under the providers array
 
     'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
@@ -33,18 +35,14 @@ You can now run migrations and seeding through `php artisan migrate --path="data
                                                                                                
     'Helpers' => 'MicheleAngioni\Support\Facades\Helpers'
 
-If you are looking for the Laravel 4 version, check the not-anymore-maintained [0.1 version](https://github.com/micheleangioni/message-board/tree/6cf137951184597bec2eafa37134b7093d61fd64) and its documentation.
-
 ## Configuration
 
 You can than edit the `ma_messageboard.php` file in your `app/config` directory.
 You need to set the correct Model you want to associate a Message Board. Usually it is the Auth model used by Laravel.
 
-Additionally, it can be useful to define a named route for your User page. An id parameters will be used as well calling `/named_route/{id}` url.
+Additionally, it can be useful to define a named route for your User page. An id parameter will be used as well calling the `/named_route/{id}` url.
 
-## Usage
-
-First of all add the `MbTrait` to your User model, which has also to implement the `MbUserInterface` 
+You also need to add the `MbTrait` to your User model, which has also to implement the `MbUserInterface` interface
 
     <?php
 
@@ -69,13 +67,15 @@ First of all add the `MbTrait` to your User model, which has also to implement t
         
         [...]
 
-The `MessageBoard` Facade is provided with all methods you need to efficiently use the Message Board.
-  
+The `MessageBoard` Facade is provided with all main methods you need to efficiently use the Message Board.
+
+## Using the Message Board
+
 ### Retrieving Posts
 
     MessageBoard::getOrderedUserPosts(MbUserInterface $user, $category = false, $private = null, $page = 1, $limit = 20, $applyPresenter = false, $escapeText = false, MbUserInterface $userVisiting = null)
     
-returns a Collection of posts, ordered by datetime, posted in the $user message board, where $user is an instance of the User model (which must implement the MbUserInterface):     
+returns a Collection of Posts, ordered by datetime, posted in the $user message board, where $user is an instance of the User model (which must implement the MbUserInterface):     
 
  - $category defines the Category to which the Post belongs. Posts can belong to any Category;
  - $private defines is retrieved Posts must be private (=true), public (=false) or doesn't matter (=null);
@@ -84,8 +84,10 @@ returns a Collection of posts, ordered by datetime, posted in the $user message 
  - $escateText states if post and comment texts must be escaped before being returned;
  - $userVisiting is the instance of the User model (which must implement the MbUserInterface) of the user who is requesting the posts. Leave it null if $user is requesting its own posts.  
 
-By setting $applyPresenter to true, the posts will also be passed to a `PostPresenter` before being returned.   
-By setting $escapeText to true, the Post and Comment text will be escaped by [HtmlPurifier](https://github.com/mewebstudio/Purifier) so that can be securely echoed in your views.  
+By setting $applyPresenter to true, the posts will also be passed to a `PostPresenter` before being returned.
+   
+By setting $escapeText to true, the Post and Comment text will be escaped by [HtmlPurifier](https://github.com/mewebstudio/Purifier) so that can be securely echoed in your views.
+  
 In the config file you find the default rules used by Message Board under the `mb_purifier_conf` key. You can easily customize it by looking at the [HtmlPurifier](https://github.com/mewebstudio/Purifier) documentation.  
 If you want to use your own text purifier, create your own class which must implement the `MicheleAngioni\MessageBoard\PurifierInterface` interface. You then have to override the binding in the `MessageBoardServiceProvider`, that is define is a custom service provider
 
@@ -96,9 +98,18 @@ If you want to use your own text purifier, create your own class which must impl
 
 You can also manually pass a single model to the presenter by using the `presentModel(MbUserInterface $user, $model, $escapeText = false)` method, or even an entire collection through `presentCollection(MbUserInterface $user, Collection $collection, $escapeText = false)`.
 
+When an User retrieves his/her own Posts, the datetime of the last retrieval will be saved. This way the MessageBoard can keep track of read and unread Posts.
+To easily know if a Post has been read (i.e., the Post itself and all its Comments has been read), just use the 
+
+    $post->isNew()
+    
+method to a Post **Presenter**.
+
+**N.B.** where a User is visiting the MessageBoard of another User, no Posts will be new.
+
 ### Managing posts
 
-To create a new Post use the createPost() method
+To create a new Post use the `createPost()` method
 
     MessageBoard::createPost(MbUserInterface $user, MbUserInterface $poster = null, $categoryId = null, $text, $banCheck = true) 
     
@@ -111,12 +122,34 @@ Use the `getPost($idPost)`, `updatePost($idPost, $text, MbUserInterface $user = 
 
 In the `updatePost` and `deletePost` methods, you can specify a User as second parameter. The system will check if the user has the rights (i.e. owns the Post or he/she has proper permissions (see below)) to delete it. If not it will rise a PermissionsException.
 
-### (optional)
+### (optional) Post Categories
 
 Posts can behave to Categories. You can manage Categories through the following methods
 
-    MessageBoard::
+**Create a new Category**
 
+    MessageBoard::createCategory($name, $defaultPic = null, $private = false, MbUserInterface $user = null)
+    
+- $name is the name of the Category;
+- $defaultPic is the file
+- $private indicates if the Category Post will be private or not
+- if $user is provided, a check will be performed if the $user has the rights to create the new Category.
+
+**Edit a Category**
+    
+    MessageBoard::updateCategory($idCategory, array $attributes, MbUserInterface $user = null)
+
+- $idCategory is the Category id;
+- $attributes is the array of attributes;
+- if $user is provided, a check will be performed if the $user has the rights to edit the Category.
+
+**Delete a Category**
+
+    MessageBoard::deleteCategory($idCategory, MbUserInterface $user = null)
+    
+- $idCategory is the Category id;
+- if $user is provided, a check will be performed if the $user has the rights to delete the Category.
+    
 ### Managing comments
 
 The `createComment(`) method can be used to create a new Comment 
@@ -144,6 +177,14 @@ Likes can be created by using the methods:
  - $likableEntityId is the primary id of the entity which is liked, i.e. a Post or a Comment;
  - $likableEntity is a string and can have the values `'post'` or `'comment'`.
 
+The Post and Comment Presenters have the method
+
+    $post->isLiked()
+    
+    $comment->isLiked()
+
+to question if the Post/Comment is already liked by the visiting User.
+
 ### (optional) Coded posts
 
 Message Board supports also coded posts, that is in the `messageboard.php` lang file you can define codes with pre-defined messages.
@@ -169,7 +210,7 @@ The codes are defined in the `messageboard.php` lang file. More codes can be def
 
 If you want a deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
 
-## Bans
+### Bans
 
 Message Board supports also user bans (i.e a banned User won't be able to write new posts and comments). 
 A user can be banned through the banUser() method 
@@ -179,6 +220,20 @@ A user can be banned through the banUser() method
  - $user is an instance of your User model (which must implement the MbUserInterface). He/she is the user who will get banned;
  - $days is the number of days the user will be banned. If the user is already banned, $days will be added to the current ban days. A negative $days will shorten the ban total length, which however can't be set negative;  
  - $reason is the reason of the ban. Can be left blank.
+
+### Message Board Events
+
+Several events are fired when main operations occur:
+
+ -  MicheleAngioni\MessageBoard\Events\CommentCreate
+ -  MicheleAngioni\MessageBoard\Events\CommentDelete
+ -  MicheleAngioni\MessageBoard\Events\LikeCreate
+ -  MicheleAngioni\MessageBoard\Events\LikeDestroy
+ -  MicheleAngioni\MessageBoard\Events\PostCreate
+ -  MicheleAngioni\MessageBoard\Events\PostDelete
+ -  MicheleAngioni\MessageBoard\Events\UserBanned
+
+This way creating listeners in your application is straightforward.
 
 ## Roles and Permissions
 
@@ -229,20 +284,6 @@ Default provided permissions are:
  - 'Remove Moderators'
  - 'Manage Permissions'
  - 'Manage Categories'
-
-## Message Board Events
-
-Several events are fired when main operations occur:
-
- -  MicheleAngioni\MessageBoard\Events\CommentCreate
- -  MicheleAngioni\MessageBoard\Events\CommentDelete
- -  MicheleAngioni\MessageBoard\Events\LikeCreate
- -  MicheleAngioni\MessageBoard\Events\LikeDestroy
- -  MicheleAngioni\MessageBoard\Events\PostCreate
- -  MicheleAngioni\MessageBoard\Events\PostDelete
- -  MicheleAngioni\MessageBoard\Events\UserBanned
-
-This way creating listeners in your application is straightforward.
 
 ## Notifications
 
@@ -349,6 +390,8 @@ To activate the default notifications:
  
  1) set `'after_mb_events'` to TRUE in the `ma_messageboard.php` config file;
  2) set 'use_model_pic' to TRUE in the `ma_messageboard.php` config file and the User model must implement the `MicheleAngioni\MessageBoard\Contracts\MbUserWithImageInterface` interface if you want pics to be used;
+ 3) set the 'user_pic_path' key in the `ma_messageboard.php` config file: it must be your relative path to the directory where User images are stored.
+ 4) set the 'category_pic_path' key in the `ma_messageboard.php` config file: it must be your relative path to the directory where Category images are stored.
  
 ## API Docs
 

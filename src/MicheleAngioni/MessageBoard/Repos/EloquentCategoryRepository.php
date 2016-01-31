@@ -1,6 +1,5 @@
 <?php namespace MicheleAngioni\MessageBoard\Repos;
 
-use Helpers;
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface;
 use MicheleAngioni\MessageBoard\Models\Category;

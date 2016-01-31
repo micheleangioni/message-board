@@ -46,25 +46,14 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
 
 		$this->user = $user;
 
-        $this->lastView = $user->mbLastView ? $user->mbLastView->datetime : NULL;
-	}
-	
-	
-	public function post_type()
-	{
-        return $this->object->post_type;
+        $this->lastView = $user->mbLastView ? $user->mbLastView->datetime : null;
 	}
 
-    public function user_id()
-    {
-        return $this->object->user_id;
-    }
-
-    public function poster_id()
-    {
-        return $this->object->poster_id;
-    }
-
+    /**
+     * Return Post text, property escaped if requested
+     *
+     * @return string
+     */
     public function text()
     {
         if($this->escapeText) {
@@ -72,16 +61,6 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
         }
 
         return $this->object->text;
-    }
-
-    public function created_at()
-    {
-        return $this->object->created_at;
-    }
-
-    public function is_read()
-    {
-        return $this->object->is_read;
     }
 
     /**

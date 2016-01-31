@@ -161,7 +161,7 @@ class MessageBoardEventHandler {
     protected function getUserPicPath(MbUserWithImageInterface $user)
     {
         if(config('ma_messageboard.use_model_pic')) {
-            $picPath = config('ma_messageboard.pic_path') . DIRECTORY_SEPARATOR . $user->getProfileImageFilename();
+            $picPath = config('ma_messageboard.user_pic_path') . DIRECTORY_SEPARATOR . $user->getProfileImageFilename();
         }
         else {
             $picPath = '';
@@ -183,7 +183,7 @@ class MessageBoardEventHandler {
             return '';
         }
 
-        return config('ma_messageboard.pic_path') . DIRECTORY_SEPARATOR . $post->category->getDefaultPic();
+        return config('ma_messageboard.category_pic_path') . DIRECTORY_SEPARATOR . $post->category->getDefaultPic();
     }
 
     /**

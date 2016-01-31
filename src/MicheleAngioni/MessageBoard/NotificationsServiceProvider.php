@@ -50,7 +50,7 @@ class NotificationsServiceProvider extends ServiceProvider {
      */
     protected function registerFacade()
     {
-        $this->app->singleton('mbnotifications', function ($app) {
+        $this->app->singleton('mbnotifications', function (\Illuminate\Contracts\Foundation\Application $app) {
             $notificationRepository = $app->make('MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface');
 
             return new \MicheleAngioni\MessageBoard\Services\NotificationService($notificationRepository);
