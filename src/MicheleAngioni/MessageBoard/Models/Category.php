@@ -18,12 +18,12 @@ class Category extends \Illuminate\Database\Eloquent\Model {
 
 
     /**
-     * Override the standard delete, deleting all related likes and comments.
+     * Override the standard delete, deleting all related posts.
      */
     public function delete()
     {
-        // Delete related comments
-        foreach($this->post as $post) {
+        // Delete related posts
+        foreach($this->posts as $post) {
             $post->delete();
         }
 

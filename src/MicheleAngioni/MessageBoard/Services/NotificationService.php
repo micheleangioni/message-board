@@ -47,7 +47,6 @@ class NotificationService
 
     /**
      * Create a new Notification.
-     * Return false in an error occurred.
      *
      * @param  int  $receiverId
      * @param  string|null  $fromType
@@ -57,6 +56,7 @@ class NotificationService
      * @param  string  $picUrl
      * @param  string  $url
      * @param  array  $extra
+     * @throws RuntimeException
      *
      * @return Notification
      */
