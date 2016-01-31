@@ -48,7 +48,9 @@ class MessageBoardServiceProvider extends ServiceProvider {
     {
         $this->registerRepositories();
 
-        // Register the HTML Purifier
+        $this->registerOtherClasses();
+
+        // Register the HTML Purifier Service Provider
         $this->app->register('Mews\Purifier\PurifierServiceProvider');
 
         $this->registerFacades();
@@ -93,7 +95,13 @@ class MessageBoardServiceProvider extends ServiceProvider {
             'MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface',
             'MicheleAngioni\MessageBoard\Repos\EloquentViewRepository'
         );
+    }
 
+    /**
+     * Register other classes used by the Message Board.
+     */
+    public function registerOtherClasses()
+    {
         $this->app->bind(
             'MicheleAngioni\MessageBoard\Contracts\PurifierInterface',
             'MicheleAngioni\MessageBoard\Purifier'
@@ -106,15 +114,10 @@ class MessageBoardServiceProvider extends ServiceProvider {
     protected function registerFacades()
     {
         $this->app->singleton('messageboard', function ($app) {
-            $categoryRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface');
-            $commentRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface');
-            $likeRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface');
-            $postRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
-            $purifier = $app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-            $presenter = $app->make('MicheleAngioni\Support\Presenters\Presenter');
-            $viewRepo = $app->make('MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface');
+            $categoryService = $app->make('MicheleAngioni\MessageBoard\Services\CategoryService');
+            $messageBoardService = $app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
             
-            return new MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter, $purifier, $viewRepo);
+            return new MbGateway($categoryService, $messageBoardService);
         });
     }
 

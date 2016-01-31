@@ -1,67 +1,22 @@
 <?php namespace MicheleAngioni\MessageBoard;
 
-use Helpers;
 use Illuminate\Support\Collection;
-use MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface as CategoryRepo;
-use MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface as CommentRepo;
-use MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface as LikeRepo;
 use MicheleAngioni\MessageBoard\Contracts\MbGatewayInterface;
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
-use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface as PostRepo;
-use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
-use MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface as ViewRepo;
-use MicheleAngioni\MessageBoard\Events\CommentCreate;
-use MicheleAngioni\MessageBoard\Events\CommentDelete;
-use MicheleAngioni\MessageBoard\Events\LikeCreate;
-use MicheleAngioni\MessageBoard\Events\LikeDestroy;
-use MicheleAngioni\MessageBoard\Events\PostCreate;
-use MicheleAngioni\MessageBoard\Events\PostDelete;
-use MicheleAngioni\MessageBoard\Events\UserBanned;
-use MicheleAngioni\MessageBoard\Models\Comment;
-use MicheleAngioni\MessageBoard\Models\Like;
-use MicheleAngioni\MessageBoard\Models\Post;
-use MicheleAngioni\MessageBoard\Presenters\CommentPresenter;
-use MicheleAngioni\MessageBoard\Presenters\PostPresenter;
-use MicheleAngioni\Support\Presenters\Presenter;
-use Event;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use InvalidArgumentException;
-use MicheleAngioni\Support\Exceptions\PermissionsException;
-use RuntimeException;
+use MicheleAngioni\MessageBoard\Services\CategoryService;
+use MicheleAngioni\MessageBoard\Services\MessageBoardService;
 
 abstract class AbstractMbGateway implements MbGatewayInterface {
 
     /**
-     * Laravel application.
-     *
-     * @var \Illuminate\Foundation\Application
+     * @var CategoryService
      */
-    protected $app;
+    protected $categoryService;
 
     /**
-     * @var CategoryRepo
+     * @var MessageBoardService
      */
-    protected $categoryRepo;
-
-    /**
-     * @var CommentRepo
-     */
-    protected $commentRepo;
-
-    /**
-     * Entities a like can be associated to and relative repositories.
-     *
-     * @var array
-     */
-    protected $likableEntities = [
-        'comment' => 'commentRepo',
-        'post' => 'postRepo'
-    ];
-
-    /**
-     * @var LikeRepo
-     */
-    protected $likeRepo;
+    protected $messageBoardService;
 
     /**
      * Standard number of mb posts per page.
@@ -70,41 +25,12 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     protected $postsPerPage;
 
-    /**
-     * @var PostRepo
-     */
-    protected $postRepo;
 
-    protected $presenter;
-
-    protected $purifier;
-
-    /**
-     * @var ViewRepo
-     */
-    protected $viewRepo;
-
-
-    function __construct(CategoryRepo $categoryRepo, CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo,
-                         Presenter $presenter, PurifierInterface $purifier, ViewRepo $viewRepo, $app = null)
+    function __construct(CategoryService $categoryService, MessageBoardService $messageBoardService)
     {
-        $this->app = $app ?: app();
+        $this->categoryService = $categoryService;
 
-        $this->categoryRepo = $categoryRepo;
-
-        $this->commentRepo = $commentRepo;
-
-        $this->likeRepo = $likeRepo;
-
-        $this->postsPerPage = $this->app['config']->get('ma_messageboard.posts_per_page');
-
-        $this->postRepo = $postRepo;
-
-        $this->presenter = $presenter;
-
-        $this->purifier = $purifier;
-
-        $this->viewRepo = $viewRepo;
+        $this->messageBoardService = $messageBoardService;
     }
 
     /**
@@ -117,7 +43,10 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @return string
      */
-    abstract protected function getCodedPostText($code, MbUserInterface $user, array $attributes);
+    public function getCodedPostText($code, MbUserInterface $user, array $attributes)
+    {
+        return $this->messageBoardService->getCodedPostText($code, $user, $attributes);
+    }
 
     /**
      * Create a new Post from a coded text.
@@ -127,22 +56,11 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  string  $code
      * @param  array  $attributes
      *
-     * @return Post
+     * @return \MicheleAngioni\MessageBoard\Models\Post
      */
     public function createCodedPost(MbUserInterface $user, $categoryId = null, $code, array $attributes = [])
     {
-        $data = [
-            'category_id' => $categoryId,
-            'user_id' => $user->getPrimaryId(),
-            'text' => $this->getCodedPostText($code, $user, $attributes)
-        ];
-
-        $post = $this->postRepo->create($data);
-
-        // Fire event
-        Event::fire(new PostCreate($post));
-
-        return $post;
+        return $this->messageBoardService->createCodedPost($user, $categoryId, $code, $attributes);
     }
 
     /**
@@ -153,53 +71,27 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  int|null  $categoryId
      * @param  string  $text
      * @param  bool  $banCheck
-     * @throws InvalidArgumentException
-     * @throws PermissionsException
+     * @throws \InvalidArgumentException
+     * @throws \MicheleAngioni\Support\Exceptions\PermissionsException
      *
-     * @return Post
+     * @return \MicheleAngioni\MessageBoard\Models\Post
      */
     public function createPost(MbUserInterface $user, MbUserInterface $poster = null, $categoryId = null, $text, $banCheck = true)
     {
-        // Check if the poster is banned and take poster id
-        if($poster) {
-            if($banCheck) {
-                if($poster->isBanned()) {
-                    throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $poster->getUsername() . ' is currently banned and cannot create a new post.');
-                }
-            }
-
-            $posterId = $poster->getPrimaryId();
-        }
-        else {
-            $posterId = null;
-        }
-
-        $data = [
-            'category_id' => $categoryId,
-            'user_id' => $user->getPrimaryId(),
-            'poster_id' => $posterId,
-            'text' => $text
-        ];
-
-        $post = $this->postRepo->create($data);
-
-        // Fire event
-        Event::fire(new PostCreate($post));
-
-        return $post;
+        return $this->messageBoardService->createPost($user, $poster, $categoryId, $text, $banCheck);
     }
 
     /**
      * Retrieve and return input Post.
      *
      * @param  int  $idPost
-     * @throws ModelNotFoundException
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      *
-     * @return Post
+     * @return \MicheleAngioni\MessageBoard\Models\Post
      */
     public function getPost($idPost)
     {
-        return $this->postRepo->findOrFail($idPost);
+        return $this->messageBoardService->getPost($idPost);
     }
 
     /**
@@ -210,23 +102,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  int  $idPost
      * @param  string  $text
      * @param  MbUserInterface  $user
-     * @throws ModelNotFoundException
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      *
-     * @return Post
+     * @return \MicheleAngioni\MessageBoard\Models\Post
      */
     public function updatePost($idPost, $text, MbUserInterface $user = null)
     {
-        $post = $this->postRepo->findOrFail($idPost);
-
-        if($user) {
-            if(!$this->userCanDeleteEntity($user, $post)) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot updated post with id $idPost.");
-            }
-        }
-
-        $post->updateText($text);
-
-        return true;
+        return $this->messageBoardService->updatePost($idPost, $text, $user);
     }
 
     /**
@@ -240,21 +122,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     public function deletePost($idPost, MbUserInterface $user = null)
     {
-        $post = $this->getPost($idPost);
-
-        if($user) {
-            if(!$this->userCanDeleteEntity($user, $post)) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot delete post with id $idPost.");
-            }
-        }
-
-        // Fire Event
-        Event::fire(new PostDelete($post));
-
-        // Delete Post
-        $post->delete($idPost);
-
-        return true;
+        return $this->messageBoardService->deletePost($idPost, $user);
     }
 
     /**
@@ -265,40 +133,24 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  string  $text
      * @param  bool  $banCheck = true
      *
-     * @return Comment
+     * @return \MicheleAngioni\MessageBoard\Models\Comment
      */
     public function createComment(MbUserInterface $user, $postId, $text, $banCheck = true)
     {
-        // Check if the user is banned
-        if($banCheck) {
-            if($user->isBanned()) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . ' is currently banned and cannot create a new comment.');
-            }
-        }
-
-        $comment = $this->commentRepo->create([
-            'post_id' => $postId,
-            'user_id' => $user->getPrimaryId(),
-            'text' => $text,
-        ]);
-
-        // Fire Event
-        Event::fire(new CommentCreate($comment));
-
-        return $comment;
+        return $this->messageBoardService->createComment($user, $postId, $text, $banCheck);
     }
 
     /**
      * Retrieve and return input Comment.
      *
      * @param  int  $idComment
-     * @throws ModelNotFoundException
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      *
-     * @return Comment
+     * @return \MicheleAngioni\MessageBoard\Models\Comment
      */
     public function getComment($idComment)
     {
-        return $this->commentRepo->findOrFail($idComment);
+        return $this->messageBoardService->getComment($idComment);
     }
 
     /**
@@ -308,23 +160,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  int  $idComment
      * @param  string  $text
      * @param  MbUserInterface  $user
-     * @throws ModelNotFoundException
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      *
      * @return bool
      */
     public function updateComment($idComment, $text, MbUserInterface $user = null)
     {
-        $comment = $this->getComment($idComment);
-
-        if($user) {
-            if(!$this->userCanDeleteEntity($user, $comment)) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot delete comment with id $idComment.");
-            }
-        }
-
-        $comment->updateText($text);
-
-        return true;
+        return $this->messageBoardService->updateComment($idComment, $text, $user);
     }
 
     /**
@@ -333,98 +175,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @param  int  $idComment
      * @param  MbUserInterface  $user
-     * @throws ModelNotFoundException
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      *
      * @return bool
      */
     public function deleteComment($idComment, MbUserInterface $user = null)
     {
-        $comment = $this->getComment($idComment);
-
-        if($user) {
-            if(!$this->userCanDeleteEntity($user, $comment)) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot delete comment with id $idComment.");
-            }
-        }
-
-        // Fire Event
-        Event::fire(new CommentDelete($comment));
-
-        // Delete Comment
-        $comment->delete();
-
-        return true;
-    }
-
-    /**
-     * Check if input User can edit input Post/Comment.
-     *
-     * @param  MbUserInterface  $user
-     * @param  Post|Comment  $entity
-     *
-     * @return bool
-     */
-    public function userCanEditEntity(MbUserInterface $user, $entity)
-    {
-        // Check if the user is banned
-        if($user->isBanned()) {
-            return false;
-        }
-
-        // Check if the user owns the entity
-        if($entity instanceof Post) {
-            if($entity->user_id == $user->getPrimaryId() || $entity->poster_id  == $user->getPrimaryId()) {
-                return true;
-            }
-        }
-        elseif($entity instanceof Comment) {
-            if($entity->user_id == $user->getPrimaryId()) {
-                return true;
-            }
-        }
-        else {
-            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $entity must be an instance of Post or Comment.');
-        }
-
-        // The user does not own the entity. Last chance to be able to edit it is to have the permission to edit not owned entities
-        if($user->canMb('Edit Posts')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Check if input User can delete input Post/Comment.
-     *
-     * @param  MbUserInterface  $user
-     * @param  Post|Comment  $entity
-     *
-     * @return bool
-     */
-    public function userCanDeleteEntity(MbUserInterface $user, $entity)
-    {
-        // Check if the user owns the entity
-        if($entity instanceof Post) {
-            if($entity->user_id == $user->getPrimaryId() || $entity->poster_id  == $user->getPrimaryId()) {
-                return true;
-            }
-        }
-        elseif($entity instanceof Comment) {
-            if($entity->user_id == $user->getPrimaryId()) {
-                return true;
-            }
-        }
-        else {
-            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $entity must be an instance of Post or Comment.');
-        }
-
-        // The user does not own the entity. Last chance to be able to edit it is to have the permission to edit not owned entities
-        if($user->canMb('Delete Posts')) {
-            return true;
-        }
-
-        return false;
+        return $this->messageBoardService->deleteComment($idComment, $user);
     }
 
     /**
@@ -433,33 +190,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  int  $idUser
      * @param  int  $likableEntityId
      * @param  string  $likableEntity
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
-     * @return Like
+     * @return \MicheleAngioni\MessageBoard\Models\Like
      */
     public function createLike($idUser, $likableEntityId, $likableEntity)
     {
-        if(!isset($this->likableEntities[$likableEntity])) {
-            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $likableEntity is not a valid entity to be liked.');
-        }
-
-        // Check if input entity is already liked by the input user, if not, create a new one
-
-        $entity = $this->{$this->likableEntities[$likableEntity]}->findOrFail($likableEntityId);
-
-        $like = $this->likeRepo->getUserEntityLike($entity, $idUser);
-
-        if(!$like) {
-            $like =  $entity->likes()->create(['user_id' => $idUser]);
-
-            // Fire Event
-            Event::fire(new LikeCreate($like));
-
-            return $like;
-        }
-        else {
-            return $like;
-        }
+        return $this->messageBoardService->createLike($idUser, $likableEntityId, $likableEntity);
     }
 
     /**
@@ -473,18 +210,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     public function deleteLike($idUser, $likableEntityId, $likableEntity)
     {
-        $entity = $this->{$this->likableEntities[$likableEntity]}->findOrFail($likableEntityId);
-
-        $like = $this->likeRepo->getUserEntityLike($entity, $idUser);
-
-        if($like) {
-            // Fire Event
-            Event::fire(new LikeDestroy($like));
-
-            $like->delete();
-        }
-
-        return true;
+        return $this->messageBoardService->deleteLike($idUser, $likableEntityId, $likableEntity);
     }
 
     /**
@@ -494,12 +220,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     public function updateUserLastView(MbUserInterface $user)
     {
-        if(!$user->mbLastView) {
-            $user->mbLastView()->create(['datetime' => date('Y-m-d H:i:s')]);
-        }
-        else {
-            $user->mbLastView()->update(['datetime' => date('Y-m-d H:i:s')]);
-        }
+        $this->messageBoardService->updateUserLastView($user);
     }
 
     /**
@@ -518,64 +239,30 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  bool  $applyPresenter = false
      * @param  bool  $escapeText = false
      * @param  MbUserInterface|bool  $userVisiting
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return Collection
      */
     public function getOrderedUserPosts(MbUserInterface $user, $category = false, $private = null, $page = 1, $limit = 20,
                                         $applyPresenter = false, $escapeText = false, MbUserInterface $userVisiting = null)
     {
-        if(!$limit) {
-            $limit = $this->postsPerPage;
-        }
-
-        try {
-            $posts = $this->postRepo->getOrderedPosts($user->getPrimaryId(), $category, $private, $page, $limit);
-        } catch (\Exception $e) {
-            throw new RuntimeException("Caught RuntimeException in ".__METHOD__.' at line '.__LINE__.':'. $e->getMessage());
-        }
-
-        if($applyPresenter) {
-            if($userVisiting) {
-                $posts = $this->presentCollection($userVisiting, $posts, $escapeText);
-            }
-            else {
-                $posts = $this->presentCollection($user, $posts, $escapeText);
-            }
-        }
-
-        // Check if a User is requesting his own Message Board, in case update his last view
-
-        if(is_null($userVisiting)) {
-            $this->updateUserLastView($user);
-        }
-
-        return $posts;
+        return $this->messageBoardService->getOrderedUserPosts($user, $category, $private, $page, $limit,
+                                                                $applyPresenter, $escapeText, $userVisiting);
     }
 
     /**
      * Pass a Post or Comment model to the corresponding presenter and return it
      *
      * @param  MbUserInterface  $user
-     * @param  Post|Comment  $model
+     * @param  \MicheleAngioni\MessageBoard\Models\Post|\MicheleAngioni\MessageBoard\Models\Comment  $model
      * @param  bool  $escapeText = false
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
-     * @return PostPresenter|CommentPresenter
+     * @return \MicheleAngioni\MessageBoard\Presenters\PostPresenter|\MicheleAngioni\MessageBoard\Presenters\CommentPresenter
      */
     public function presentModel(MbUserInterface $user, $model, $escapeText = false)
     {
-        if($model instanceof Post) {
-            $model = $this->presenter->model($model, new PostPresenter($user, $escapeText, $this->purifier));
-        }
-        elseif($model instanceof Comment) {
-            $model = $this->presenter->model($model, new CommentPresenter($user, $escapeText, $this->purifier));
-        }
-        else {
-            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': input model should be an instance of Post or Comment.');
-        }
-
-        return $model;
+        return $this->messageBoardService->presentModel($user, $model, $escapeText);
     }
 
     /**
@@ -584,33 +271,13 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * @param  MbUserInterface  $user
      * @param  Collection  $collection
      * @param  bool  $escapeText = false
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return Collection
      */
     public function presentCollection(MbUserInterface $user, Collection $collection, $escapeText = false)
     {
-        if($collection->count() == 0) {
-            return $collection;
-        }
-
-        if($collection->first() instanceof Comment) {
-            return $this->presenter->collection($collection, new CommentPresenter($user, $escapeText, $this->purifier));
-        }
-        elseif($collection->first() instanceof Post) {
-
-            $newCollection = new Collection;
-
-            foreach($collection as $key => $post){
-                $newCollection[$key] = $this->presenter->model($post, new PostPresenter($user, $escapeText, $this->purifier));
-                $newCollection[$key]->comments = $this->presentCollection($user, $post->comments, $escapeText);
-            }
-
-            return $newCollection;
-        }
-        else {
-            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': input collection should contain Post or Comment models.');
-        }
+        return $this->messageBoardService->presentCollection($user, $collection, $escapeText);
     }
 
     /**
@@ -625,39 +292,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      */
     public function banUser(MbUserInterface $user, $days, $reason = '')
     {
-        // Check if input user is already banned
-        if($user->isBanned()) {
-            // Extend the current ban
-
-            $ban = $user->mbBans->first();
-
-            $currentBanDays = Helpers::daysBetweenDates(Helpers::getDate(), $ban->until);
-
-            $ban->until = max($currentBanDays + $days,0);
-            $ban->save();
-        }
-        else {
-            $ban = $user->mbBans()->create([
-                'reason' => $reason,
-                'until' => Helpers::getDate(max($days,0)),
-            ]);
-        }
-
-        // Fire Event
-        Event::fire(new UserBanned($ban));
-
-        return true;
-    }
-
-    /**
-     * Return input user page link for the view.
-     *
-     * @param  MbUserInterface  $user
-     * @return string
-     */
-    protected function getUserLink(MbUserInterface $user)
-    {
-        return link_to_route($this->app['config']->get('ma_messageboard.user_named_route'), e($user->getUsername()), [$user->getPrimaryId()], []);
+        return $this->messageBoardService->banUser($user, $days, $reason);
     }
 
 }

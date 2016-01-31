@@ -1,6 +1,6 @@
 <?php
 
-class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
+class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
 
     protected $categoryRepo;
 
@@ -98,18 +98,29 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
 	public function testCreateCodedPost()
 	{
-        $stub = $this->getAbstractGatewayStub();
+        $this->mockRepositories();
+
+        $this->app->bind('html', function($app) {
+            $html = $this->mock('html');
+            $html->shouldReceive('linkRoute')
+                ->once()
+                ->andReturn('link');
+
+            return $html;
+        });
+
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
         $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
 
         $user->shouldReceive('getPrimaryId')
-            ->once()
+            ->twice()
             ->andReturn(1);
 
-        $stub->expects($this->any())
-             ->method('setCodedPostText')
-             ->will($this->returnValue('text'));
+        $user->shouldReceive('getUsername')
+            ->once()
+            ->andReturn('username');
 
         $this->postRepo->shouldReceive('create')
             ->once()
@@ -118,12 +129,14 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Event::shouldReceive('fire')->once();
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post',
-            $stub->createCodedPost($user, null, 1, []));
+            $mbService->createCodedPost($user, null, 1, []));
     }
 
     public function testCreatePost()
     {
-        $stub = $this->getAbstractGatewayStub();
+        $this->mockRepositories();
+
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
         $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
@@ -149,7 +162,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Event::shouldReceive('fire')->once();
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post',
-            $stub->createPost($user, $poster, null, 'text'));
+            $mbService->createPost($user, $poster, null, 'text'));
     }
 
     /**
@@ -157,7 +170,9 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
      */
     public function testCreatePostByBannedUser()
     {
-        $stub = $this->getAbstractGatewayStub();
+        $this->mockRepositories();
+
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
 
@@ -171,29 +186,33 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->once()
             ->andReturn('Username');
 
-        $stub->createPost($user, $poster, null, 'text');
+        $mbService->createPost($user, $poster, null, 'text');
     }
 
     public function testGetPost()
     {
+        $this->mockRepositories();
+
         $idPost = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $this->postRepo->shouldReceive('findOrFail')
             ->once()
             ->with($idPost)
             ->andReturn(true);
 
-        $this->assertTrue($stub->getPost($idPost));
+        $this->assertTrue($mbService->getPost($idPost));
     }
 
     public function testUpdatePost()
     {
+        $this->mockRepositories();
+
         $idPost = 10;
         $newText = 'New Text';
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
         $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
 
         $this->postRepo->shouldReceive('findOrFail')
@@ -207,14 +226,16 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->with($newText)
             ->andReturn(true);
 
-        $this->assertTrue($stub->updatePost($idPost, $newText));
+        $this->assertTrue($mbService->updatePost($idPost, $newText));
     }
 
     public function testDeletePost()
     {
+        $this->mockRepositories();
+
         $idPost = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
         $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
 
         $this->postRepo->shouldReceive('findOrFail')
@@ -229,12 +250,14 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         Event::shouldReceive('fire')->once();
 
-        $this->assertTrue($stub->deletePost($idPost));
+        $this->assertTrue($mbService->deletePost($idPost));
     }
 
     public function testCreateComment()
     {
-        $stub = $this->getAbstractGatewayStub();
+        $this->mockRepositories();
+
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
         $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
@@ -254,7 +277,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Event::shouldReceive('fire')->once();
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Comment',
-            $stub->createComment($user, 1, 'ciao'));
+            $mbService->createComment($user, 1, 'ciao'));
     }
 
     /**
@@ -262,7 +285,9 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
      */
     public function testCreateCommentByBannedUser()
     {
-        $stub = $this->getAbstractGatewayStub();
+        $this->mockRepositories();
+
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
 
         $user->shouldReceive('getUsername')
@@ -273,29 +298,33 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->once()
             ->andReturn(true);
 
-        $stub->createComment($user, 1, 'ciao');
+        $mbService->createComment($user, 1, 'ciao');
     }
 
     public function testGetComment()
     {
+        $this->mockRepositories();
+
         $idComment = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $this->commentRepo->shouldReceive('findOrFail')
             ->once()
             ->with($idComment)
             ->andReturn(true);
 
-        $this->assertTrue($stub->getComment($idComment));
+        $this->assertTrue($mbService->getComment($idComment));
     }
 
     public function testUpdateComment()
     {
+        $this->mockRepositories();
+
         $idComment = 10;
         $newText = 'New Text';
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
         $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
 
         $this->commentRepo->shouldReceive('findOrFail')
@@ -308,14 +337,16 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->with($newText)
             ->andReturn(true);
 
-        $this->assertTrue($stub->updateComment($idComment, $newText));
+        $this->assertTrue($mbService->updateComment($idComment, $newText));
     }
 
     public function testDeleteComment()
     {
+        $this->mockRepositories();
+
         $idComment = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
         $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
 
         $this->commentRepo->shouldReceive('findOrFail')
@@ -329,15 +360,17 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         Event::shouldReceive('fire')->once();
 
-        $this->assertTrue($stub->deleteComment($idComment));
+        $this->assertTrue($mbService->deleteComment($idComment));
     }
 
     public function testCreatePostLikeIfNotAlreadyLiked()
     {
+        $this->mockRepositories();
+
         $idUser = 1;
         $likableEntityId = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
         $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
         $like = $this->mock('MicheleAngioni\MessageBoard\Models\Like');
 
@@ -364,15 +397,17 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Event::shouldReceive('fire')->once();
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Like',
-            $stub->createLike($idUser, $likableEntityId, 'post'));
+            $mbService->createLike($idUser, $likableEntityId, 'post'));
     }
 
     public function testCreatePostLikeAlreadyLiked()
     {
+        $this->mockRepositories();
+
         $idUser = 1;
         $likableEntityId = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
 
@@ -386,15 +421,17 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
             ->with($post, $idUser)
             ->andReturn(true);
 
-        $this->assertTrue($stub->createLike($idUser, $likableEntityId, 'post'));
+        $this->assertTrue($mbService->createLike($idUser, $likableEntityId, 'post'));
     }
 
     public function testCreateCommentLikeIfNotAlreadyLiked()
     {
+        $this->mockRepositories();
+
         $idUser = 1;
         $likableEntityId = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
         $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
         $like = $this->mock('MicheleAngioni\MessageBoard\Models\Like');
 
@@ -421,15 +458,17 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         Event::shouldReceive('fire')->once();
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Like',
-            $stub->createLike($idUser, $likableEntityId, 'comment'));
+            $mbService->createLike($idUser, $likableEntityId, 'comment'));
     }
 
     public function testDeletePostLike()
     {
+        $this->mockRepositories();
+
         $idUser = 1;
         $likableEntityId = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
         $like = $this->mock('MicheleAngioni\MessageBoard\Models\Like');
@@ -447,15 +486,17 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $like->shouldReceive('delete')
              ->once();
 
-        $this->assertTrue($stub->deleteLike($idUser, $likableEntityId, 'post'));
+        $this->assertTrue($mbService->deleteLike($idUser, $likableEntityId, 'post'));
     }
 
     public function testDeleteCommentLike()
     {
+        $this->mockRepositories();
+
         $idUser = 1;
         $likableEntityId = 10;
 
-        $stub = $this->getAbstractGatewayStub();
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
         $like = $this->mock('MicheleAngioni\MessageBoard\Models\Like');
@@ -473,7 +514,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $like->shouldReceive('delete')
             ->once();
 
-        $this->assertTrue($stub->deleteLike($idUser, $likableEntityId, 'comment'));
+        $this->assertTrue($mbService->deleteLike($idUser, $likableEntityId, 'comment'));
     }
 
 
@@ -485,21 +526,12 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $appPath = $app['path.base'];
         $this->app['path.base'] .= '/../../../..';
 
-        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
-        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
-        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
-        $purifier = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
-        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
-
         $app['path.base'] = $appPath;
         $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
-            $purifier, $viewRepo, $app);
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = new User;
 
@@ -508,7 +540,7 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $this->assertFalse($user->isBanned());
 
-        $mbGateway->banUser($user, 3, $reason = 'Ban');
+        $mbService->banUser($user, 3, $reason = 'Ban');
         $user = User::find(1);
         $this->assertTrue($user->isBanned());
     }
@@ -518,22 +550,13 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
      */
     public function testDeletePostByOtherUser()
     {
-        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
-        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
-        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
-        $purifier = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
-        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
-
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
-            $purifier, $viewRepo, $app);
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = new User;
         $user->id = 1;
@@ -543,33 +566,24 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $user2->id = 2;
         $user2->save();
 
-        $post = $user->mbPosts()->create(array(
+        $post = $user->mbPosts()->create([
             'category_id' => null,
             'poster_id' => $user->id,
             'text' => 'text'
-        ));
+        ]);
 
-        $mbGateway->deletePost($post->id, $user2);
+        $mbService->deletePost($post->id, $user2);
     }
 
     public function testDeletePostByAdmin()
     {
-        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
-        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
-        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
-        $purifier = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
-        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
-
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
-            $purifier, $viewRepo, $app);
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = new User;
         $user->id = 1;
@@ -584,14 +598,14 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $user2->attachMbRole($role);
 
-        $post = $user->mbPosts()->create(array(
+        $post = $user->mbPosts()->create([
             'category_id' => null,
             'user_id' => $user->id,
             'poster_id' => $user->id,
             'text' => 'text'
-        ));
+        ]);
 
-        $this->assertTrue($mbGateway->deletePost($post->id, $user2));
+        $this->assertTrue($mbService->deletePost($post->id, $user2));
     }
 
     /**
@@ -599,22 +613,13 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
      */
     public function testDeleteCommentByOtherUser()
     {
-        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
-        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
-        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
-        $purifier = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
-        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
-
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
-            $purifier, $viewRepo, $app);
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = new User;
         $user->id = 1;
@@ -624,39 +629,30 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $user2->id = 2;
         $user2->save();
 
-        $post = $user->mbPosts()->create(array(
+        $post = $user->mbPosts()->create([
             'category_id' => null,
             'user_id' => $user->id,
             'poster_id' => $user->id,
             'text' => 'text'
-        ));
+        ]);
 
-        $comment = $post->comments()->create(array(
+        $comment = $post->comments()->create([
             'user_id' => $user->id,
             'text' => 'text'
-        ));
+        ]);
 
-        $mbGateway->deleteComment($comment->id, $user2);
+        $mbService->deleteComment($comment->id, $user2);
     }
 
     public function testDeleteCommentByAdmin()
     {
-        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
-        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
-        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
-        $purifier = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
-        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
-
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
-            $purifier, $viewRepo, $app);
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = new User;
         $user->id = 1;
@@ -671,19 +667,19 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $user2->attachMbRole($role);
 
-        $post = $user->mbPosts()->create(array(
+        $post = $user->mbPosts()->create([
             'category_id' => null,
             'user_id' => $user->id,
             'poster_id' => $user->id,
             'text' => 'text'
-        ));
+        ]);
 
-        $comment = $post->comments()->create(array(
+        $comment = $post->comments()->create([
             'user_id' => $user->id,
             'text' => 'text'
-        ));
+        ]);
 
-        $this->assertTrue($mbGateway->deleteComment($comment->id, $user2));
+        $this->assertTrue($mbService->deleteComment($comment->id, $user2));
     }
 
 
@@ -738,22 +734,13 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $category->created_at = $postdatetime;
         $category->save();
 
-        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
-        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
-        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
-        $purifier = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
-        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
-
         $app = $this->app;
 
         $app['config']['ma_messageboard.model'] = 'User';
         $app['config']['ma_messageboard.posts_per_page'] = 20;
         $app['config']['ma_messageboard.user_named_route'] = 'user';
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
-                                                                $purifier, $viewRepo, $app);
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $queryMock = $this->mock('QueryMock');
         $queryMock->shouldReceive('update')->andReturn(true);
@@ -763,14 +750,14 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $user->shouldReceive('getPrimaryId')->andReturn(1);
         $user->shouldReceive('mbLastView')->andReturn($queryMock);
 
-        $posts = $mbGateway->getOrderedUserPosts($user, false);
+        $posts = $mbService->getOrderedUserPosts($user, false);
         $this->assertEquals(2, $posts[0]->id);
 
-        $posts = $mbGateway->getOrderedUserPosts($user, 10);
+        $posts = $mbService->getOrderedUserPosts($user, 10);
         $this->assertEquals(3, $posts[0]->id);
         $this->assertEquals(1, $posts->count());
 
-        $posts = $mbGateway->getOrderedUserPosts($user, 'category');
+        $posts = $mbService->getOrderedUserPosts($user, 'category');
         $this->assertEquals(3, $posts[0]->id);
         $this->assertEquals(1, $posts->count());
     }
@@ -799,20 +786,11 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         //unset($post); unset($comment); unset($comment2);
 
-        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCategoryRepository');
-        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentCommentRepository');
-        $likeRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentLikeRepository');
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentPostRepository');
-        $presenter = $this->app->make('MicheleAngioni\Support\Presenters\Presenter');
-        $purifier = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-        $viewRepo = $this->app->make('MicheleAngioni\MessageBoard\Repos\EloquentViewRepository');
-
         $app = $this->app;
 
         Config::shouldReceive('get')->with('ma_messageboard.model')->andReturn('User');
 
-        $mbGateway = new MicheleAngioni\MessageBoard\MbGateway($categoryRepo, $commentRepo, $likeRepo, $postRepo, $presenter,
-                                                                $purifier, $viewRepo, $app);
+        $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
         $user->shouldReceive('getPrimaryId')->andReturn(1);
@@ -828,14 +806,14 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 
         $user->mbLastView = $viewMock;
 
-        $posts = $mbGateway->getOrderedUserPosts($user, 'all', 1,  20, true, true);
+        $posts = $mbService->getOrderedUserPosts($user, 'all', 1,  20, true, true);
 
         $this->assertGreaterThanOrEqual(0, strpos($posts[0]->text,'<?'));
         $this->assertGreaterThanOrEqual(0, strpos($posts[0]->comments[0]->text,'<?'));
     }
     */
 
-    protected function getAbstractGatewayStub()
+    public function mockRepositories()
     {
         $this->categoryRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface');
         $this->commentRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface');
@@ -844,13 +822,6 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
         $this->purifier = $this->mock('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
         $this->presenter = $this->mock('MicheleAngioni\Support\Presenters\Presenter');
         $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface');
-
-        Config::shouldReceive('get')->with('ma_messageboard.posts_per_page')->andReturn(20);
-        Config::shouldReceive('get')->with('ma_messageboard.user_named_route')->andReturn('user');
-        
-        return $this->getMockForAbstractClass('MicheleAngioni\MessageBoard\AbstractMbGateway',
-            [$this->categoryRepo, $this->commentRepo, $this->likeRepo, $this->postRepo, $this->presenter, $this->purifier,
-                $this->viewRepo]);
     }
 
 
@@ -876,6 +847,8 @@ class MbAbstractGatewayTest extends Orchestra\Testbench\TestCase {
 class User extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\Contracts\MbUserInterface
 {
     use MicheleAngioni\MessageBoard\MbTrait;
+
+    protected $table = 'users';
 
     public function getPrimaryId()
     {
