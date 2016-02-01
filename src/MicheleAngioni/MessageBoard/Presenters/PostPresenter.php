@@ -57,7 +57,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     public function text()
     {
         if($this->escapeText) {
-            return $this->purifier->clean($this->object->text, config('ma_messageboard.mb_purifier_conf'));
+            return $this->purifier->clean($this->object->text, 'ma_messageboard.mb_purifier_conf');
         }
 
         return $this->object->text;
