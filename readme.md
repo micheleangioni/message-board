@@ -126,13 +126,23 @@ In the `updatePost` and `deletePost` methods, you can specify a User as second p
 
 Posts can behave to Categories. You can manage Categories through the following methods
 
+**Retrieve all Categories**
+
+    MessageBoard::getCategories()
+
+**Retrieve a Category**
+
+    MessageBoard::getCategory($category)
+    
+- $category can be the Category id or name.
+
 **Create a new Category**
 
     MessageBoard::createCategory($name, $defaultPic = null, $private = false, MbUserInterface $user = null)
     
 - $name is the name of the Category;
-- $defaultPic is the file
-- $private indicates if the Category Post will be private or not
+- $defaultPic is the file;
+- $private indicates if the Category Post will be private or not;
 - if $user is provided, a check will be performed if the $user has the rights to create the new Category.
 
 **Edit a Category**
@@ -193,7 +203,7 @@ You can use the `MessageBoard::createCodedPost(MbUserInterface $user, $categoryI
 
  - $user is an instance of your User model (which must implement the MbUserInterface) where the post will be posted.  
  - $categoryId defines the Category of the Post;  
- - $code is the key of the lang file array which identifies the coded message.  
+ - $code is the key of the lang file array which identifies the coded message; 
  - $attributes defines a list of variables can be injected in the coded message. See the [Laravel localization documentation](http://laravel.com/docs/5.0/localization) for further details.
 
 The codes are defined in the `messageboard.php` lang file. More codes can be defined this way:
@@ -389,9 +399,9 @@ The package can automatically create notifications where several main events occ
 To activate the default notifications:
  
  1) set `'after_mb_events'` to TRUE in the `ma_messageboard.php` config file;
- 2) set 'use_model_pic' to TRUE in the `ma_messageboard.php` config file and the User model must implement the `MicheleAngioni\MessageBoard\Contracts\MbUserWithImageInterface` interface if you want pics to be used;
- 3) set the 'user_pic_path' key in the `ma_messageboard.php` config file: it must be your relative path to the directory where User images are stored.
- 4) set the 'category_pic_path' key in the `ma_messageboard.php` config file: it must be your relative path to the directory where Category images are stored.
+ 2) set `'use_model_pic'` to TRUE in the `ma_messageboard.php` config file and the User model must implement the `MicheleAngioni\MessageBoard\Contracts\MbUserWithImageInterface` interface if you want pics to be used;
+ 3) set the `'user_pic_path'` key in the `ma_messageboard.php` config file: it must be your relative path to the directory where User images are stored.
+ 4) set the `'category_pic_path'` key in the `ma_messageboard.php` config file: it must be your relative path to the directory where Category images are stored.
  
 ## API Docs
 

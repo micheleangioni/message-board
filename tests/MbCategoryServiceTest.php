@@ -84,12 +84,10 @@ class MbCategoryServiceTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals(0, $this->categoryService->getCategories()->count());
 
         $category = $this->categoryService->createCategory('category', 'pic.jpg');
-
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Category', $category);
-
         $this->assertEquals(1, $this->categoryService->getCategories()->count());
-
         $this->assertEquals($category->getKey(), $this->categoryService->getCategory($category->getKey())->getKey());
+        $this->assertEquals($category->getKey(), $this->categoryService->getCategory('category')->getKey());
 
         $this->categoryService->updateCategory($category->getKey(), ['name' => 'new category']);
 

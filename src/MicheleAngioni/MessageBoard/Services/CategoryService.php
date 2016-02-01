@@ -1,5 +1,6 @@
 <?php namespace MicheleAngioni\MessageBoard\Services;
 
+use Helpers;
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface as CategoryRepo;
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
@@ -29,14 +30,19 @@ class CategoryService
     /**
      * Return input Category.
      *
-     * @param  int  $idCategory
+     * @param  int|string  $category
      * @throws ModelNotFoundException
      *
      * @return Category
      */
-    public function getCategory($idCategory)
+    public function getCategory($category)
     {
-        return $this->categoryRepo->findOrFail($idCategory);
+        if(Helpers::isInt($category, 1)) {
+            return $this->categoryRepo->findOrFail($category);
+        }
+        else {
+            return $this->categoryRepo->firstOrFailBy(['name' => $category]);
+        }
     }
 
     /**

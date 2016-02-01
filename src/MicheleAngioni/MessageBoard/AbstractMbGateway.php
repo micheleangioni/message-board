@@ -46,12 +46,12 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     /**
      * Return input Category.
      *
-     * @param  int  $idCategory
+     * @param  int|string  $category
      * @return \MicheleAngioni\MessageBoard\Models\Category
      */
-    public function getCategory($idCategory)
+    public function getCategory($category)
     {
-        return $this->categoryService->getCategory($idCategory);
+        return $this->categoryService->getCategory($category);
     }
 
     /**
