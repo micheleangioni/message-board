@@ -299,7 +299,11 @@ Default provided permissions are:
 
 The Message Board package includes a Notification system out of the box.  
 
-In order to use it, you need to add the `Notifable` trait to your User model.
+In order to use it, first of all you need to add the appropriate Service Provider in the `app.php` conf file under the providers array
+ 
+    'MicheleAngioni\MessageBoard\NotificationsServiceProvider'
+ 
+You then need to add the `Notifable` trait to your User model like in the following example
 
     <?php
 
