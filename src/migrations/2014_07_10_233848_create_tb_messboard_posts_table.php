@@ -15,7 +15,7 @@ class CreateTbMessboardPostsTable extends Migration {
         Schema::create('tb_messboard_posts', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->integer('category_id')->unique()->nullable()->default(null);
+            $table->integer('category_id')->nullable()->default(null);
             $table->integer('user_id')->unsigned();
             $table->integer('poster_id')->index()->unsigned()->nullable();
             $table->text('text', 65535);
