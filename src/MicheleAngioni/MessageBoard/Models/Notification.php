@@ -112,7 +112,7 @@ class Notification extends \Illuminate\Database\Eloquent\Model {
      */
     public function getCleanText()
     {
-        return clean($this->getText());
+        return clean($this->getText(), 'ma_messageboard.mb_purifier_conf');
     }
 
     /**
