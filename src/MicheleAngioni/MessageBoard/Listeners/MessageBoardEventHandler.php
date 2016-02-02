@@ -33,7 +33,7 @@ class MessageBoardEventHandler {
             }
             else {
                 $picUrl = $this->getCategoryPicUrl($post);
-                $text = substr($post->getText(), 0, min(strlen($post->getText()), config('ma_messageboard.notification_max_length')));
+                $text = substr($post->getText(), 0, min(strlen($post->getText()), config('ma_messageboard.notifications.notification_max_length')));
             }
 
             $this->notificationService->sendNotification(
@@ -67,7 +67,7 @@ class MessageBoardEventHandler {
             }
             else {
                 $picUrl = '';
-                $text = substr($comment->getText(), 0, min(strlen($comment->getText()), config('ma_messageboard.notification_max_length')));
+                $text = substr($comment->getText(), 0, min(strlen($comment->getText()), config('ma_messageboard.notifications.notification_max_length')));
             }
 
             $this->notificationService->sendNotification(
@@ -160,8 +160,8 @@ class MessageBoardEventHandler {
      */
     protected function getUserPicPath(MbUserWithImageInterface $user)
     {
-        if(config('ma_messageboard.use_model_pic')) {
-            $picPath = config('ma_messageboard.user_pic_path') . DIRECTORY_SEPARATOR . $user->getProfileImageFilename();
+        if(config('ma_messageboard.notifications.use_model_pic')) {
+            $picPath = config('ma_messageboard.notifications.user_pic_path') . DIRECTORY_SEPARATOR . $user->getProfileImageFilename();
         }
         else {
             $picPath = '';
@@ -183,7 +183,7 @@ class MessageBoardEventHandler {
             return '';
         }
 
-        return config('ma_messageboard.category_pic_path') . DIRECTORY_SEPARATOR . $post->category->getDefaultPic();
+        return config('ma_messageboard.notifications.category_pic_path') . DIRECTORY_SEPARATOR . $post->category->getDefaultPic();
     }
 
     /**
