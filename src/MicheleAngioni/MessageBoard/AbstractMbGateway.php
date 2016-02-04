@@ -115,7 +115,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @return string
      */
-    public function getCodedPostText($code, MbUserInterface $user, array $attributes)
+    public function getCodedPostText($code, MbUserInterface $user, array $attributes = [])
     {
         return $this->messageBoardService->getCodedPostText($code, $user, $attributes);
     }

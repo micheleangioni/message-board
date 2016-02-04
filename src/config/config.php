@@ -38,6 +38,18 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
+    | Localization file name
+    |--------------------------------------------------------------------------
+    |
+    | If you want to use your localization file for coded posts, just specify
+    | the file name.
+    |
+    */
+
+    'localization_file_name' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | MessageBoard Purifier Configuration
     |--------------------------------------------------------------------------
     |

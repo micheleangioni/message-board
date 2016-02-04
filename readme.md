@@ -206,7 +206,11 @@ You can use the `MessageBoard::createCodedPost(MbUserInterface $user, $categoryI
  - $code is the key of the lang file array which identifies the coded message; 
  - $attributes defines a list of variables can be injected in the coded message. See the [Laravel localization documentation](http://laravel.com/docs/5.0/localization) for further details.
 
-The codes are defined in the `messageboard.php` lang file. More codes can be defined this way:
+To use your own codes, just specify in the in the `localization_file_name` key of the `ma_messageboard.php` config file the name of the lang file you wish to use.
+
+For example, you could define a `messageboard.php` lang file and place it under the lang\en directory
+
+    // /resources/lang/en/messageboard.php
 
     return [
     
@@ -217,8 +221,14 @@ The codes are defined in the `messageboard.php` lang file. More codes can be def
         '42' => ":user , remember: the answer is 42."
     
     ];
+    
+and than set 
 
-If you want a deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes)` method which must return the text of the coded message.
+    'localization_file_name' => 'messageboard',
+    
+in the config file.
+
+If you want an even deeper level of customization for your coded posts, you can extend the `AbstractMbGateway` and create your own `getCodedPostText($code, MbUserInterface $user, array $attributes = [])` method which must return the text of the coded message.
 
 ### Bans
 
