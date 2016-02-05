@@ -113,7 +113,7 @@ class MessageBoardService {
         }
 
         if(config('ma_messageboard.localization_file_name')) {
-            return $this->mbText = trans(config('ma_messageboard.localization_file_name') . $code, $variables);
+            return $this->mbText = trans(config('ma_messageboard.localization_file_name.') . $code, $variables);
         }
 
         return $this->mbText = trans('ma_messageboard::messageboard.'.$code, $variables);
