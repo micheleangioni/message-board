@@ -2,16 +2,16 @@
 
 return array(
 
-	/*
-	|--------------------------------------------------------------------------
-	| Message Board coded sentences
-	|--------------------------------------------------------------------------
-	|
-	| The following language lines can be used as coded sentences to be used
-	| in the Message Board.
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | Message Board coded sentences
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines can be used as coded sentences to be used
+    | in the Message Board.
+    |
+    */
 
-	"user" => "The user is :user.",
+    'user' => "The user is :user.",
 
 );

@@ -129,7 +129,7 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
         Event::shouldReceive('fire')->once();
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post',
-            $mbService->createCodedPost($user, null, 1, []));
+            $mbService->createCodedPost($user, null, 'code', []));
     }
 
     public function testCreatePost()
@@ -519,6 +519,40 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
 
 
     // <<< --- INTEGRATION TESTS --- >>>
+
+    public function testCodedPostWithCategory()
+    {
+        $app = $this->app;
+        $appPath = $app['path.base'];
+        $this->app['path.base'] .= '/../../../..';
+
+        $app['path.base'] = $appPath;
+        $app['config']['ma_messageboard.model'] = 'User';
+        $app['config']['ma_messageboard.posts_per_page'] = 20;
+        $app['config']['ma_messageboard.user_named_route'] = 'user';
+
+        $this->app->bind('html', function($app) {
+            $html = $this->mock('html');
+            $html->shouldReceive('linkRoute')
+                ->once()
+                ->andReturn('linkToUser');
+
+            return $html;
+        });
+
+        $mbGateway = $this->app->make('MicheleAngioni\MessageBoard\MbGateway');
+
+        $category = $mbGateway->createCategory('Category', null, false);
+
+        $user = new User;
+        $user->id = 1;
+        $user->save();
+
+        $post = $mbGateway->createCodedPost($user, $category->getKey(), 'user', ['user' => 'username']);
+
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post', $post);
+        $this->assertEquals(trans('ma_messageboard::messageboard.user', ['user' => 'linkToUser']), $post->getText());
+    }
 
     public function testBanUser()
     {
