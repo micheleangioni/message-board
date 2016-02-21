@@ -574,9 +574,22 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
 
         $this->assertFalse($user->isBanned());
 
+        // Ban the User
+
         $mbService->banUser($user, 3, $reason = 'Ban');
         $user = User::find(1);
         $this->assertTrue($user->isBanned());
+        $this->assertEquals(1, count($user->mbBans));
+
+        // Ban again the User
+
+        $mbService->banUser($user, 5, $reason = 'Ban New');
+        $user = User::find(1);
+        $this->assertEquals(1, count($user->mbBans));
+        $ban = $user->getBan();
+        $this->assertEquals($ban->getReason(), 'Ban New');
+
+        $this->assertEquals(date('Y-m-d', strtotime('8 days')), $ban->getUntil());
     }
 
     /**

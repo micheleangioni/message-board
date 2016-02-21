@@ -629,17 +629,18 @@ class MessageBoardService {
         if($user->isBanned()) {
             // Extend the current ban
 
-            $ban = $user->mbBans->first();
+            $ban = $user->getBan();
 
-            $currentBanDays = Helpers::daysBetweenDates(Helpers::getDate(), $ban->until);
+            $currentBanDays = Helpers::daysBetweenDates(Helpers::getDate(), $ban->getUntil());
 
-            $ban->until = max($currentBanDays + $days,0);
+            $ban->reason = $reason;
+            $ban->until = Helpers::getDate(max($currentBanDays + $days, 0));
             $ban->save();
         }
         else {
             $ban = $user->mbBans()->create([
                 'reason' => $reason,
-                'until' => Helpers::getDate(max($days,0)),
+                'until' => Helpers::getDate(max($days, 0)),
             ]);
         }
 

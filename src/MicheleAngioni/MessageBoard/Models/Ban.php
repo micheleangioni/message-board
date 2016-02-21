@@ -17,4 +17,21 @@ class Ban extends \Illuminate\Database\Eloquent\Model {
         return $this->belongsTo(\Config::get('ma_messageboard.model'));
     }
 
+    // Getters
+
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    public function getReason()
+    {
+        return $this->reason;
+    }
+
+    public function getUntil()
+    {
+        return $this->until;
+    }
+
 }

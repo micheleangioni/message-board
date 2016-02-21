@@ -52,12 +52,31 @@ trait MbTrait {
     public function isBanned()
     {
         if(count($this->mbBans) > 0) {
-            if($this->mbBans->first()->until >= Helpers::getDate()) {
+            if($this->mbBans->last()->getUntil() >= Helpers::getDate()) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Return the current Ban.
+     * Return null if the User is not banned.
+     *
+     * @return bool
+     */
+    public function getBan()
+    {
+        if(count($this->mbBans) > 0) {
+            $ban = $this->mbBans->last();
+
+            if($ban->getUntil() >= Helpers::getDate()) {
+                return $ban;
+            }
+        }
+
+        return null;
     }
 
     /**

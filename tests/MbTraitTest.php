@@ -82,6 +82,9 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
         $user->id = 1;
         $user->save();
 
+        $this->assertFalse($user->isBanned());
+        $this->assertNull($user->getBan());
+
         // Test attach and detach roles
         $user->attachMbRole($roles[0]);
         $this->assertEquals(1, count($user->mbRoles));
@@ -91,14 +94,22 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
         $user = UserMb::find(1);
         $this->assertEquals(0, count($user->mbRoles));
 
-        // Test isBanned
-        $user->mbBans()->create(array(
+        // Ban the User
+        $user->mbBans()->create([
             'user_id' => 1,
             'reason' => 'Reason',
             'until' => '2100-01-01'
-        ));
+        ]);
 
+        // Reload Model
+        $user = $user->fresh();
+
+        // Test isBanned
         $this->assertTrue($user->isBanned());
+
+        // Test getBan
+        $ban = $user->getBan();
+        $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Ban', $ban);
     }
 
 }
