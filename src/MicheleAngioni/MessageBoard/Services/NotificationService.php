@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface as NotificationRepo;
+use MicheleAngioni\MessageBoard\Events\NotificationCreate;
 use MicheleAngioni\MessageBoard\Models\Notification;
+use Event;
 use RuntimeException;
 
 class NotificationService
@@ -77,6 +79,9 @@ class NotificationService
         } catch (\Exception $e) {
             throw new \RuntimeException("Caught RuntimeException in ".__METHOD__.' at line '.__LINE__.': ' .$e->getMessage());
         }
+
+        // Fire Event
+        Event::fire(new NotificationCreate($notification));
 
         return $notification;
     }
