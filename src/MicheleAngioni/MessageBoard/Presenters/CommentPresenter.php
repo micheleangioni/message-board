@@ -66,6 +66,16 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
     }
 
     /**
+     * Return Comment primary key
+     *
+     * @return int
+     */
+    public function getKey()
+    {
+        return $this->object->getKey();
+    }
+
+    /**
      * Return Comment text, property escaped if requested
      *
      * @return string
@@ -73,6 +83,16 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
     public function getText()
     {
         return $this->text();
+    }
+
+    /**
+     * Return Comment creation datetime
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->object->getCreatedAt();
     }
 
     /**

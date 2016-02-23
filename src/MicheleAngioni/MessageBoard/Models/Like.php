@@ -60,6 +60,11 @@ class Like extends \Illuminate\Database\Eloquent\Model {
         return $this->likable_type;
     }
 
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
 
     // Others
 

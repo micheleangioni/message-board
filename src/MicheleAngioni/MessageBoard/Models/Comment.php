@@ -67,6 +67,11 @@ class Comment extends \Illuminate\Database\Eloquent\Model {
         return $this->text;
     }
 
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
 
     // Others
 

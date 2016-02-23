@@ -49,6 +49,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
         $this->lastView = $user->mbLastView ? $user->mbLastView->datetime : null;
 	}
 
+
     /**
      * Return Post text, property escaped if requested
      *
@@ -64,6 +65,16 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     }
 
     /**
+     * Return Post primary key
+     *
+     * @return int
+     */
+    public function getKey()
+    {
+        return $this->object->getKey();
+    }
+
+    /**
      * Return Post text, property escaped if requested
      *
      * @return string
@@ -71,6 +82,16 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     public function getText()
     {
         return $this->text();
+    }
+
+    /**
+     * Return Post creation datetime
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->object->getCreatedAt();
     }
 
     /**
