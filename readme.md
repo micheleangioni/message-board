@@ -7,7 +7,7 @@
 
 Message Board is a [Laravel 5](http://laravel.com) package which assigns a message board to each User, where posts and comments can be posted.
 
-Bans and a roles and permission system is provided out of the box. Social features such as "likes" are included as well.
+Bans and a permission system are provided out of the box. Social features such as "likes" are included as well.
 
 ## Documentation
 
@@ -73,6 +73,8 @@ You can browse the Message Board [API Documentation](http://micheleangioni.githu
 Support follows PSR-1 and PSR-4 PHP coding standards, and semantic versioning.
 
 Please report any issue you find in the issues page.  
+
+Use development branch for pull requests.
 
 ## License
 

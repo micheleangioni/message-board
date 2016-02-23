@@ -64,7 +64,7 @@ trait MbTrait {
      * Return the current Ban.
      * Return null if the User is not banned.
      *
-     * @return bool
+     * @return \MicheleAngioni\MessageBoard\Models\Ban|null
      */
     public function getBan()
     {
