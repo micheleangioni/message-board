@@ -525,6 +525,10 @@ class MessageBoardService {
     public function getOrderedUserPosts(MbUserInterface $user, $category = false, $private = null, $page = 1, $limit = 20,
                                         $applyPresenter = false, $escapeText = false, MbUserInterface $userVisiting = null)
     {
+        if(!$page) {
+            $page = 1;
+        }
+
         if(!$limit) {
             $limit = $this->postsPerPage;
         }
