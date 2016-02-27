@@ -525,12 +525,19 @@ class MessageBoardService {
     public function getOrderedUserPosts(MbUserInterface $user, $category = false, $private = null, $page = 1, $limit = 20,
                                         $applyPresenter = false, $escapeText = false, MbUserInterface $userVisiting = null)
     {
+        if(!$page) {
+            $page = 1;
+        }
+
         if(!$limit) {
             $limit = $this->postsPerPage;
         }
 
-        if(!$page) {
-            $page = 1;
+        // If the User is visiting another User's mb, only public posts can be retrieved
+        if($userVisiting) {
+            if($user->getPrimaryId() !== $userVisiting->getPrimaryId()) {
+                $private = false;
+            }
         }
 
         try {

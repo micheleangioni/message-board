@@ -44,21 +44,59 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
     public function getOrderedPosts($idUser, $category = false, $private = null, $page = 1, $limit = 20)
     {
         if(!(Helpers::isInt($idUser,1) && Helpers::isInt($page,1) && Helpers::isInt($limit,1))) {
-            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $idUser, $page or $limit are not valid integers.');
+            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $idUser, $page or $limit are not valid positive integers.');
         }
 
         // Take all posts in the mb, ordered by Post AND Comment datetime.
 
         try {
             if($category === false) {
-                // No Category constraints
-                $posts = $this->getBy(
-                    ['user_id' => $idUser],
-                    ['likes', 'poster', 'comments.likes.user', 'comments.user']
-                );
+                // No Category constraints, check private requirements
+
+                if(is_null($private)) {
+                    // Retrieve all posts regardless of categories or privacy
+
+                    $posts = $this->getBy(
+                        ['user_id' => $idUser],
+                        ['likes', 'poster', 'comments.likes.user', 'comments.user']
+                    );
+                }
+                elseif($private === false) {
+                    // Retrieve all Posts regardless of Categories, but if a Post has a Category, take it only if public
+
+                    $posts = $this->model
+                        ->with(['likes', 'poster', 'comments.likes.user', 'comments.user'])
+                        ->whereNull('category_id')
+                        ->orWhere(function($query)
+                        {
+                            $query->whereHas('category', function($q)
+                            {
+                                $q->where('private', false);
+                            });
+                        })
+                        ->get();
+                }
+                elseif($private === true) {
+                    // Retrieve only posts with a private Category
+
+                    $posts = $this->model
+                        ->with(['likes', 'poster', 'comments.likes.user', 'comments.user'])
+                        ->where(function($query)
+                        {
+                            $query->whereHas('category', function($q)
+                            {
+                                $q->where('private', true);
+                            });
+                        })
+                        ->get();
+                }
+                else {
+                    throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $private must be null or boolean.');
+                }
             }
             elseif(is_null($category)) {
                 // Only Posts with no Category relationships
+
                 $posts = $this->getBy(
                     ['user_id' => $idUser, 'category_id' => null],
                     ['likes', 'poster', 'comments.likes.user', 'comments.user']
