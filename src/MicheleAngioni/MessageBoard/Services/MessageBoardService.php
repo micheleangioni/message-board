@@ -529,6 +529,10 @@ class MessageBoardService {
             $limit = $this->postsPerPage;
         }
 
+        if(!$page) {
+            $page = 1;
+        }
+
         try {
             $posts = $this->postRepo->getOrderedPosts($user->getPrimaryId(), $category, $private, $page, $limit);
         } catch (\Exception $e) {

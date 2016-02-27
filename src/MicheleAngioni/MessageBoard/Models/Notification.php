@@ -102,6 +102,16 @@ class Notification extends \Illuminate\Database\Eloquent\Model {
         return $this->extra;
     }
 
+    /**
+     * Return the creation datetime.
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
 
     // Other Methods
 

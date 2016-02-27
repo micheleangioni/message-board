@@ -111,6 +111,24 @@ return array(
          */
         'notification_max_length' => 100
 
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | APIs
+    |--------------------------------------------------------------------------
+    |
+    | The following settings activate and customize Message Board APIs.
+    |
+    */
+
+    'api' => [
+
+        /*
+         * Set to TRUE to enable v1 api endpoints.
+         */
+        'v1_enabled' => false
+
     ]
 
 );
