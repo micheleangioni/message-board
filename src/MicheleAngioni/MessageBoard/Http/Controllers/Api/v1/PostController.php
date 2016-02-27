@@ -4,11 +4,11 @@ use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use MicheleAngioni\MessageBoard\Http\Controllers\Api\ApiController;
 use MicheleAngioni\MessageBoard\MbGateway;
-use MicheleAngioni\MessageBoard\Presenters\PostPresenter;
 use MicheleAngioni\MessageBoard\Transformers\PostTransformer;
 use MicheleAngioni\MessageBoard\Contracts\UserRepositoryInterface as UserRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
 use Tymon\JWTAuth\JWTAuth;
+use Log;
 
 class PostController extends ApiController {
 
@@ -44,8 +44,6 @@ class PostController extends ApiController {
      */
 	function __construct(JWTAuth $auth, Manager $fractal, MbGateway $mbGateway, Presenter $presenter, UserRepo $userRepo)
 	{
-        //$this->middleware('csrf', ['only' => ['store', 'update', 'updatePlayers']]);
-
         $this->mbGateway = $mbGateway;
 
         $this->presenter = $presenter;
@@ -87,7 +85,10 @@ class PostController extends ApiController {
                                                            $request->json('page'), $request->json('limit'), true, true,
                                                            $userVisiting);
         } catch (\Exception $e) {
-            Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $userVisiting->getPrimaryId() .": {$e->getMessage()}");
+            if(config(config('ma_messageboard.api.log_errors'))) {
+                Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $userVisiting->getPrimaryId() .": {$e->getMessage()}");
+            }
+
             $this->setStatusCode(500);
             return $this->respondWithError('Internal error retrieving user posts. The error has been logged and will be fixed as soon as possible.',
                 self::CODE_RETRIEVING_POSTS_ERROR);
@@ -129,7 +130,10 @@ class PostController extends ApiController {
                     self::CODE_USER_BANNED_ERROR);
             }
             else {
-                Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $userAuthor->getPrimaryId() .": {$e->getMessage()}");
+                if(config(config('ma_messageboard.api.log_errors'))) {
+                    Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $userAuthor->getPrimaryId() .": {$e->getMessage()}");
+                }
+
                 $this->setStatusCode(500);
                 return $this->respondWithError('Internal error creating a new post. The error has been logged and will be fixed as soon as possible.',
                     self::CODE_RETRIEVING_POSTS_ERROR);

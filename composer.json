@@ -11,9 +11,9 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "illuminate/html": "~5.0",
-        "laravel/framework": "~5.0",
-        "league/fractal": "dev-master",
+        "laravel/framework": "~5.1",
+        "laravelcollective/html": "~5.1",
+        "league/fractal": "0.13.*",
         "mews/purifier": "~2.0",
         "michele-angioni/support": "~2.10",
         "tymon/jwt-auth": "0.5.*"

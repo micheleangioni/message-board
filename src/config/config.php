@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -127,8 +127,13 @@ return array(
         /*
          * Set to TRUE to enable v1 api endpoints.
          */
-        'v1_enabled' => false
+        'v1_enabled' => false,
+
+        /**
+         * By default API errors will be logged using the default Laravel Log class.
+         */
+        'log_errors' => true,
 
     ]
 
-);
+];
