@@ -2,16 +2,6 @@
 
 class ApiTest extends Orchestra\Testbench\TestCase {
 
-    protected $categoryRepo;
-
-    protected $commentRepo;
-
-    protected $likeRepo;
-
-    protected $postRepo;
-
-    protected $viewRepo;
-
     /**
      * Setup the test environment.
      */
@@ -159,7 +149,7 @@ class ApiTest extends Orchestra\Testbench\TestCase {
         $token = JWTAuth::fromUser($user);
 
         // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('GET', '/api/v1/posts',
+        $this->json('POST', '/api/v1/posts',
             [
                 'idUser' => 1,
                 'text' => 'Post text'
@@ -168,18 +158,39 @@ class ApiTest extends Orchestra\Testbench\TestCase {
                 'X-Requested-With' => 'XMLHttpRequest',
                 'HTTP_Authorization' => 'Bearer ' . $token
             ] // server
-        )->seeStatusCode(200);
+        )->seeStatusCode(201);
     }
 
-    public function mockRepositories()
+    public function testDeletePost()
     {
-        $this->categoryRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface');
-        $this->commentRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface');
-        $this->likeRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface');
-        $this->postRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
-        $this->purifier = $this->mock('MicheleAngioni\MessageBoard\Contracts\PurifierInterface');
-        $this->presenter = $this->mock('MicheleAngioni\Support\Presenters\Presenter');
-        $this->viewRepo = $this->mock('MicheleAngioni\MessageBoard\Contracts\ViewRepositoryInterface');
+        $this->withoutMiddleware();
+
+        // Create a new User and add it to the Database
+        $user = new UserApi;
+        $user->id = 1;
+        $user->username = 'Username';
+        $user->password = bcrypt(str_random(10));
+        $user->save();
+
+        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
+
+        $postRepo->create([
+            'user_id' => 1,
+            'poster_id' => 1,
+            'text' => 'Post Text'
+        ]);
+
+        // Login as this User
+        $token = JWTAuth::fromUser($user);
+
+        // Call the API logout, by adding the Authentication header (i.e., the Token)
+        $this->json('DELETE', '/api/v1/posts/1',
+            [], //parameters
+            [
+                'X-Requested-With' => 'XMLHttpRequest',
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ] // server
+        )->seeStatusCode(200);
     }
 
 

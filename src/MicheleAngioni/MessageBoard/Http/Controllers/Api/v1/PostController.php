@@ -18,6 +18,8 @@ class PostController extends ApiController {
 
     const CODE_RETRIEVING_POSTS_ERROR = 'MB-ERR-RETRIEVING_POSTS';
 
+    const CODE_DELETING_POSTS_ERROR = 'MB-ERR-DELETING_POSTS';
+
     /**
      * @var MbGateway
      */
@@ -126,6 +128,7 @@ class PostController extends ApiController {
             $this->mbGateway->createPost($user, $userAuthor, $request->json('idCategory'), $request->json('text'), true);
         } catch (\Exception $e) {
             if($e instanceof \MicheleAngioni\Support\Exceptions\PermissionsException) {
+                $this->setStatusCode(403);
                 return $this->respondWithError('The user is banned, so is unable to perform the required action.',
                     self::CODE_USER_BANNED_ERROR);
             }
@@ -141,6 +144,40 @@ class PostController extends ApiController {
         }
 
         return response()->json([], 201);
+    }
+
+    /**
+     * Delete input Post.
+     *
+     * @param  int  $idPost
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($idPost, Request $request)
+    {
+        // Retrieve the authenticated User
+        $user = $this->auth->setRequest($request)->parseToken()->toUser();
+
+        try {
+            $this->mbGateway->deletePost($idPost, $user);
+        } catch (\Exception $e) {
+            if($e instanceof \MicheleAngioni\Support\Exceptions\PermissionsException) {
+                $this->setStatusCode(403);
+                return $this->respondWithError('The user does not have the required permissions to delete input Post.',
+                    self::CODE_USER_PERMISSIONS_ERROR);
+            }
+            else {
+                if(config(config('ma_messageboard.api.log_errors'))) {
+                    Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $user->getPrimaryId() .": {$e->getMessage()}");
+                }
+
+                $this->setStatusCode(500);
+                return $this->respondWithError('Internal error creating a new post. The error has been logged and will be fixed as soon as possible.',
+                    self::CODE_DELETING_POSTS_ERROR);
+            }
+        }
+
+        return response()->json([]);
     }
 
 }

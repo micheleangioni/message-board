@@ -29,6 +29,8 @@ class ApiController extends BaseController
 
     const CODE_USER_NOT_FOUND_ERROR = 'MB-ERR-USER_NOT_FOUND';
 
+    const CODE_USER_PERMISSIONS_ERROR = 'MB-ERR-USER_PERMISSIONS';
+
     /*
      * 5xx Internal Message Board error codes
      */
@@ -159,7 +161,7 @@ class ApiController extends BaseController
     {
         $response = Response::json($array, $this->statusCode, $headers);
 
-        // $response->header('Content-Type', 'application/json');
+        $response->header('Content-Type', 'application/json');
 
         return $response;
     }
