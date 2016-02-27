@@ -529,6 +529,13 @@ class MessageBoardService {
             $limit = $this->postsPerPage;
         }
 
+        // If the User is visiting another User's mb, only public posts can be retrieved
+        if($userVisiting) {
+            if($user->getPrimaryId() !== $userVisiting->getPrimaryId()) {
+                $private = false;
+            }
+        }
+
         try {
             $posts = $this->postRepo->getOrderedPosts($user->getPrimaryId(), $category, $private, $page, $limit);
         } catch (\Exception $e) {
