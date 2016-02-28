@@ -20,7 +20,7 @@ Route::pattern('age', '[0-9]+');
 // v1
 
 if(config('ma_messageboard.api.v1_enabled')) {
-    Route::group(['namespace' => 'MicheleAngioni\\MessageBoard\\Http\\Controllers\\Api\\v1', 'prefix' => '/api/v1', 'middleware' => 'jwt.auth'], function()
+    Route::group(['namespace' => 'MicheleAngioni\\MessageBoard\\Http\\Controllers\\Api\\v1', 'prefix' => config('ma_messageboard.api.api_prefix') . '/v1', 'middleware' => 'jwt.auth'], function()
     {
         // Posts
         Route::get('posts', array('as' => 'mb.api.posts.index', 'uses' => 'PostController@index'));

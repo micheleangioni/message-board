@@ -60,6 +60,7 @@ class MbApiPostTest extends Orchestra\Testbench\TestCase {
         $app['config']->set('ma_messageboard.model', 'UserPostApi');
         $app['config']->set('ma_messageboard.api.notifications', true);
         $app['config']->set('ma_messageboard.api.v1_enabled', true);
+        $app['config']->set('ma_messageboard.api.api_prefix', '/api');
     }
 
     /**

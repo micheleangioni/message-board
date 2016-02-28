@@ -134,6 +134,11 @@ return [
          */
         'v1_enabled' => false,
 
+        /*
+         * The route prefix for API routes.
+         */
+        'api_prefix' => '/api',
+
         /**
          * By default API errors will be logged using the default Laravel Log class.
          */
