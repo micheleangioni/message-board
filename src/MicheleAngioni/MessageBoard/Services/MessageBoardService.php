@@ -366,24 +366,9 @@ class MessageBoardService {
      */
     public function userCanEditEntity(MbUserInterface $user, $entity)
     {
-        // Check if the user is banned
-        if($user->isBanned()) {
-            return false;
-        }
-
         // Check if the user owns the entity
-        if($entity instanceof Post) {
-            if($entity->user_id == $user->getPrimaryId() || $entity->poster_id  == $user->getPrimaryId()) {
-                return true;
-            }
-        }
-        elseif($entity instanceof Comment) {
-            if($entity->user_id == $user->getPrimaryId()) {
-                return true;
-            }
-        }
-        else {
-            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $entity must be an instance of Post or Comment.');
+        if($this->userOwnsEntity($user, $entity)) {
+            return true;
         }
 
         // The user does not own the entity. Last chance to be able to edit it is to have the permission to edit not owned entities
@@ -405,6 +390,29 @@ class MessageBoardService {
     public function userCanDeleteEntity(MbUserInterface $user, $entity)
     {
         // Check if the user owns the entity
+        if($this->userOwnsEntity($user, $entity)) {
+            return true;
+        }
+
+        // The user does not own the entity. Last chance to be able to delete it is to have the permission to delete not owned entities
+        if($user->canMb('Delete Posts')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if input User owns input Entity, i.e. wrote it or it is in User's message board.
+     *
+     * @param  MbUserInterface  $user
+     * @param  Post|Comment $entity
+     * @throws InvalidArgumentException
+     *
+     * @return bool
+     */
+    protected function userOwnsEntity(MbUserInterface $user, $entity)
+    {
         if($entity instanceof Post) {
             if($entity->user_id == $user->getPrimaryId() || $entity->poster_id  == $user->getPrimaryId()) {
                 return true;
@@ -417,11 +425,6 @@ class MessageBoardService {
         }
         else {
             throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $entity must be an instance of Post or Comment.');
-        }
-
-        // The user does not own the entity. Last chance to be able to edit it is to have the permission to edit not owned entities
-        if($user->canMb('Delete Posts')) {
-            return true;
         }
 
         return false;
