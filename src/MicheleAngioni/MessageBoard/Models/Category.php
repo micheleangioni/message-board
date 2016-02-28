@@ -43,6 +43,16 @@ class Category extends \Illuminate\Database\Eloquent\Model {
         return $this->default_pic;
     }
 
+    public function getPrivate()
+    {
+        return $this->private;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
 
     // Other Methods
 

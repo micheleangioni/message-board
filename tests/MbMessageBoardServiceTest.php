@@ -95,7 +95,7 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
         return 'UTC';
     }
 
-
+    
 	public function testCreateCodedPost()
 	{
         $this->mockRepositories();
@@ -552,6 +552,29 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Post', $post);
         $this->assertEquals(trans('ma_messageboard::messageboard.user', ['user' => 'linkToUser']), $post->getText());
+    }
+
+    /**
+     * @expectedException \MicheleAngioni\Support\Exceptions\PermissionsException
+     */
+    public function testGetNotAccessiblePost()
+    {
+        $mbGateway = $this->app->make('MicheleAngioni\MessageBoard\MbGateway');
+
+        $user = new User;
+        $user->id = 1;
+        $user->save();
+
+        $user2 = new User;
+        $user2->id = 2;
+        $user2->save();
+
+        $categoryRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\CategoryRepositoryInterface');
+        $category = $categoryRepo->create(['name' => 'Name', 'private' => true]);
+
+        $post = $mbGateway->createPost($user2, null, $category->getKey(), 'text', true);
+
+        $mbGateway->getPost($post->getKey(), $user);
     }
 
     public function testBanUser()

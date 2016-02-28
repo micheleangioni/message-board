@@ -191,15 +191,38 @@ class MessageBoardService {
 
     /**
      * Retrieve and return input Post.
+     * If a User is provided, a check will be performed if he/she can access the Post.
      *
      * @param  int  $idPost
+     * @param  MbUserInterface  $user
      * @throws ModelNotFoundException
+     * @throws PermissionsException
      *
      * @return Post
      */
-    public function getPost($idPost)
+    public function getPost($idPost, MbUserInterface $user = null)
     {
-        return $this->postRepo->findOrFail($idPost);
+        $post = $this->postRepo->findOrFail($idPost);
+
+        if($user) {
+            // Check if the User owns the Post
+            if ($this->userOwnsEntity($user, $post)) {
+                return $post;
+            }
+
+            // Check if the Post has a Category, if not then it is public
+            if (is_null($post->category)) {
+                return $post;
+            }
+
+            // Check if the category is private
+            if ($post->category->isPrivate()) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " access to post with id $idPost.");
+            }
+        }
+
+        return $post;
+
     }
 
     /**
