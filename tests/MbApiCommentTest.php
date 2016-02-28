@@ -1,6 +1,6 @@
 <?php
 
-class ApiTest extends Orchestra\Testbench\TestCase {
+class MbApiCommentTest extends Orchestra\Testbench\TestCase {
 
     /**
      * Setup the test environment.
@@ -44,7 +44,7 @@ class ApiTest extends Orchestra\Testbench\TestCase {
         $app['config']->set('jwt.ttl', '60');
         $app['config']->set('jwt.refresh_ttl', '20160');
         $app['config']->set('jwt.algo', 'HS256');
-        $app['config']->set('jwt.user', UserApi::class);
+        $app['config']->set('jwt.user', UserCommentApi::class);
         $app['config']->set('jwt.identifier', 'id');
         $app['config']->set('jwt.required_claims', ['iss', 'iat', 'exp', 'nbf', 'sub', 'jti']);
         $app['config']->set('jwt.blacklist_enabled', true);
@@ -57,7 +57,7 @@ class ApiTest extends Orchestra\Testbench\TestCase {
             return new Tymon\JWTAuth\Providers\Storage\IlluminateCacheAdapter($app['cache']);
         });
 
-        $app['config']->set('ma_messageboard.model', 'UserApi');
+        $app['config']->set('ma_messageboard.model', 'UserCommentApi');
         $app['config']->set('ma_messageboard::api.v1_enabled', true);
     }
 
@@ -109,50 +109,32 @@ class ApiTest extends Orchestra\Testbench\TestCase {
     }
 
     
-	public function testGetUserPosts()
-	{
-        $this->withoutMiddleware();
-
-        // Create a new User and add it to the Database
-        $user = new UserApi;
-        $user->id = 1;
-        $user->username = 'Username';
-        $user->password = bcrypt(str_random(10));
-        $user->save();
-
-        // Login as this User
-        $token = JWTAuth::fromUser($user);
-
-        // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('GET', '/api/v1/posts',
-            [
-                'idUser' => 1
-            ], //parameters
-            [
-                'X-Requested-With' => 'XMLHttpRequest',
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ] // server
-        )->seeStatusCode(200);
-    }
-
-    public function testCreatePost()
+    public function testCreateComment()
     {
         $this->withoutMiddleware();
 
         // Create a new User and add it to the Database
-        $user = new UserApi;
+        $user = new UserCommentApi;
         $user->id = 1;
         $user->username = 'Username';
         $user->password = bcrypt(str_random(10));
         $user->save();
 
+        // Create a new Post
+        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
+        $post = $postRepo->create([
+            'user_id' => 1,
+            'poster_id' => 1,
+            'text' => 'Post Text'
+        ]);
+
         // Login as this User
         $token = JWTAuth::fromUser($user);
 
         // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('POST', '/api/v1/posts',
+        $this->json('POST', '/api/v1/comments',
             [
-                'idUser' => 1,
+                'idPost' => $post->getKey(),
                 'text' => 'Post text'
             ], //parameters
             [
@@ -167,39 +149,7 @@ class ApiTest extends Orchestra\Testbench\TestCase {
         $this->withoutMiddleware();
 
         // Create a new User and add it to the Database
-        $user = new UserApi;
-        $user->id = 1;
-        $user->username = 'Username';
-        $user->password = bcrypt(str_random(10));
-        $user->save();
-
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
-
-        $postRepo->create([
-            'user_id' => 1,
-            'poster_id' => 1,
-            'text' => 'Post Text'
-        ]);
-
-        // Login as this User
-        $token = JWTAuth::fromUser($user);
-
-        // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('DELETE', '/api/v1/posts/1',
-            [], //parameters
-            [
-                'X-Requested-With' => 'XMLHttpRequest',
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ] // server
-        )->seeStatusCode(200);
-    }
-
-    public function testGetPostComments()
-    {
-        $this->withoutMiddleware();
-
-        // Create a new User and add it to the Database
-        $user = new UserApi;
+        $user = new UserCommentApi;
         $user->id = 1;
         $user->username = 'Username';
         $user->password = bcrypt(str_random(10));
@@ -208,40 +158,32 @@ class ApiTest extends Orchestra\Testbench\TestCase {
         $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
 
         $post = $postRepo->create([
-            'user_id' => $user->getPrimaryId(),
-            'poster_id' => $user->getPrimaryId(),
+            'user_id' => 1,
+            'poster_id' => 1,
             'text' => 'Post Text'
         ]);
 
-
         $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface');
 
-        $commentRepo->create([
+        $comment = $commentRepo->create([
             'post_id' => $post->getKey(),
             'user_id' => $user->getPrimaryId(),
             'text' => 'Comment Text'
-        ]);
-
-        $commentRepo->create([
-            'post_id' => $post->getKey(),
-            'user_id' => $user->getPrimaryId(),
-            'text' => 'Comment 2 Text'
         ]);
 
         // Login as this User
         $token = JWTAuth::fromUser($user);
 
         // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('GET', '/api/v1/posts/' . $post->getKey() . '/comments',
+        $this->json('DELETE', '/api/v1/comments/' . $comment->getKey(),
             [], //parameters
             [
                 'X-Requested-With' => 'XMLHttpRequest',
                 'HTTP_Authorization' => 'Bearer ' . $token
             ] // server
-        )
-            ->seeStatusCode(200)
-            ->seeJson(['text' => 'Comment Text'])
-            ->seeJson(['text' => 'Comment 2 Text']);
+        )->seeStatusCode(200);
+
+        $this->assertNull($commentRepo->find($comment->getKey()));
     }
 
 
@@ -264,7 +206,7 @@ class ApiTest extends Orchestra\Testbench\TestCase {
 /**
  * A stub class that implements MbUserInterface and uses the MbTrait trait.
  */
-class UserApi extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\Contracts\MbUserInterface
+class UserCommentApi extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\Contracts\MbUserInterface
 {
     use MicheleAngioni\MessageBoard\MbTrait;
 

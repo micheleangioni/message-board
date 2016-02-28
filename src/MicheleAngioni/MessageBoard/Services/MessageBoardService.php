@@ -283,6 +283,8 @@ class MessageBoardService {
      * @param  int  $postId
      * @param  string  $text
      * @param  bool  $banCheck = true
+     * @throws PermissionsException
+     * @throws UserIsBannedException
      *
      * @return Comment
      */
@@ -361,6 +363,7 @@ class MessageBoardService {
      * @param  int  $idComment
      * @param  MbUserInterface  $user
      * @throws ModelNotFoundException
+     * @throws PermissionsException
      *
      * @return bool
      */

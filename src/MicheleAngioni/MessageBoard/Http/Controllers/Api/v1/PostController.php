@@ -167,7 +167,7 @@ class PostController extends ApiController {
         } catch (\Exception $e) {
             if($e instanceof \MicheleAngioni\Support\Exceptions\PermissionsException) {
                 $this->setStatusCode(403);
-                return $this->respondWithError('The user does not have the required permissions to delete input Post.',
+                return $this->respondWithError('The user does not have the required permissions to delete input post.',
                     self::CODE_USER_PERMISSIONS_ERROR);
             }
             else {
@@ -176,7 +176,7 @@ class PostController extends ApiController {
                 }
 
                 $this->setStatusCode(500);
-                return $this->respondWithError('Internal error creating a new post. The error has been logged and will be fixed as soon as possible.',
+                return $this->respondWithError('Internal error deleting a post. The error has been logged and will be fixed as soon as possible.',
                     self::CODE_DELETING_POSTS_ERROR);
             }
         }
@@ -200,7 +200,12 @@ class PostController extends ApiController {
         try {
             $post = $this->mbGateway->getPost($idPost, $user, true, true);
         } catch (\Exception $e) {
-            if($e instanceof \MicheleAngioni\Support\Exceptions\PermissionsException) {
+            if($e instanceof \MicheleAngioni\MessageBoard\Exceptions\UserIsBannedException) {
+                $this->setStatusCode(403);
+                return $this->respondWithError('The user is banned and cannot write new comments.',
+                    self::CODE_USER_PERMISSIONS_ERROR);
+            }
+            elseif($e instanceof \MicheleAngioni\Support\Exceptions\PermissionsException) {
                 $this->setStatusCode(403);
                 return $this->respondWithError('The user cannot access to required post.',
                     self::CODE_USER_PERMISSIONS_ERROR);
@@ -211,7 +216,7 @@ class PostController extends ApiController {
                 }
 
                 $this->setStatusCode(500);
-                return $this->respondWithError('Internal error post comments. The error has been logged and will be fixed as soon as possible.',
+                return $this->respondWithError('Internal error retrieving post comments. The error has been logged and will be fixed as soon as possible.',
                     self::CODE_RETRIEVING_POST_COMMENTS_ERROR);
             }
         }
