@@ -166,7 +166,7 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
     }
 
     /**
-     * @expectedException \MicheleAngioni\Support\Exceptions\PermissionsException
+     * @expectedException \MicheleAngioni\MessageBoard\Exceptions\UserIsBannedException
      */
     public function testCreatePostByBannedUser()
     {
@@ -260,15 +260,23 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
         $mbService = $this->app->make('MicheleAngioni\MessageBoard\Services\MessageBoardService');
 
         $user = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
+
+        $post = $this->mock('MicheleAngioni\MessageBoard\Models\Post');
+        $post->shouldReceive('getAttribute')
+            ->andReturn(null);
+
         $comment = $this->mock('MicheleAngioni\MessageBoard\Models\Comment');
 
         $user->shouldReceive('getPrimaryId')
-            ->once()
             ->andReturn(1);
 
         $user->shouldReceive('isBanned')
             ->once()
             ->andReturn(false);
+
+        $this->postRepo->shouldReceive('findOrFail')
+            ->once()
+            ->andReturn($post);
 
         $this->commentRepo->shouldReceive('create')
             ->once()
@@ -281,7 +289,7 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
     }
 
     /**
-     * @expectedException \MicheleAngioni\Support\Exceptions\PermissionsException
+     * @expectedException \MicheleAngioni\MessageBoard\Exceptions\UserIsBannedException
      */
     public function testCreateCommentByBannedUser()
     {

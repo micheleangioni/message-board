@@ -15,6 +15,7 @@ use MicheleAngioni\MessageBoard\Events\LikeDestroy;
 use MicheleAngioni\MessageBoard\Events\PostCreate;
 use MicheleAngioni\MessageBoard\Events\PostDelete;
 use MicheleAngioni\MessageBoard\Events\UserBanned;
+use MicheleAngioni\MessageBoard\Exceptions\UserIsBannedException;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\MessageBoard\Models\Post;
@@ -154,7 +155,7 @@ class MessageBoardService {
      * @param  string  $text
      * @param  bool  $banCheck
      * @throws InvalidArgumentException
-     * @throws PermissionsException
+     * @throws UserIsBannedException
      *
      * @return Post
      */
@@ -164,7 +165,7 @@ class MessageBoardService {
         if($poster) {
             if($banCheck) {
                 if($poster->isBanned()) {
-                    throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $poster->getUsername() . ' is currently banned and cannot create a new post.');
+                    throw new UserIsBannedException('Caught UserIsBannedException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $poster->getUsername() . ' is currently banned and cannot create a new post.');
                 }
             }
 
@@ -207,27 +208,9 @@ class MessageBoardService {
         $post = $this->postRepo->findOrFail($idPost);
 
         if($user) {
-            // Check if the User owns the Post
-            if($this->userOwnsEntity($user, $post)) {
-                if($applyPresenter) {
-                    $post = $this->presentModel($user, $post, $escapeText);
-                }
-
-                return $post;
-            }
-
-            // Check if the Post has a Category, if not then it is public
-            if(is_null($post->category)) {
-                if($applyPresenter) {
-                    $post = $this->presentModel($user, $post, $escapeText);
-                }
-
-                return $post;
-            }
-
-            // Check if the category is private
-            if($post->category->isPrivate()) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " access to post with id $idPost.");
+            // Check if the User has access to the Post
+            if(!$this->userCanAccessPost($user, $post)) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot access post $idPost.");
             }
         }
 
@@ -255,8 +238,8 @@ class MessageBoardService {
         $post = $this->postRepo->findOrFail($idPost);
 
         if($user) {
-            if(!$this->userCanDeleteEntity($user, $post)) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot updated post with id $idPost.");
+            if(!$this->userCanEditEntity($user, $post)) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot update post $idPost.");
             }
         }
 
@@ -308,8 +291,16 @@ class MessageBoardService {
         // Check if the user is banned
         if($banCheck) {
             if($user->isBanned()) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . ' is currently banned and cannot create a new comment.');
+                throw new UserIsBannedException('Caught UserIsBannedException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . ' is currently banned and cannot create a new comment.');
             }
+        }
+
+        $post = $this->getPost($postId);
+
+        // Check if the user can comment input post
+
+        if(!$this->userCanAccessPost($user, $post)) {
+            throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot access post $postId.");
         }
 
         $comment = $this->commentRepo->create([
@@ -436,6 +427,31 @@ class MessageBoardService {
         }
 
         return false;
+    }
+
+    /**
+     * Check if input User can access input Post.
+     *
+     * @param  MbUserInterface  $user
+     * @param  Post  $post
+     *
+     * @return bool
+     */
+    protected function userCanAccessPost(MbUserInterface $user, Post $post)
+    {
+        // Check if the user owns the post
+        if($this->userOwnsEntity($user, $post)) {
+            return true;
+        }
+
+        // Check if the post has a private category
+        if($post->category) {
+            if($post->category->isPrivate()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

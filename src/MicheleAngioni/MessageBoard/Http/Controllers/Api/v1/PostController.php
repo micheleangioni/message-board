@@ -130,7 +130,7 @@ class PostController extends ApiController {
         try {
             $this->mbGateway->createPost($user, $userAuthor, $request->json('idCategory'), $request->json('text'), true);
         } catch (\Exception $e) {
-            if($e instanceof \MicheleAngioni\Support\Exceptions\PermissionsException) {
+            if($e instanceof \MicheleAngioni\MessageBoard\Exceptions\UserIsBannedException) {
                 $this->setStatusCode(403);
                 return $this->respondWithError('The user is banned, so is unable to perform the required action.',
                     self::CODE_USER_BANNED_ERROR);
@@ -209,8 +209,6 @@ class PostController extends ApiController {
                 if(config('ma_messageboard.api.log_errors')) {
                     Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $user->getPrimaryId() .": {$e->getMessage()}");
                 }
-
-                dd("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $user->getPrimaryId() .": {$e->getMessage()}");
 
                 $this->setStatusCode(500);
                 return $this->respondWithError('Internal error post comments. The error has been logged and will be fixed as soon as possible.',
