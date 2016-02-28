@@ -64,7 +64,7 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
         return array(
             'Mews\Purifier\PurifierServiceProvider',
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider'
         );
     }
 

@@ -75,8 +75,8 @@ class MbApiCommentTest extends Orchestra\Testbench\TestCase {
         return array(
             'Mews\Purifier\PurifierServiceProvider',
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardAPIServiceProvider',
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider',
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardAPIServiceProvider',
             'Tymon\JWTAuth\Providers\JWTAuthServiceProvider'
         );
     }

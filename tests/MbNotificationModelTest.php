@@ -14,7 +14,7 @@ class MbNotificationModelTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'Mews\Purifier\PurifierServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider'
         );
     }
 

@@ -1,6 +1,8 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use MicheleAngioni\MessageBoard\MbGateway;
+use MicheleAngioni\MessageBoard\PermissionManager;
 
 class MessageBoardServiceProvider extends ServiceProvider {
 
@@ -20,25 +22,25 @@ class MessageBoardServiceProvider extends ServiceProvider {
 	{
         // Publish config files
         $this->publishes([
-            __DIR__.'/../../config/config.php' => config_path('ma_messageboard.php'),
+            __DIR__.'/../../../config/config.php' => config_path('ma_messageboard.php'),
         ]);
 
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/config.php', 'ma_messageboard'
+            __DIR__.'/../../../config/config.php', 'ma_messageboard'
         );
 
         // Publish migrations
         $this->publishes([
-            __DIR__.'/../../migrations/' => base_path('/database/migrations/messageboard'),
+            __DIR__.'/../../../migrations/' => base_path('/database/migrations/messageboard'),
         ]);
 
         // Publish seeds
         $this->publishes([
-            __DIR__.'/../../seeds/' => base_path('/database/seeds'),
+            __DIR__.'/../../../seeds/' => base_path('/database/seeds'),
         ]);
 
         // Load translations
-        $this->loadTranslationsFrom(__DIR__.'/../../lang/', 'ma_messageboard');
+        $this->loadTranslationsFrom(__DIR__.'/../../../lang/', 'ma_messageboard');
 	}
 
     /**

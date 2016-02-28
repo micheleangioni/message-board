@@ -57,7 +57,7 @@ class MbPermissionManagerTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider'
         );
     }
 

@@ -1,4 +1,4 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php namespace MicheleAngioni\MessageBoard\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -19,7 +19,7 @@ class MessageBoardAPIServiceProvider extends ServiceProvider {
     public function boot()
     {
         // Load API routes
-        require __DIR__.'/Http/routes.php';
+        require __DIR__.'/../Http/routes.php';
     }
 
     /**
