@@ -578,6 +578,7 @@ class MessageBoardService {
     {
         if($model instanceof Post) {
             $model = $this->presenter->model($model, new PostPresenter($user, $escapeText, $this->purifier));
+            $model->comments = $this->presentCollection($user, $model->comments, $escapeText);
         }
         elseif($model instanceof Comment) {
             $model = $this->presenter->model($model, new CommentPresenter($user, $escapeText, $this->purifier));
