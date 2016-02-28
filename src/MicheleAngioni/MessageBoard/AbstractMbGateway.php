@@ -158,13 +158,15 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      *
      * @param  int  $idPost
      * @param  MbUserInterface  $user
+     * @param  bool  $applyPresenter = false
+     * @param  bool  $escapeText = false
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      *
      * @return \MicheleAngioni\MessageBoard\Models\Post
      */
-    public function getPost($idPost, MbUserInterface $user = null)
+    public function getPost($idPost, MbUserInterface $user = null, $applyPresenter = false, $escapeText = false)
     {
-        return $this->messageBoardService->getPost($idPost, $user);
+        return $this->messageBoardService->getPost($idPost, $user, $applyPresenter, $escapeText);
     }
 
     /**

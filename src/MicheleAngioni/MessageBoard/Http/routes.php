@@ -27,5 +27,6 @@ if(config('ma_messageboard::api.v1_enabled')) {
         Route::get('posts', array('as' => 'mb.api.posts.index', 'uses' => 'PostController@index'));
         Route::post('posts', array('as' => 'mb.api.posts.store', 'uses' => 'PostController@store'));
         Route::delete('posts/{id}', array('as' => 'mb.api.posts.destroy', 'uses' => 'PostController@destroy'));
+        Route::get('posts/{id}/comments', array('as' => 'mb.api.posts.commentsIndex', 'uses' => 'PostController@commentsIndex'));
     });
 }

@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
+use MicheleAngioni\MessageBoard\Contracts\UserRepositoryInterface as UserRepo;
 use MicheleAngioni\MessageBoard\Http\Controllers\Api\ApiController;
 use MicheleAngioni\MessageBoard\MbGateway;
+use MicheleAngioni\MessageBoard\Transformers\CommentTransformer;
 use MicheleAngioni\MessageBoard\Transformers\PostTransformer;
-use MicheleAngioni\MessageBoard\Contracts\UserRepositoryInterface as UserRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
 use Tymon\JWTAuth\JWTAuth;
 use Log;
@@ -17,6 +18,8 @@ class PostController extends ApiController {
      */
 
     const CODE_RETRIEVING_POSTS_ERROR = 'MB-ERR-RETRIEVING_POSTS';
+
+    const CODE_RETRIEVING_POST_COMMENTS_ERROR = 'MB-ERR-RETRIEVING_POST_COMMENTS';
 
     const CODE_DELETING_POSTS_ERROR = 'MB-ERR-DELETING_POSTS';
 
@@ -87,7 +90,7 @@ class PostController extends ApiController {
                                                            $request->json('page'), $request->json('limit'), true, true,
                                                            $userVisiting);
         } catch (\Exception $e) {
-            if(config(config('ma_messageboard.api.log_errors'))) {
+            if(config('ma_messageboard.api.log_errors')) {
                 Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $userVisiting->getPrimaryId() .": {$e->getMessage()}");
             }
 
@@ -133,7 +136,7 @@ class PostController extends ApiController {
                     self::CODE_USER_BANNED_ERROR);
             }
             else {
-                if(config(config('ma_messageboard.api.log_errors'))) {
+                if(config('ma_messageboard.api.log_errors')) {
                     Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $userAuthor->getPrimaryId() .": {$e->getMessage()}");
                 }
 
@@ -151,6 +154,7 @@ class PostController extends ApiController {
      *
      * @param  int  $idPost
      * @param  Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($idPost, Request $request)
@@ -167,7 +171,7 @@ class PostController extends ApiController {
                     self::CODE_USER_PERMISSIONS_ERROR);
             }
             else {
-                if(config(config('ma_messageboard.api.log_errors'))) {
+                if(config('ma_messageboard.api.log_errors')) {
                     Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $user->getPrimaryId() .": {$e->getMessage()}");
                 }
 
@@ -178,6 +182,43 @@ class PostController extends ApiController {
         }
 
         return response()->json([]);
+    }
+
+    /**
+     * Return the Comments belonging to input Post.
+     *
+     * @param  int  $idPost
+     * @param  Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function commentsIndex($idPost, Request $request)
+    {
+        // Retrieve the authenticated User
+        $user = $this->auth->setRequest($request)->parseToken()->toUser();
+
+        try {
+            $post = $this->mbGateway->getPost($idPost, $user, true, true);
+        } catch (\Exception $e) {
+            if($e instanceof \MicheleAngioni\Support\Exceptions\PermissionsException) {
+                $this->setStatusCode(403);
+                return $this->respondWithError('The user cannot access to required post.',
+                    self::CODE_USER_PERMISSIONS_ERROR);
+            }
+            else {
+                if(config('ma_messageboard.api.log_errors')) {
+                    Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $user->getPrimaryId() .": {$e->getMessage()}");
+                }
+
+                dd("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $user->getPrimaryId() .": {$e->getMessage()}");
+
+                $this->setStatusCode(500);
+                return $this->respondWithError('Internal error post comments. The error has been logged and will be fixed as soon as possible.',
+                    self::CODE_RETRIEVING_POST_COMMENTS_ERROR);
+            }
+        }
+
+        return $this->respondWithCollection($post->comments, new CommentTransformer);
     }
 
 }

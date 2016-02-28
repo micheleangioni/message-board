@@ -95,7 +95,7 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
         return 'UTC';
     }
 
-    
+
 	public function testCreateCodedPost()
 	{
         $this->mockRepositories();

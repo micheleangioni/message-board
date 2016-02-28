@@ -195,34 +195,47 @@ class MessageBoardService {
      *
      * @param  int  $idPost
      * @param  MbUserInterface  $user
+     * @param  bool  $applyPresenter = false
+     * @param  bool  $escapeText = false
      * @throws ModelNotFoundException
      * @throws PermissionsException
      *
      * @return Post
      */
-    public function getPost($idPost, MbUserInterface $user = null)
+    public function getPost($idPost, MbUserInterface $user = null, $applyPresenter = false, $escapeText = false)
     {
         $post = $this->postRepo->findOrFail($idPost);
 
         if($user) {
             // Check if the User owns the Post
-            if ($this->userOwnsEntity($user, $post)) {
+            if($this->userOwnsEntity($user, $post)) {
+                if($applyPresenter) {
+                    $post = $this->presentModel($user, $post, $escapeText);
+                }
+
                 return $post;
             }
 
             // Check if the Post has a Category, if not then it is public
-            if (is_null($post->category)) {
+            if(is_null($post->category)) {
+                if($applyPresenter) {
+                    $post = $this->presentModel($user, $post, $escapeText);
+                }
+
                 return $post;
             }
 
             // Check if the category is private
-            if ($post->category->isPrivate()) {
+            if($post->category->isPrivate()) {
                 throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " access to post with id $idPost.");
             }
         }
 
-        return $post;
+        if($applyPresenter) {
+            $post = $this->presentModel($user, $post, $escapeText);
+        }
 
+        return $post;
     }
 
     /**
@@ -604,6 +617,7 @@ class MessageBoardService {
     {
         if($model instanceof Post) {
             $model = $this->presenter->model($model, new PostPresenter($user, $escapeText, $this->purifier));
+            $model->comments = $this->presentCollection($user, $model->comments, $escapeText);
         }
         elseif($model instanceof Comment) {
             $model = $this->presenter->model($model, new CommentPresenter($user, $escapeText, $this->purifier));

@@ -108,6 +108,7 @@ class ApiTest extends Orchestra\Testbench\TestCase {
         return 'UTC';
     }
 
+    
 	public function testGetUserPosts()
 	{
         $this->withoutMiddleware();
@@ -191,6 +192,56 @@ class ApiTest extends Orchestra\Testbench\TestCase {
                 'HTTP_Authorization' => 'Bearer ' . $token
             ] // server
         )->seeStatusCode(200);
+    }
+
+    public function testGetPostComments()
+    {
+        $this->withoutMiddleware();
+
+        // Create a new User and add it to the Database
+        $user = new UserApi;
+        $user->id = 1;
+        $user->username = 'Username';
+        $user->password = bcrypt(str_random(10));
+        $user->save();
+
+        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
+
+        $post = $postRepo->create([
+            'user_id' => $user->getPrimaryId(),
+            'poster_id' => $user->getPrimaryId(),
+            'text' => 'Post Text'
+        ]);
+
+
+        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface');
+
+        $commentRepo->create([
+            'post_id' => $post->getKey(),
+            'user_id' => $user->getPrimaryId(),
+            'text' => 'Comment Text'
+        ]);
+
+        $commentRepo->create([
+            'post_id' => $post->getKey(),
+            'user_id' => $user->getPrimaryId(),
+            'text' => 'Comment 2 Text'
+        ]);
+
+        // Login as this User
+        $token = JWTAuth::fromUser($user);
+
+        // Call the API logout, by adding the Authentication header (i.e., the Token)
+        $this->json('GET', '/api/v1/posts/' . $post->getKey() . '/comments',
+            [], //parameters
+            [
+                'X-Requested-With' => 'XMLHttpRequest',
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ] // server
+        )
+            ->seeStatusCode(200)
+            ->seeJson(['text' => 'Comment Text'])
+            ->seeJson(['text' => 'Comment 2 Text']);
     }
 
 

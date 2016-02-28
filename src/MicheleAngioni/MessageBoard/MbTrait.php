@@ -11,12 +11,12 @@ trait MbTrait {
 
     public function mbLastView()
     {
-        return $this->hasOne('\MicheleAngioni\MessageBoard\Models\View');
+        return $this->hasOne('\MicheleAngioni\MessageBoard\Models\View', 'user_id');
     }
 
     public function mbPosts()
     {
-        return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Post');
+        return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Post', 'user_id');
     }
 
     public function mbRoles()
