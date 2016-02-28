@@ -58,8 +58,8 @@ class MbApiCommentTest extends Orchestra\Testbench\TestCase {
         });
 
         $app['config']->set('ma_messageboard.model', 'UserCommentApi');
-        $app['config']->set('ma_messageboard::api.notifications', true);
-        $app['config']->set('ma_messageboard::api.v1_enabled', true);
+        $app['config']->set('ma_messageboard.api.notifications', true);
+        $app['config']->set('ma_messageboard.api.v1_enabled', true);
     }
 
     /**

@@ -19,7 +19,7 @@ Route::pattern('age', '[0-9]+');
 
 // v1
 
-if(config('ma_messageboard::api.v1_enabled')) {
+if(config('ma_messageboard.api.v1_enabled')) {
     Route::group(['namespace' => 'MicheleAngioni\\MessageBoard\\Http\\Controllers\\Api\\v1', 'prefix' => '/api/v1', 'middleware' => 'jwt.auth'], function()
     {
         // Posts
@@ -32,7 +32,7 @@ if(config('ma_messageboard::api.v1_enabled')) {
         Route::post('comments', array('as' => 'mb.api.comments.store', 'uses' => 'CommentController@store'));
         Route::delete('comments/{id}', array('as' => 'mb.api.comments.destroy', 'uses' => 'CommentController@destroy'));
 
-        if(config('ma_messageboard::api.notifications')) {
+        if(config('ma_messageboard.api.notifications')) {
             // Notifications
             Route::get('notifications', array('as' => 'mb.api.notifications.index', 'uses' => 'NotificationController@index'));
             Route::put('notifications/{id}', array('as' => 'mb.api.notifications.read', 'uses' => 'NotificationController@read'));
