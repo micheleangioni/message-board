@@ -127,6 +127,11 @@ return [
         /*
          * Set to TRUE to enable v1 api endpoints.
          */
+        'notifications' => false,
+
+        /*
+         * Set to TRUE to enable v1 api endpoints.
+         */
         'v1_enabled' => false,
 
         /**

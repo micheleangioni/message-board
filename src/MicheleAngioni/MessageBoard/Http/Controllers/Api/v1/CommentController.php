@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use MicheleAngioni\MessageBoard\Http\Controllers\Api\ApiController;
 use MicheleAngioni\MessageBoard\MbGateway;
-use MicheleAngioni\MessageBoard\Transformers\PostTransformer;
 use MicheleAngioni\MessageBoard\Contracts\UserRepositoryInterface as UserRepo;
 use MicheleAngioni\Support\Presenters\Presenter;
 use Tymon\JWTAuth\JWTAuth;
@@ -58,7 +57,7 @@ class CommentController extends ApiController {
     /**
      * Create a new Comment.
      *
-     * @param  Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -97,7 +96,7 @@ class CommentController extends ApiController {
      * Delete input Comment.
      *
      * @param  int  $idComment
-     * @param  Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
     public function destroy($idComment, Request $request)

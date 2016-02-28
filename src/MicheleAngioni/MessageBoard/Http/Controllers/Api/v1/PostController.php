@@ -61,7 +61,7 @@ class PostController extends ApiController {
     /**
      * Return the Posts of a User.
      *
-     * @param  Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -105,7 +105,7 @@ class PostController extends ApiController {
     /**
      * Create a new Post.
      *
-     * @param  Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -153,7 +153,7 @@ class PostController extends ApiController {
      * Delete input Post.
      *
      * @param  int  $idPost
-     * @param  Request $request
+     * @param  Request  $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -188,7 +188,7 @@ class PostController extends ApiController {
      * Return the Comments belonging to input Post.
      *
      * @param  int  $idPost
-     * @param  Request $request
+     * @param  Request  $request
      *
      * @return \Illuminate\Http\Response
      */

@@ -31,5 +31,11 @@ if(config('ma_messageboard::api.v1_enabled')) {
         // Comments
         Route::post('comments', array('as' => 'mb.api.comments.store', 'uses' => 'CommentController@store'));
         Route::delete('comments/{id}', array('as' => 'mb.api.comments.destroy', 'uses' => 'CommentController@destroy'));
+
+        if(config('ma_messageboard::api.notifications')) {
+            // Notifications
+            Route::get('notifications', array('as' => 'mb.api.notifications.index', 'uses' => 'NotificationController@index'));
+            Route::put('notifications/{id}', array('as' => 'mb.api.notifications.read', 'uses' => 'NotificationController@read'));
+        }
     });
 }
