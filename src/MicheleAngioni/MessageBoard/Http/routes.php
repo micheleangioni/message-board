@@ -31,7 +31,7 @@ if(config('ma_messageboard.api.v1_enabled')) {
 
         if (config('ma_messageboard.api.authentication')) {
             Route::post('auth', [
-                'middleware' => 'GrahamCampbell\Throttle\Http\Middleware\ThrottleMiddleware:5,30', // 5 hits in 30 minutes
+                'middleware' => 'GrahamCampbell\Throttle\Http\Middleware\ThrottleMiddleware:10,30', // 5 hits in 30 minutes
                 'as' => 'mb.api.auth.authenticate',
                 'uses' => 'AuthenticationController@authenticate'
             ]);
