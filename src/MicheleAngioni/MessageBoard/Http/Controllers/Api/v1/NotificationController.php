@@ -60,7 +60,7 @@ class NotificationController extends ApiController {
         $user = $this->auth->setRequest($request)->parseToken()->toUser();
 
         try {
-            $notifications = $this->notificationService->getUserNotifications($user);
+            $notifications = $this->notificationService->getUserNotifications($user->getPrimaryId());
         } catch (\Exception $e) {
             if(config(config('ma_messageboard.api.log_errors'))) {
                 Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $user->getPrimaryId() .": {$e->getMessage()}");

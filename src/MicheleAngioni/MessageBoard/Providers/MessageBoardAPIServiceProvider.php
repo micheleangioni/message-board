@@ -28,6 +28,9 @@ class MessageBoardAPIServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->registerRepositories();
+
+        // Register the GrahamCampbell Throttle Service Provider
+        $this->app->register('GrahamCampbell\Throttle\ThrottleServiceProvider');
     }
 
     protected function registerRepositories()
