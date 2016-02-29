@@ -58,6 +58,7 @@ class MbApiNotificationTest extends Orchestra\Testbench\TestCase {
         });
 
         $app['config']->set('ma_messageboard.model', 'UserNotificationApi');
+        $app['config']->set('ma_messageboard.api.authentication', true);
         $app['config']->set('ma_messageboard.api.notifications', true);
         $app['config']->set('ma_messageboard.api.v1_enabled', true);
         $app['config']->set('ma_messageboard.api.api_prefix', '/api');

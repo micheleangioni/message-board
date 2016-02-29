@@ -16,6 +16,7 @@ class CreateTbUsersTable extends Migration {
         {
             $table->increments('id');
             $table->string('username')->nullable()->default('Username');
+            $table->string('email')->nullable();
             $table->string('password', 60)->nullable();
             $table->timestamps();
         });

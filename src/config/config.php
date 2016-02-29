@@ -125,7 +125,14 @@ return [
     'api' => [
 
         /*
-         * Set to TRUE to enable v1 api endpoints.
+         * Set to TRUE to enable the authentication endpoints.
+         * These endpoints are subject to versioning as well.
+         */
+        'authentication' => false,
+
+        /*
+         * Set to TRUE to enable the notification endpoints.
+         * These endpoints are subject to versioning as well.
          */
         'notifications' => false,
 

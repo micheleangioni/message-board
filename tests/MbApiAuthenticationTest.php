@@ -1,6 +1,6 @@
 <?php
 
-class MbApiPostTest extends Orchestra\Testbench\TestCase {
+class MbApiAuthenticationTest extends Orchestra\Testbench\TestCase {
 
     /**
      * Setup the test environment.
@@ -40,11 +40,13 @@ class MbApiPostTest extends Orchestra\Testbench\TestCase {
             'prefix' => ''
         ]);
 
+        $app['config']->set('auth.providers.users.model', UserAuthApi::class);
+
         $app['config']->set('jwt.secret', 'JWTSECRET');
         $app['config']->set('jwt.ttl', '60');
         $app['config']->set('jwt.refresh_ttl', '20160');
         $app['config']->set('jwt.algo', 'HS256');
-        $app['config']->set('jwt.user', UserPostApi::class);
+        $app['config']->set('jwt.user', UserAuthApi::class);
         $app['config']->set('jwt.identifier', 'id');
         $app['config']->set('jwt.required_claims', ['iss', 'iat', 'exp', 'nbf', 'sub', 'jti']);
         $app['config']->set('jwt.blacklist_enabled', true);
@@ -57,7 +59,7 @@ class MbApiPostTest extends Orchestra\Testbench\TestCase {
             return new Tymon\JWTAuth\Providers\Storage\IlluminateCacheAdapter($app['cache']);
         });
 
-        $app['config']->set('ma_messageboard.model', 'UserPostApi');
+        $app['config']->set('ma_messageboard.model', 'UserAuthApi');
         $app['config']->set('ma_messageboard.api.authentication', true);
         $app['config']->set('ma_messageboard.api.notifications', true);
         $app['config']->set('ma_messageboard.api.v1_enabled', true);
@@ -78,6 +80,7 @@ class MbApiPostTest extends Orchestra\Testbench\TestCase {
             'Mews\Purifier\PurifierServiceProvider',
             'MicheleAngioni\Support\SupportServiceProvider',
             'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider',
+            'MicheleAngioni\MessageBoard\Providers\NotificationsServiceProvider',
             'MicheleAngioni\MessageBoard\Providers\MessageBoardAPIServiceProvider',
             'Tymon\JWTAuth\Providers\JWTAuthServiceProvider'
         );
@@ -112,38 +115,41 @@ class MbApiPostTest extends Orchestra\Testbench\TestCase {
     }
 
     
-	public function testGetUserPosts()
+	public function testAuthenticateUser()
 	{
         $this->withoutMiddleware();
 
         // Create a new User and add it to the Database
-        $user = new UserPostApi;
+        $user = new UserAuthApi;
         $user->id = 1;
         $user->username = 'Username';
-        $user->password = bcrypt(str_random(10));
+        $user->email = 'email@email.com';
+        $user->password = bcrypt('password');
         $user->save();
 
-        // Login as this User
-        $token = JWTAuth::fromUser($user);
-
         // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('GET', '/api/v1/posts',
+        $this->json('POST', '/api/v1/auth',
             [
-                'idUser' => 1
+                'email' => 'email@email.com',
+                'password' => 'password'
             ], //parameters
             [
-                'X-Requested-With' => 'XMLHttpRequest',
-                'HTTP_Authorization' => 'Bearer ' . $token
+                'X-Requested-With' => 'XMLHttpRequest'
             ] // server
-        )->seeStatusCode(200);
+        )
+            ->seeStatusCode(200)
+            ->see('token');
     }
 
-    public function testCreatePost()
+    /**
+     * @expectedException \Tymon\JWTAuth\Exceptions\TokenBlacklistedException
+     */
+    public function testLogout()
     {
         $this->withoutMiddleware();
 
         // Create a new User and add it to the Database
-        $user = new UserPostApi;
+        $user = new UserAuthApi;
         $user->id = 1;
         $user->username = 'Username';
         $user->password = bcrypt(str_random(10));
@@ -152,103 +158,20 @@ class MbApiPostTest extends Orchestra\Testbench\TestCase {
         // Login as this User
         $token = JWTAuth::fromUser($user);
 
+
         // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('POST', '/api/v1/posts',
+        $this->json('DELETE', '/api/v1/auth',
             [
-                'idUser' => 1,
-                'text' => 'Post text'
             ], //parameters
-            [
-                'X-Requested-With' => 'XMLHttpRequest',
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ] // server
-        )->seeStatusCode(201);
-    }
-
-    public function testDeletePost()
-    {
-        $this->withoutMiddleware();
-
-        // Create a new User and add it to the Database
-        $user = new UserPostApi;
-        $user->id = 1;
-        $user->username = 'Username';
-        $user->password = bcrypt(str_random(10));
-        $user->save();
-
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
-
-        $post = $postRepo->create([
-            'user_id' => 1,
-            'poster_id' => 1,
-            'text' => 'Post Text'
-        ]);
-
-        // Login as this User
-        $token = JWTAuth::fromUser($user);
-
-        // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('DELETE', '/api/v1/posts/' . $post->getKey(),
-            [], //parameters
-            [
-                'X-Requested-With' => 'XMLHttpRequest',
-                'HTTP_Authorization' => 'Bearer ' . $token
-            ] // server
-        )->seeStatusCode(200);
-
-        $this->assertNull($postRepo->find($post->getKey()));
-    }
-
-    public function testGetPostComments()
-    {
-        $this->withoutMiddleware();
-
-        // Create a new User and add it to the Database
-        $user = new UserPostApi;
-        $user->id = 1;
-        $user->username = 'Username';
-        $user->password = bcrypt(str_random(10));
-        $user->save();
-
-        $postRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface');
-
-        $post = $postRepo->create([
-            'user_id' => $user->getPrimaryId(),
-            'poster_id' => $user->getPrimaryId(),
-            'text' => 'Post Text'
-        ]);
-
-
-        $commentRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface');
-
-        $commentRepo->create([
-            'post_id' => $post->getKey(),
-            'user_id' => $user->getPrimaryId(),
-            'text' => 'Comment Text'
-        ]);
-
-        $commentRepo->create([
-            'post_id' => $post->getKey(),
-            'user_id' => $user->getPrimaryId(),
-            'text' => 'Comment 2 Text'
-        ]);
-
-        // Login as this User
-        $token = JWTAuth::fromUser($user);
-
-        // Call the API logout, by adding the Authentication header (i.e., the Token)
-        $this->json('GET', '/api/v1/posts/' . $post->getKey() . '/comments',
-            [], //parameters
             [
                 'X-Requested-With' => 'XMLHttpRequest',
                 'HTTP_Authorization' => 'Bearer ' . $token
             ] // server
         )
-            ->seeStatusCode(200)
-            ->seeJson(['text' => 'Comment Text'])
-            ->seeJson(['text' => 'Comment 2 Text']);
-    }
+            ->seeStatusCode(200);
 
+        JWTAuth::toUser();
+    }
 
     public function mock($class)
     {
@@ -269,9 +192,12 @@ class MbApiPostTest extends Orchestra\Testbench\TestCase {
 /**
  * A stub class that implements MbUserInterface and uses the MbTrait trait.
  */
-class UserPostApi extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\Contracts\MbUserInterface
+class UserAuthApi extends \Illuminate\Database\Eloquent\Model implements \MicheleAngioni\MessageBoard\Contracts\MbUserInterface,
+                                                                         \Illuminate\Contracts\Auth\Authenticatable
 {
+    use Illuminate\Auth\Authenticatable;
     use MicheleAngioni\MessageBoard\MbTrait;
+    use MicheleAngioni\MessageBoard\Notifable;
 
     protected $table = 'users';
 
