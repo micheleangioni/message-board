@@ -126,7 +126,7 @@ class Notification extends \Illuminate\Database\Eloquent\Model {
     }
 
     /**
-     * Check if the Notification hasbeen read.
+     * Check if the Notification has been read.
      *
      * @return bool
      */
