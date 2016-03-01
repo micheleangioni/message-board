@@ -2,17 +2,7 @@
 
 // < ------ PATTERN DEFINITIONS ------ > //
 
-
 Route::pattern('id', '[0-9]+');
-Route::pattern('id2', '[0-9]+');
-
-Route::pattern('cou', '[0-9]+');
-Route::pattern('reg', '[0-9]+');
-
-Route::pattern('page', '[0-9]+');
-Route::pattern('limit', '[0-9]+');
-
-Route::pattern('age', '[0-9]+');
 
 
 // APIs
