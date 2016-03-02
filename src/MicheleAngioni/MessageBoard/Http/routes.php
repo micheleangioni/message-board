@@ -5,12 +5,11 @@
 Route::pattern('id', '[0-9]+');
 
 
-// APIs
+// API
 
 // v1
 
 if(config('ma_messageboard.api.v1_enabled')) {
-    // Authentication
 
     Route::group([
         'namespace' => 'MicheleAngioni\\MessageBoard\\Http\\Controllers\\Api\\v1',
@@ -24,6 +23,15 @@ if(config('ma_messageboard.api.v1_enabled')) {
                 'middleware' => 'GrahamCampbell\Throttle\Http\Middleware\ThrottleMiddleware:10,30', // 5 hits in 30 minutes
                 'as' => 'mb.api.auth.authenticate',
                 'uses' => 'AuthenticationController@authenticate'
+            ]);
+
+            Route::post('auth-refresh', [
+                'middleware' => [
+                    'jwt.refresh',
+                    'GrahamCampbell\Throttle\Http\Middleware\ThrottleMiddleware:5,30',
+                ],
+                'as' => 'mb.api.auth.refresh',
+                'uses' => 'AuthenticationController@refresh'
             ]);
         }
 

@@ -63,6 +63,19 @@ class AuthenticationController extends ApiController {
     }
 
     /**
+     * Route used to refresh the used token.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function refresh(Request $request)
+    {
+        $this->auth->setRequest($request);
+
+        return response()->json([]);
+    }
+
+    /**
      * Logout an User.
      *
      * @param  Request  $request
