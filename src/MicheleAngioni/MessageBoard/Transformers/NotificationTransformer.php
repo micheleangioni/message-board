@@ -21,6 +21,7 @@ class NotificationTransformer extends TransformerAbstract
             'type' => $notification->getType(),
             'text' => $notification->getText(),
             'picUrl' => $notification->getPicUrl(),
+            'url' => $notification->getUrl(),
             'extra' => $notification->getExtra(),
             'isRead' => $notification->isRead(),
             'cleanText' => $notification->getCleanText(),
