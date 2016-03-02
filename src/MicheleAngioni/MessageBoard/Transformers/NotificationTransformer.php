@@ -24,7 +24,7 @@ class NotificationTransformer extends TransformerAbstract
             'extra' => $notification->getExtra(),
             'isRead' => $notification->isRead(),
             'cleanText' => $notification->getCleanText(),
-            'createdAt' => $notification->getCreatedAt()
+            'createdAt' => (string)$notification->getCreatedAt()
         ];
     }
 

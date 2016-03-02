@@ -27,7 +27,7 @@ class CommentTransformer extends TransformerAbstract
             'text' => $comment->getText(),
             'isInAuthorPost' => (bool)$comment->isInAuthorPost(),
             'isLiked' => (bool)$comment->isLiked(),
-            'createdAt' => $comment->getCreatedAt()
+            'createdAt' => (string)$comment->getCreatedAt()
         ];
     }
 

@@ -31,7 +31,7 @@ class PostTransformer extends TransformerAbstract
             'isInAuthorMb' => (bool)$post->isInAuthorMb(),
             'isLiked' => (bool)$post->isLiked(),
             'isNew' => (bool)$post->isNew(),
-            'createdAt' => $post->getCreatedAt()
+            'createdAt' => (string)$post->getCreatedAt()
         ];
     }
 

@@ -19,7 +19,7 @@ class LikeTransformer extends TransformerAbstract
             'author_name' => $like->getAuthor()->getUsername(),
             'owner_id' => $like->getOwnerId(),
             'owner_name' => $like->getOwner()->getUsername(),
-            'createdAt' => $like->getCreatedAt()
+            'createdAt' => (string)$like->getCreatedAt()
         ];
     }
 
