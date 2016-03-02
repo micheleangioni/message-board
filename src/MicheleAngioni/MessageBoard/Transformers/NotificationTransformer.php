@@ -22,7 +22,7 @@ class NotificationTransformer extends TransformerAbstract
             'text' => $notification->getText(),
             'picUrl' => $notification->getPicUrl(),
             'url' => $notification->getUrl(),
-            'extra' => $notification->getExtra(),
+            'extra' => json_decode($notification->getExtra()),
             'isRead' => $notification->isRead(),
             'cleanText' => $notification->getCleanText(),
             'createdAt' => (string)$notification->getCreatedAt()
