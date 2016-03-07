@@ -173,6 +173,47 @@ class MbApiNotificationTest extends Orchestra\Testbench\TestCase
         $this->assertTrue($notification->isRead());
     }
 
+    public function testReadAllNotifications()
+    {
+        $this->withoutMiddleware();
+
+        // Create a new User and add it to the Database
+        $user = new UserNotificationApi;
+        $user->id = 1;
+        $user->username = 'Username';
+        $user->password = bcrypt(str_random(10));
+        $user->save();
+
+        $notificationRepo = $this->app->make('MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface');
+
+        $notification = $notificationRepo->create([
+            'to_id' => $user->getPrimaryId(),
+            'text' => 'Notification Text'
+        ]);
+
+        $notification2 = $notificationRepo->create([
+            'to_id' => $user->getPrimaryId(),
+            'text' => 'Other Notification Text'
+        ]);
+
+        // Login as this User
+        $token = JWTAuth::fromUser($user);
+
+        // Call the API logout, by adding the Authentication header (i.e., the Token)
+        $this->json('PUT', '/api/v1/notifications/read-all',
+            [], //parameters
+            [
+                'X-Requested-With' => 'XMLHttpRequest',
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ] // server
+        )->seeStatusCode(200);
+
+        $notification = $notificationRepo->find($notification->getKey());
+        $notification2 = $notificationRepo->find($notification2->getKey());
+        $this->assertTrue($notification->isRead());
+        $this->assertTrue($notification2->isRead());
+    }
+
 
     public function mock($class)
     {

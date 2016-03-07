@@ -19,6 +19,8 @@ class NotificationController extends ApiController
 
     const CODE_INVALID_EXTRA_DATA_ERROR = 'MB-ERR-INVALID_EXTRA_DATA';
 
+    const CODE_READING_NOTIFICATIONS_ERROR = 'MB-ERR-READING_NOTIFICATIONS';
+
     const CODE_RETRIEVING_NOTIFICATIONS_ERROR = 'MB-ERR-RETRIEVING_NOTIFICATIONS';
 
     const CODE_USER_NOTIFICATION_NOT_FOUND_ERROR = 'MB-ERR-USER_NOTIFICATION_NOT_FOUND';
@@ -108,8 +110,34 @@ class NotificationController extends ApiController
 
                 $this->setStatusCode(500);
                 return $this->respondWithError('Internal error trying to read a notification. The error has been logged and will be fixed as soon as possible.',
-                    self::CODE_RETRIEVING_NOTIFICATIONS_ERROR);
+                    self::CODE_READING_NOTIFICATIONS_ERROR);
             }
+        }
+
+        return response()->json([]);
+    }
+
+    /**
+     * Read all Notifications of the User.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function readAll(Request $request)
+    {
+        // Retrieve the authenticated User
+        $user = $this->auth->setRequest($request)->parseToken()->toUser();
+
+        try {
+            $user->readAllNotifications();
+        } catch (\Exception $e) {
+            if(config(config('ma_messageboard.api.log_errors'))) {
+                Log::error("Caught Exception in ".__METHOD__.' at line '.__LINE__." for user ". $user->getPrimaryId() .": {$e->getMessage()}");
+            }
+
+            $this->setStatusCode(500);
+            return $this->respondWithError('Internal error trying to read user notifications. The error has been logged and will be fixed as soon as possible.',
+                self::CODE_READING_NOTIFICATIONS_ERROR);
         }
 
         return response()->json([]);

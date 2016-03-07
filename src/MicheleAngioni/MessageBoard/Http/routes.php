@@ -56,6 +56,7 @@ if(config('ma_messageboard.api.v1_enabled')) {
                 // Notifications
                 Route::get('notifications', ['as' => 'mb.api.notifications.index', 'uses' => 'NotificationController@index']);
                 Route::put('notifications/{id}', ['as' => 'mb.api.notifications.read', 'uses' => 'NotificationController@read']);
+                Route::put('notifications/read-all', ['as' => 'mb.api.notifications.readAll', 'uses' => 'NotificationController@readAll']);
             }
         });
     });
