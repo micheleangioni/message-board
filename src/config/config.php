@@ -124,6 +124,15 @@ return [
 
     'api' => [
 
+        /**
+         * By default, Message Board will use the tymon/jwt-auth token middlewares to authenticate and refresh tokens.
+         * However, you can use your custom middlewares by changing the names in the array below.
+         */
+        'middlewares' => [
+            'auth' => 'jwt.auth',
+            'refresh' => 'jwt.refresh'
+        ],
+
         /*
          * Set to TRUE to enable the authentication endpoints.
          * These endpoints are subject to versioning as well.

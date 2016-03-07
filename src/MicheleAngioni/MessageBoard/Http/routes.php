@@ -27,7 +27,7 @@ if(config('ma_messageboard.api.v1_enabled')) {
 
             Route::post('auth-refresh', [
                 'middleware' => [
-                    'jwt.refresh',
+                    config('ma_messageboard.api.middlewares.refresh'),
                     'GrahamCampbell\Throttle\Http\Middleware\ThrottleMiddleware:5,30',
                 ],
                 'as' => 'mb.api.auth.refresh',
@@ -35,7 +35,10 @@ if(config('ma_messageboard.api.v1_enabled')) {
             ]);
         }
 
-        Route::group(['middleware' => ['jwt.auth', 'GrahamCampbell\Throttle\Http\Middleware\ThrottleMiddleware:150,5']], function () {
+        Route::group(['middleware' => [
+            config('ma_messageboard.api.middlewares.auth'),
+            'GrahamCampbell\Throttle\Http\Middleware\ThrottleMiddleware:150,5'
+        ]], function () {
             // Logout
             Route::delete('auth', ['as' => 'mb.api.auth.logout', 'uses' => 'AuthenticationController@logout']);
 
