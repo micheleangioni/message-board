@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Services;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Services;
 
 use Helpers;
 use Illuminate\Support\Collection;
@@ -127,5 +129,4 @@ class CategoryService
 
         return true;
     }
-
 }

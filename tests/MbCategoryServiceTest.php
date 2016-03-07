@@ -1,7 +1,7 @@
 <?php
 
-class MbCategoryServiceTest extends Orchestra\Testbench\TestCase {
-
+class MbCategoryServiceTest extends Orchestra\Testbench\TestCase
+{
     protected $categoryService;
 
     /**
@@ -57,8 +57,8 @@ class MbCategoryServiceTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider',
-            'MicheleAngioni\MessageBoard\NotificationsServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider',
+            'MicheleAngioni\MessageBoard\Providers\NotificationsServiceProvider'
         );
     }
 
@@ -139,7 +139,6 @@ class MbCategoryServiceTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }
 
 

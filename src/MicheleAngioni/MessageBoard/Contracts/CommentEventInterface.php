@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
 
-interface CommentEventInterface {
+namespace MicheleAngioni\MessageBoard\Contracts;
 
+interface CommentEventInterface
+{
     /**
      * Return the Comment model
      *

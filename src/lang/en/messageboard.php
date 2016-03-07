@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -12,6 +12,6 @@ return array(
     |
     */
 
-    'user' => "The user is :user.",
+    'user' => "The user is :user."
 
-);
+];

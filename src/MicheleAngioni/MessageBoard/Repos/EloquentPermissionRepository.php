@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Repos;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\PermissionRepositoryInterface;
@@ -8,10 +10,8 @@ class EloquentPermissionRepository extends AbstractEloquentRepository implements
 {
     protected $model;
 
-
     public function __construct(Permission $model)
     {
         $this->model = $model;
     }
-
 }

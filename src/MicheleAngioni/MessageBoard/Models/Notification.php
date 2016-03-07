@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Models;
+<?php
 
-class Notification extends \Illuminate\Database\Eloquent\Model {
+namespace MicheleAngioni\MessageBoard\Models;
 
+class Notification extends \Illuminate\Database\Eloquent\Model
+{
 	/**
 	 * The database table used by the model.
 	 *
@@ -102,6 +104,16 @@ class Notification extends \Illuminate\Database\Eloquent\Model {
         return $this->extra;
     }
 
+    /**
+     * Return the creation datetime.
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
 
     // Other Methods
 
@@ -116,7 +128,7 @@ class Notification extends \Illuminate\Database\Eloquent\Model {
     }
 
     /**
-     * Check if the Notification hasbeen read.
+     * Check if the Notification has been read.
      *
      * @return bool
      */
@@ -138,5 +150,4 @@ class Notification extends \Illuminate\Database\Eloquent\Model {
         $this->read = true;
         $this->save();
     }
-
 }

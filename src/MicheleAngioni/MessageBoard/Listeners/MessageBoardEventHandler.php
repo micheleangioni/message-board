@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Listeners;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Listeners;
 
 use Illuminate\Events\Dispatcher;
 use MicheleAngioni\MessageBoard\Contracts\CommentEventInterface;
@@ -9,8 +11,8 @@ use MicheleAngioni\MessageBoard\Models\Post;
 use MicheleAngioni\MessageBoard\Services\NotificationService;
 use MicheleAngioni\MessageBoard\Exceptions\InvalidLikableTypeException;
 
-class MessageBoardEventHandler {
-
+class MessageBoardEventHandler
+{
     protected $notificationService;
 
 
@@ -235,5 +237,4 @@ class MessageBoardEventHandler {
             $events->listen('MicheleAngioni\MessageBoard\Events\PostCreate', 'MicheleAngioni\MessageBoard\Listeners\MessageBoardEventHandler@onPostCreate');
         }
     }
-
 }

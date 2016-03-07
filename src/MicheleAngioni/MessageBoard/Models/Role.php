@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Models;
+<?php
 
-class Role extends \Illuminate\Database\Eloquent\Model {
+namespace MicheleAngioni\MessageBoard\Models;
 
+class Role extends \Illuminate\Database\Eloquent\Model
+{
     /**
      * The database table used by the model.
      *
@@ -21,5 +23,4 @@ class Role extends \Illuminate\Database\Eloquent\Model {
     {
         return $this->belongsToMany(\Config::get('ma_messageboard.model'), 'tb_messboard_user_role', 'role_id')->withTimestamps();
     }
-
 }

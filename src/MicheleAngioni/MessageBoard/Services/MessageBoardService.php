@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Services;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Services;
 
 use Helpers;
 use Illuminate\Support\Collection;
@@ -15,6 +17,7 @@ use MicheleAngioni\MessageBoard\Events\LikeDestroy;
 use MicheleAngioni\MessageBoard\Events\PostCreate;
 use MicheleAngioni\MessageBoard\Events\PostDelete;
 use MicheleAngioni\MessageBoard\Events\UserBanned;
+use MicheleAngioni\MessageBoard\Exceptions\UserIsBannedException;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\MessageBoard\Models\Post;
@@ -27,8 +30,8 @@ use InvalidArgumentException;
 use MicheleAngioni\Support\Exceptions\PermissionsException;
 use RuntimeException;
 
-class MessageBoardService {
-
+class MessageBoardService
+{
     /**
      * @var CommentRepo
      */
@@ -154,7 +157,7 @@ class MessageBoardService {
      * @param  string  $text
      * @param  bool  $banCheck
      * @throws InvalidArgumentException
-     * @throws PermissionsException
+     * @throws UserIsBannedException
      *
      * @return Post
      */
@@ -164,7 +167,7 @@ class MessageBoardService {
         if($poster) {
             if($banCheck) {
                 if($poster->isBanned()) {
-                    throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $poster->getUsername() . ' is currently banned and cannot create a new post.');
+                    throw new UserIsBannedException('Caught UserIsBannedException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $poster->getUsername() . ' is currently banned and cannot create a new post.');
                 }
             }
 
@@ -191,15 +194,33 @@ class MessageBoardService {
 
     /**
      * Retrieve and return input Post.
+     * If a User is provided, a check will be performed if he/she can access the Post.
      *
      * @param  int  $idPost
+     * @param  MbUserInterface  $user
+     * @param  bool  $applyPresenter = false
+     * @param  bool  $escapeText = false
      * @throws ModelNotFoundException
+     * @throws PermissionsException
      *
      * @return Post
      */
-    public function getPost($idPost)
+    public function getPost($idPost, MbUserInterface $user = null, $applyPresenter = false, $escapeText = false)
     {
-        return $this->postRepo->findOrFail($idPost);
+        $post = $this->postRepo->findOrFail($idPost);
+
+        if($user) {
+            // Check if the User has access to the Post
+            if(!$this->userCanAccessPost($user, $post)) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot access post $idPost.");
+            }
+        }
+
+        if($applyPresenter) {
+            $post = $this->presentModel($user, $post, $escapeText);
+        }
+
+        return $post;
     }
 
     /**
@@ -219,8 +240,8 @@ class MessageBoardService {
         $post = $this->postRepo->findOrFail($idPost);
 
         if($user) {
-            if(!$this->userCanDeleteEntity($user, $post)) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot updated post with id $idPost.");
+            if(!$this->userCanEditEntity($user, $post)) {
+                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot update post $idPost.");
             }
         }
 
@@ -264,6 +285,8 @@ class MessageBoardService {
      * @param  int  $postId
      * @param  string  $text
      * @param  bool  $banCheck = true
+     * @throws PermissionsException
+     * @throws UserIsBannedException
      *
      * @return Comment
      */
@@ -272,8 +295,16 @@ class MessageBoardService {
         // Check if the user is banned
         if($banCheck) {
             if($user->isBanned()) {
-                throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . ' is currently banned and cannot create a new comment.');
+                throw new UserIsBannedException('Caught UserIsBannedException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . ' is currently banned and cannot create a new comment.');
             }
+        }
+
+        $post = $this->getPost($postId);
+
+        // Check if the user can comment input post
+
+        if(!$this->userCanAccessPost($user, $post)) {
+            throw new PermissionsException('Caught PermissionsException in ' . __METHOD__ . ' at line ' . __LINE__ . ': user ' . $user->getUsername() . " cannot access post $postId.");
         }
 
         $comment = $this->commentRepo->create([
@@ -334,6 +365,7 @@ class MessageBoardService {
      * @param  int  $idComment
      * @param  MbUserInterface  $user
      * @throws ModelNotFoundException
+     * @throws PermissionsException
      *
      * @return bool
      */
@@ -366,24 +398,9 @@ class MessageBoardService {
      */
     public function userCanEditEntity(MbUserInterface $user, $entity)
     {
-        // Check if the user is banned
-        if($user->isBanned()) {
-            return false;
-        }
-
         // Check if the user owns the entity
-        if($entity instanceof Post) {
-            if($entity->user_id == $user->getPrimaryId() || $entity->poster_id  == $user->getPrimaryId()) {
-                return true;
-            }
-        }
-        elseif($entity instanceof Comment) {
-            if($entity->user_id == $user->getPrimaryId()) {
-                return true;
-            }
-        }
-        else {
-            throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $entity must be an instance of Post or Comment.');
+        if($this->userOwnsEntity($user, $entity)) {
+            return true;
         }
 
         // The user does not own the entity. Last chance to be able to edit it is to have the permission to edit not owned entities
@@ -405,6 +422,54 @@ class MessageBoardService {
     public function userCanDeleteEntity(MbUserInterface $user, $entity)
     {
         // Check if the user owns the entity
+        if($this->userOwnsEntity($user, $entity)) {
+            return true;
+        }
+
+        // The user does not own the entity. Last chance to be able to delete it is to have the permission to delete not owned entities
+        if($user->canMb('Delete Posts')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if input User can access input Post.
+     *
+     * @param  MbUserInterface  $user
+     * @param  Post  $post
+     *
+     * @return bool
+     */
+    protected function userCanAccessPost(MbUserInterface $user, Post $post)
+    {
+        // Check if the user owns the post
+        if($this->userOwnsEntity($user, $post)) {
+            return true;
+        }
+
+        // Check if the post has a private category
+        if($post->category) {
+            if($post->category->isPrivate()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if input User owns input Entity, i.e. wrote it or it is in User's message board.
+     *
+     * @param  MbUserInterface  $user
+     * @param  Post|Comment $entity
+     * @throws InvalidArgumentException
+     *
+     * @return bool
+     */
+    protected function userOwnsEntity(MbUserInterface $user, $entity)
+    {
         if($entity instanceof Post) {
             if($entity->user_id == $user->getPrimaryId() || $entity->poster_id  == $user->getPrimaryId()) {
                 return true;
@@ -417,11 +482,6 @@ class MessageBoardService {
         }
         else {
             throw new InvalidArgumentException('Caught InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $entity must be an instance of Post or Comment.');
-        }
-
-        // The user does not own the entity. Last chance to be able to edit it is to have the permission to edit not owned entities
-        if($user->canMb('Delete Posts')) {
-            return true;
         }
 
         return false;
@@ -672,5 +732,4 @@ class MessageBoardService {
     {
         return link_to_route(config('ma_messageboard.user_named_route'), e($user->getUsername()), [$user->getPrimaryId()], []);
     }
-
 }

@@ -1,11 +1,13 @@
-<?php namespace MicheleAngioni\MessageBoard\Events;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Events;
 
 use MicheleAngioni\MessageBoard\Contracts\PostEventInterface;
 use MicheleAngioni\MessageBoard\Models\Post;
 use Illuminate\Queue\SerializesModels;
 
-class PostUpdate implements PostEventInterface {
-
+class PostUpdate implements PostEventInterface
+{
 	use SerializesModels;
 
     /**
@@ -28,5 +30,4 @@ class PostUpdate implements PostEventInterface {
     {
         return $this->post;
     }
-
 }

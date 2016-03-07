@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php
+
+namespace MicheleAngioni\MessageBoard;
 
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\MbGatewayInterface;
@@ -6,8 +8,8 @@ use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 use MicheleAngioni\MessageBoard\Services\CategoryService;
 use MicheleAngioni\MessageBoard\Services\MessageBoardService;
 
-abstract class AbstractMbGateway implements MbGatewayInterface {
-
+abstract class AbstractMbGateway implements MbGatewayInterface
+{
     /**
      * @var CategoryService
      */
@@ -104,7 +106,6 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
         return $this->categoryService->deleteCategory($idCategory, $user);
     }
 
-
     /**
      * Create the coded text of the mb post.
      * Keys in the messageboard.php lang file will be used for localization.
@@ -157,13 +158,16 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
      * Retrieve and return input Post.
      *
      * @param  int  $idPost
+     * @param  MbUserInterface  $user
+     * @param  bool  $applyPresenter = false
+     * @param  bool  $escapeText = false
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      *
      * @return \MicheleAngioni\MessageBoard\Models\Post
      */
-    public function getPost($idPost)
+    public function getPost($idPost, MbUserInterface $user = null, $applyPresenter = false, $escapeText = false)
     {
-        return $this->messageBoardService->getPost($idPost);
+        return $this->messageBoardService->getPost($idPost, $user, $applyPresenter, $escapeText);
     }
 
     /**
@@ -366,5 +370,4 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     {
         return $this->messageBoardService->banUser($user, $days, $reason);
     }
-
 }

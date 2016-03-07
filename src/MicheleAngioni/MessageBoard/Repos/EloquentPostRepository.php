@@ -1,6 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Repos;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use Helpers;
+use Illuminate\Database\Eloquent\Builder;
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface;
 use MicheleAngioni\MessageBoard\Models\Post;
@@ -12,7 +15,6 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 {
     protected $model;
 
-
     public function __construct(Post $model)
     {
         $this->model = $model;
@@ -21,15 +23,19 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
     /**
      * {@inheritdoc}
      */
-    public function deleteOldMessages($type, $datetime)
+    public function deleteOldMessages($datetime, $category = null)
     {
         if(!Helpers::checkDatetime($datetime)) {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $datetime is not a valid datetime.');
         }
 
-        $posts = $this->model->where('post_type', '=', $type)
-            ->where('created_at', '<', $datetime)
-            ->get();
+        $query = $this->model;
+
+        if($category) {
+            $query = $query->where('category_id', '=', $category);
+        }
+
+        $posts = $query->where('created_at', '<', $datetime)->get();
 
         foreach($posts as $post) {
             $post->delete();
@@ -44,7 +50,7 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
     public function getOrderedPosts($idUser, $category = false, $private = null, $page = 1, $limit = 20)
     {
         if(!(Helpers::isInt($idUser,1) && Helpers::isInt($page,1) && Helpers::isInt($limit,1))) {
-            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $idUser, $page or $limit are not valid integers.');
+            throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $idUser, $page or $limit are not valid positive integers.');
         }
 
         // Take all posts in the mb, ordered by Post AND Comment datetime.
@@ -67,9 +73,9 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
                     $posts = $this->model
                         ->with(['likes', 'poster', 'comments.likes.user', 'comments.user'])
                         ->whereNull('category_id')
-                        ->orWhere(function($query)
+                        ->orWhere(function(Builder $query)
                         {
-                            $query->whereHas('category', function($q)
+                            $query->whereHas('category', function(Builder $q)
                             {
                                 $q->where('private', false);
                             });
@@ -81,9 +87,9 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
                     $posts = $this->model
                         ->with(['likes', 'poster', 'comments.likes.user', 'comments.user'])
-                        ->where(function($query)
+                        ->where(function(Builder $query)
                         {
-                            $query->whereHas('category', function($q)
+                            $query->whereHas('category', function(Builder $q)
                             {
                                 $q->where('private', true);
                             });
@@ -149,5 +155,4 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
         return $pagedPosts;
     }
-
 }

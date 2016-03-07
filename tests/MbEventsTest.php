@@ -1,7 +1,7 @@
 <?php
 
-class MbEventsTest extends Orchestra\Testbench\TestCase {
-
+class MbEventsTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -54,8 +54,8 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider',
-            'MicheleAngioni\MessageBoard\NotificationsServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider',
+            'MicheleAngioni\MessageBoard\Providers\NotificationsServiceProvider'
         );
     }
 
@@ -92,13 +92,11 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
         $senderPost = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
 
         $senderPost->shouldReceive('getPrimaryId')
-            ->once()
             ->andReturn($idSender);
 
         $receiver = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
 
         $receiver->shouldReceive('getPrimaryId')
-            ->once()
             ->andReturn($idReceiver);
 
         $category = new \MicheleAngioni\MessageBoard\Models\Category();
@@ -123,7 +121,6 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
         $senderComment = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
 
         $senderComment->shouldReceive('getPrimaryId')
-            ->once()
             ->andReturn($idSender2);
 
         $mbGateway->createComment($senderComment, $post->getkey(), 'text', false);
@@ -201,13 +198,11 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
         $sender = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
 
         $sender->shouldReceive('getPrimaryId')
-            ->once()
             ->andReturn($idSender);
 
         $receiver = $this->mock('MicheleAngioni\MessageBoard\Contracts\MbUserInterface');
 
         $receiver->shouldReceive('getPrimaryId')
-            ->twice()
             ->andReturn($idReceiver);
 
         $category = new \MicheleAngioni\MessageBoard\Models\Category();
@@ -250,7 +245,6 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }
 
 

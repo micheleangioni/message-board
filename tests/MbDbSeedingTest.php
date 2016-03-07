@@ -1,7 +1,7 @@
 <?php
 
-class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
-
+class MbDbSeedingTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -55,7 +55,7 @@ class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
             'Illuminate\Database\DatabaseServiceProvider',
             'Illuminate\Database\SeedServiceProvider',
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider'
         );
     }
 

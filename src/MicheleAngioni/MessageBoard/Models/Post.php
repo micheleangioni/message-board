@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Models;
+<?php
 
-class Post extends \Illuminate\Database\Eloquent\Model {
+namespace MicheleAngioni\MessageBoard\Models;
 
+class Post extends \Illuminate\Database\Eloquent\Model
+{
 	/**
 	 * The database table used by the model.
 	 *
@@ -104,6 +106,11 @@ class Post extends \Illuminate\Database\Eloquent\Model {
         return $this->text;
     }
 
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
 
     // Other Methods
 
@@ -168,5 +175,4 @@ class Post extends \Illuminate\Database\Eloquent\Model {
             return false;
         }
     }
-
 }

@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Presenters;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Presenters;
 
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
@@ -6,8 +8,8 @@ use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\Support\Presenters\AbstractPresenter;
 use MicheleAngioni\Support\Presenters\PresentableInterface;
 
-class CommentPresenter extends AbstractPresenter implements PresentableInterface {
-
+class CommentPresenter extends AbstractPresenter implements PresentableInterface
+{
     /**
      * @var bool
      */
@@ -66,6 +68,16 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
     }
 
     /**
+     * Return Comment primary key
+     *
+     * @return int
+     */
+    public function getKey()
+    {
+        return $this->object->getKey();
+    }
+
+    /**
      * Return Comment text, property escaped if requested
      *
      * @return string
@@ -73,6 +85,16 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
     public function getText()
     {
         return $this->text();
+    }
+
+    /**
+     * Return Comment creation datetime
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->object->getCreatedAt();
     }
 
     /**
@@ -110,5 +132,4 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
 
         return $this->isLiked = false;
     }
-
 }

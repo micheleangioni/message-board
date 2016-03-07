@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Presenters;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Presenters;
 
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
@@ -6,8 +8,8 @@ use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\Support\Presenters\AbstractPresenter;
 use MicheleAngioni\Support\Presenters\PresentableInterface;
 
-class PostPresenter extends AbstractPresenter implements PresentableInterface {
-
+class PostPresenter extends AbstractPresenter implements PresentableInterface
+{
     /**
      * @var bool
      */
@@ -49,6 +51,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
         $this->lastView = $user->mbLastView ? $user->mbLastView->datetime : null;
 	}
 
+
     /**
      * Return Post text, property escaped if requested
      *
@@ -64,6 +67,16 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     }
 
     /**
+     * Return Post primary key
+     *
+     * @return int
+     */
+    public function getKey()
+    {
+        return $this->object->getKey();
+    }
+
+    /**
      * Return Post text, property escaped if requested
      *
      * @return string
@@ -71,6 +84,16 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
     public function getText()
     {
         return $this->text();
+    }
+
+    /**
+     * Return Post creation datetime
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->object->getCreatedAt();
     }
 
     /**
@@ -147,5 +170,4 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
             return $this->isNew = false;
         }
     }
-
 }

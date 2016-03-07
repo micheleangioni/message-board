@@ -1,7 +1,7 @@
 <?php
 
-class NotifableTraitTest extends Orchestra\Testbench\TestCase {
-
+class NotifableTraitTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -53,8 +53,8 @@ class NotifableTraitTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider',
-            'MicheleAngioni\MessageBoard\NotificationsServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider',
+            'MicheleAngioni\MessageBoard\Providers\NotificationsServiceProvider'
         );
     }
 
@@ -115,7 +115,6 @@ class NotifableTraitTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals(0, $user->countNotificationsNotRead());
         $this->assertEquals(0, $user->getNotifications()->count());
     }
-
 }
 
 /**

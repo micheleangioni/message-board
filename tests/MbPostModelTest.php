@@ -1,7 +1,7 @@
 <?php
 
-class MbPostModelTest extends Orchestra\Testbench\TestCase {
-
+class MbPostModelTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Define environment setup.
      *
@@ -54,5 +54,4 @@ class MbPostModelTest extends Orchestra\Testbench\TestCase {
 
         $this->assertEquals($commentDatetime, $post->childDatetime);
     }
-
 }

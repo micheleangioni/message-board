@@ -1,12 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
 
-/**
- * The MbUserInterface is used by other MessageBoard components to require a User model.
- *
- * @package MicheleAngioni\MessageBoard
- */
-interface MbUserInterface {
+namespace MicheleAngioni\MessageBoard\Contracts;
 
+interface MbUserInterface
+{
     public function mbBans();
 
     public function mbLastView();
@@ -28,5 +25,4 @@ interface MbUserInterface {
     public function hasMbRole($name);
 
     public function canMb($permission);
-
 }

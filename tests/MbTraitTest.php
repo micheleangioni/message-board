@@ -1,7 +1,7 @@
 <?php
 
-class MbTraitTest extends Orchestra\Testbench\TestCase {
-
+class MbTraitTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -53,7 +53,7 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider'
         );
     }
 
@@ -111,7 +111,6 @@ class MbTraitTest extends Orchestra\Testbench\TestCase {
         $ban = $user->getBan();
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Ban', $ban);
     }
-
 }
 
 /**

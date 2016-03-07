@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Models;
+<?php
 
-class Category extends \Illuminate\Database\Eloquent\Model {
+namespace MicheleAngioni\MessageBoard\Models;
 
+class Category extends \Illuminate\Database\Eloquent\Model
+{
 	/**
 	 * The database table used by the model.
 	 *
@@ -43,6 +45,16 @@ class Category extends \Illuminate\Database\Eloquent\Model {
         return $this->default_pic;
     }
 
+    public function getPrivate()
+    {
+        return $this->private;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
 
     // Other Methods
 
@@ -60,5 +72,4 @@ class Category extends \Illuminate\Database\Eloquent\Model {
             return false;
         }
     }
-
 }

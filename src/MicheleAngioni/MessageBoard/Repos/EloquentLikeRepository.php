@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Repos;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\LikeRepositoryInterface;
@@ -7,7 +9,6 @@ use MicheleAngioni\MessageBoard\Models\Like;
 class EloquentLikeRepository extends AbstractEloquentRepository implements LikeRepositoryInterface
 {
     protected $model;
-
 
     public function __construct(Like $model)
     {
@@ -29,5 +30,4 @@ class EloquentLikeRepository extends AbstractEloquentRepository implements LikeR
         return $entity->likes()
             ->where(['user_id' => $userId, 'likable_type' => $type])->first();
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 
-class MbFacadesTest extends Orchestra\Testbench\TestCase {
-
+class MbFacadesTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -58,8 +58,8 @@ class MbFacadesTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider',
-            'MicheleAngioni\MessageBoard\NotificationsServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider',
+            'MicheleAngioni\MessageBoard\Providers\NotificationsServiceProvider'
         );
     }
 
@@ -145,7 +145,6 @@ class MbFacadesTest extends Orchestra\Testbench\TestCase {
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Notification', $notification);
     }
-
 }
 
 

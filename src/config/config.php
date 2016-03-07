@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -111,6 +111,55 @@ return array(
          */
         'notification_max_length' => 100
 
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | APIs
+    |--------------------------------------------------------------------------
+    |
+    | The following settings activate and customize Message Board APIs.
+    |
+    */
+
+    'api' => [
+
+        /**
+         * By default, Message Board will use the tymon/jwt-auth token middlewares to authenticate and refresh tokens.
+         * However, you can use your custom middlewares by changing the names in the array below.
+         */
+        'middlewares' => [
+            'auth' => 'jwt.auth',
+            'refresh' => 'jwt.refresh'
+        ],
+
+        /*
+         * Set to TRUE to enable the authentication endpoints.
+         * These endpoints are subject to versioning as well.
+         */
+        'authentication' => false,
+
+        /*
+         * Set to TRUE to enable the notification endpoints.
+         * These endpoints are subject to versioning as well.
+         */
+        'notifications' => false,
+
+        /*
+         * Set to TRUE to enable v1 api endpoints.
+         */
+        'v1_enabled' => false,
+
+        /*
+         * The route prefix for API routes.
+         */
+        'api_prefix' => '/api',
+
+        /**
+         * By default API errors will be logged using the default Laravel Log class.
+         */
+        'log_errors' => true,
+
     ]
 
-);
+];

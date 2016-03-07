@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Repos;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\CommentRepositoryInterface;
@@ -8,10 +10,8 @@ class EloquentCommentRepository extends AbstractEloquentRepository implements Co
 {
     protected $model;
 
-
     public function __construct(Comment $model)
     {
         $this->model = $model;
     }
-
 }

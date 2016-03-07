@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTbMessboardPermissionsTable extends Migration {
-
+class CreateTbMessboardPermissionsTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -29,5 +29,4 @@ class CreateTbMessboardPermissionsTable extends Migration {
     {
         Schema::drop('tb_messboard_permissions');
     }
-
 }

@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Services;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Services;
 
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface as NotificationRepo;
@@ -38,14 +40,21 @@ class NotificationService
     }
 
     /**
-     * Retrieve and return all notifications of input User.
+     * Retrieve and return $limit notifications of input User.
+     * $limit = 0 means no limit.
      *
      * @param  int  $toId
+     * @param  int  $limit = 10
      * @return Collection
      */
-    public function getUserNotifications($toId)
+    public function getUserNotifications($toId, $limit = 10)
     {
-        return $this->notificationRepo->getBy(['to_id' => $toId]);
+        if($limit > 0) {
+            return $this->notificationRepo->getByLimit($limit, ['to_id' => $toId]);
+        }
+        else {
+            return $this->notificationRepo->getBy(['to_id' => $toId]);
+        }
     }
 
     /**
@@ -127,5 +136,4 @@ class NotificationService
     {
         return $this->notificationRepo->deleteOldNotifications($datetime);
     }
-
 }

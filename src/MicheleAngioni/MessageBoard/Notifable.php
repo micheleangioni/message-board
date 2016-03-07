@@ -1,9 +1,11 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php
+
+namespace MicheleAngioni\MessageBoard;
 
 trait Notifable
 {
     /**
-     * Notification Relation
+     * Notifications Relation.
      *
      * @return mixed
      */
@@ -13,7 +15,7 @@ trait Notifable
     }
 
     /**
-     * Read all Notifications
+     * Read all Notifications.
      *
      * @return mixed
      */
@@ -23,7 +25,24 @@ trait Notifable
     }
 
     /**
-     * Read Limiting Notifications
+     * Read input Notification.
+     * Return true on success.
+     *
+     * @param  int  $idNotification
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     *
+     * @return bool
+     */
+    public function readNotification($idNotification)
+    {
+        $notification = $this->notifications()->where('id', $idNotification)->firstOrFail();
+        $notification->setAsRead();
+
+        return true;
+    }
+
+    /**
+     * Read Limiting Notifications.
      *
      * @param  int    $numbers
      * @param  string  $order
@@ -40,7 +59,7 @@ trait Notifable
     }
 
     /**
-     * Delete Limiting Notifications
+     * Delete Limiting Notifications.
      *
      * @param  int    $numbers
      * @param  string  $order
@@ -56,7 +75,7 @@ trait Notifable
     }
 
     /**
-     * Delete all Notifications
+     * Delete all Notifications.
      *
      * @return mixed
      */
@@ -66,7 +85,7 @@ trait Notifable
     }
 
     /**
-     * Get Not Read
+     * Get Not Read Notifications.
      *
      * @param  int|null  $limit
      * @param  int  $page
@@ -90,7 +109,7 @@ trait Notifable
     }
 
     /**
-     * Get all notifications
+     * Get all Notifications.
      *
      * @param  null|null  $limit
      * @param  int  $page
@@ -113,7 +132,7 @@ trait Notifable
     }
 
     /**
-     * Get last notification
+     * Get last Notification.
      *
      * @param  string|null  $type
      *
@@ -132,7 +151,7 @@ trait Notifable
     }
 
     /**
-     * Count unread notification
+     * Count unread Notifications;
      *
      * @param  string|null  $type
      *
@@ -149,5 +168,4 @@ trait Notifable
 
         return $query->count();
     }
-
 }

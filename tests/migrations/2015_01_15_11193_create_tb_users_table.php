@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTbUsersTable extends Migration {
-
+class CreateTbUsersTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -15,10 +15,12 @@ class CreateTbUsersTable extends Migration {
         Schema::create('users', function(Blueprint $table)
         {
             $table->increments('id');
+            $table->string('username')->nullable()->default('Username');
+            $table->string('email')->nullable();
+            $table->string('password', 60)->nullable();
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
@@ -29,5 +31,4 @@ class CreateTbUsersTable extends Migration {
     {
         Schema::drop('users');
     }
-
 }

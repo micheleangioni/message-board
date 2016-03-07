@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Models;
+<?php
 
-class View extends \Illuminate\Database\Eloquent\Model {
+namespace MicheleAngioni\MessageBoard\Models;
 
+class View extends \Illuminate\Database\Eloquent\Model
+{
 	/**
 	 * The database table used by the model.
 	 *
@@ -16,5 +18,4 @@ class View extends \Illuminate\Database\Eloquent\Model {
     {
         return $this->belongsTo(\Config::get('ma_messageboard.model'));
     }
-
 }

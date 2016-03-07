@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTbMessboardCategoriesTable extends Migration {
-
+class CreateTbMessboardCategoriesTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -31,5 +31,4 @@ class CreateTbMessboardCategoriesTable extends Migration {
     {
         Schema::drop('tb_messboard_categories');
     }
-
 }

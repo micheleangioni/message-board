@@ -1,10 +1,12 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php
+
+namespace MicheleAngioni\MessageBoard;
 
 use Mews\Purifier\Purifier as HtmlPurifier;
 use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
 
-class Purifier implements PurifierInterface {
-
+class Purifier implements PurifierInterface
+{
     /**
      * @var HtmlPurifier
      */
@@ -27,5 +29,4 @@ class Purifier implements PurifierInterface {
     {
         return $this->purifier->clean($dirtyText, config($configuration));
     }
-
 }

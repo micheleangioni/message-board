@@ -1,18 +1,20 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
 
-interface PostRepositoryInterface {
+namespace MicheleAngioni\MessageBoard\Contracts;
 
+interface PostRepositoryInterface
+{
     /**
      * Delete mb posts of input date, older than input datetime of format 'Y-m-d H:i:s' .
      * Return true on success.
      *
-     * @param  string  $type
      * @param  string  $datetime
+     * @param  string  $category = null
      * @throws \InvalidArgumentException
      *
      * @return bool
      */
-    public function deleteOldMessages($type, $datetime);
+    public function deleteOldMessages($datetime, $category = null);
 
     /**
      * Return posts of input type of the input user, ordered by post AND comment datetime.
@@ -32,5 +34,4 @@ interface PostRepositoryInterface {
      * @return \Illuminate\Support\Collection
      */
     public function getOrderedPosts($idUser, $category, $private, $page, $limit);
-
 }

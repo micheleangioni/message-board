@@ -1,7 +1,7 @@
 <?php
 
-class MbNotificationServiceTest extends Orchestra\Testbench\TestCase {
-
+class MbNotificationServiceTest extends Orchestra\Testbench\TestCase
+{
     protected $permissionRepo;
 
     protected $roleRepo;
@@ -57,8 +57,8 @@ class MbNotificationServiceTest extends Orchestra\Testbench\TestCase {
     {
         return array(
             'MicheleAngioni\Support\SupportServiceProvider',
-            'MicheleAngioni\MessageBoard\MessageBoardServiceProvider',
-            'MicheleAngioni\MessageBoard\NotificationsServiceProvider'
+            'MicheleAngioni\MessageBoard\Providers\MessageBoardServiceProvider',
+            'MicheleAngioni\MessageBoard\Providers\NotificationsServiceProvider'
         );
     }
 
@@ -153,5 +153,4 @@ class MbNotificationServiceTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }
