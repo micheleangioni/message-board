@@ -9,6 +9,8 @@ Message Board is a [Laravel 5](http://laravel.com) package which assigns a messa
 
 Bans and a permission system are provided out of the box. Social features such as "likes" are included as well.
 
+The package comes bundled with a highly customizable full featured API, which needs to be enabled in the config file, to let your application use Message Board through asynchronous calls without having to write your own API.    
+
 ## Documentation
 
 Check our [wiki](https://github.com/micheleangioni/message-board/wiki) for full documentation.
@@ -62,11 +64,6 @@ Check our [wiki](https://github.com/micheleangioni/message-board/wiki) for full 
 		
 		$user->readAllNotifications();				
 	}
-
-## API Docs
-
-You can browse the Message Board [API Documentation](http://micheleangioni.github.io/message-board/master/index.html).
-(currently outdated)
 
 ## Contribution guidelines
 
