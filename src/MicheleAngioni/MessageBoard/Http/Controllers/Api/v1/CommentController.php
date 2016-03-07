@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Http\Controllers\Api\v1;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
@@ -9,8 +11,8 @@ use MicheleAngioni\Support\Presenters\Presenter;
 use Tymon\JWTAuth\JWTAuth;
 use Log;
 
-class CommentController extends ApiController {
-
+class CommentController extends ApiController
+{
     /*
      * Internal Message Board error codes
      */
@@ -125,5 +127,4 @@ class CommentController extends ApiController {
 
         return response()->json([]);
     }
-
 }

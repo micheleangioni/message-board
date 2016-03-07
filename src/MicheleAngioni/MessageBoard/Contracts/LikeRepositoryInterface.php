@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
 
-interface LikeRepositoryInterface {
+namespace MicheleAngioni\MessageBoard\Contracts;
 
+interface LikeRepositoryInterface
+{
     /**
      * Return the Like of input entity (class name or object) and user.
      * Return null if no Like is found.

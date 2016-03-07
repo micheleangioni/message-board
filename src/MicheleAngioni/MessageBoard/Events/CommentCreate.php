@@ -1,11 +1,13 @@
-<?php namespace MicheleAngioni\MessageBoard\Events;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Events;
 
 use MicheleAngioni\MessageBoard\Contracts\CommentEventInterface;
 use MicheleAngioni\MessageBoard\Models\Comment;
 use Illuminate\Queue\SerializesModels;
 
-class CommentCreate implements CommentEventInterface {
-
+class CommentCreate implements CommentEventInterface
+{
 	use SerializesModels;
 
     /**
@@ -28,5 +30,4 @@ class CommentCreate implements CommentEventInterface {
     {
         return $this->comment;
     }
-
 }

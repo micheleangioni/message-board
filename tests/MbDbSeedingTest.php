@@ -1,7 +1,7 @@
 <?php
 
-class MbDbSeedingTest extends Orchestra\Testbench\TestCase {
-
+class MbDbSeedingTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */

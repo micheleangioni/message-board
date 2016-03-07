@@ -1,7 +1,7 @@
 <?php
 
-class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
-
+class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase
+{
     protected $categoryRepo;
 
     protected $commentRepo;
@@ -916,7 +916,6 @@ class MbMessageBoardServiceTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }
 
 /**

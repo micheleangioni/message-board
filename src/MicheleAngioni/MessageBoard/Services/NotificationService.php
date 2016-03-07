@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Services;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Services;
 
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface as NotificationRepo;
@@ -134,5 +136,4 @@ class NotificationService
     {
         return $this->notificationRepo->deleteOldNotifications($datetime);
     }
-
 }

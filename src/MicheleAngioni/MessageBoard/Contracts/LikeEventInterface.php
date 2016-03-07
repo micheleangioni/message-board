@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
 
-interface LikeEventInterface {
+namespace MicheleAngioni\MessageBoard\Contracts;
 
+interface LikeEventInterface
+{
     /**
      * Return the Like model
      *

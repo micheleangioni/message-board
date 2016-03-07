@@ -1,9 +1,8 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
 
-use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
+namespace MicheleAngioni\MessageBoard\Contracts;
 
-interface MbGatewayInterface {
-
+interface MbGatewayInterface
+{
     function createCodedPost(MbUserInterface $user, $categoryId, $code, array $attributes);
-
 }

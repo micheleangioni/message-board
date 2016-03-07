@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php
+
+namespace MicheleAngioni\MessageBoard;
 
 use MicheleAngioni\MessageBoard\Contracts\MbGatewayInterface;
 use MicheleAngioni\MessageBoard\Services\CategoryService;
@@ -10,5 +12,4 @@ class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
     {
         parent::__construct($categoryService, $messageBoardService);
     }
-
 }

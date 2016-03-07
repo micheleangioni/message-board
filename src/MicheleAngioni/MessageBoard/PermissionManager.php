@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php
+
+namespace MicheleAngioni\MessageBoard;
 
 use Helpers;
 use Illuminate\Support\Collection;
@@ -164,5 +166,4 @@ class PermissionManager
 
         return true;
     }
-
 }

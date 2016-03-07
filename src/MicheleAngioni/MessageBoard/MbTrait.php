@@ -1,9 +1,11 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php
+
+namespace MicheleAngioni\MessageBoard;
 
 use Helpers;
 
-trait MbTrait {
-
+trait MbTrait
+{
     public function mbBans()
     {
         return $this->hasMany('\MicheleAngioni\MessageBoard\Models\Ban', 'user_id')->orderBy('updated_at', 'desc');
@@ -51,8 +53,8 @@ trait MbTrait {
      */
     public function isBanned()
     {
-        if(count($this->mbBans) > 0) {
-            if($this->mbBans->last()->getUntil() >= Helpers::getDate()) {
+        if (count($this->mbBans) > 0) {
+            if ($this->mbBans->last()->getUntil() >= Helpers::getDate()) {
                 return true;
             }
         }
@@ -71,7 +73,7 @@ trait MbTrait {
         if(count($this->mbBans) > 0) {
             $ban = $this->mbBans->last();
 
-            if($ban->getUntil() >= Helpers::getDate()) {
+            if ($ban->getUntil() >= Helpers::getDate()) {
                 return $ban;
             }
         }
@@ -123,11 +125,11 @@ trait MbTrait {
      */
     public function attachMbRole($role)
     {
-        if( is_object($role)) {
+        if (is_object($role)) {
             $idRole = $role->getKey();
         }
 
-        if( is_array($role)) {
+        if (is_array($role)) {
             $idRole = $role['id'];
         }
 
@@ -137,7 +139,7 @@ trait MbTrait {
     /**
      * Detach input Role from the user.
      *
-     * @param \MicheleAngioni\MessageBoard\Models\Role  $role
+     * @param \MicheleAngioni\MessageBoard\Models\Role|array  $role
      * @return void
      */
     public function detachMbRole($role)
@@ -152,5 +154,4 @@ trait MbTrait {
 
         $this->mbRoles()->detach($idRole);
     }
-
 }

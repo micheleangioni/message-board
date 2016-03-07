@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Repos;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\NotificationRepositoryInterface;
@@ -7,7 +9,6 @@ use MicheleAngioni\MessageBoard\Models\Notification;
 class EloquentNotificationRepository extends AbstractEloquentRepository implements NotificationRepositoryInterface
 {
     protected $model;
-
 
     public function __construct(Notification $model)
     {
@@ -41,5 +42,4 @@ class EloquentNotificationRepository extends AbstractEloquentRepository implemen
     {
         return $this->model->where('created_at', '<', $datetime)->delete();
     }
-
 }

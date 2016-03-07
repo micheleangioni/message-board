@@ -1,7 +1,7 @@
 <?php
 
-class MbApiPostTest extends Orchestra\Testbench\TestCase {
-
+class MbApiPostTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -263,7 +263,6 @@ class MbApiPostTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }
 
 /**

@@ -1,10 +1,12 @@
-<?php namespace MicheleAngioni\MessageBoard\Providers;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Event;
 
-class NotificationsServiceProvider extends ServiceProvider {
-
+class NotificationsServiceProvider extends ServiceProvider
+{
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -56,5 +58,4 @@ class NotificationsServiceProvider extends ServiceProvider {
             return new \MicheleAngioni\MessageBoard\Services\NotificationService($notificationRepository);
         });
     }
-
 }

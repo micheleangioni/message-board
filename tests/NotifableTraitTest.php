@@ -1,7 +1,7 @@
 <?php
 
-class NotifableTraitTest extends Orchestra\Testbench\TestCase {
-
+class NotifableTraitTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -115,7 +115,6 @@ class NotifableTraitTest extends Orchestra\Testbench\TestCase {
         $this->assertEquals(0, $user->countNotificationsNotRead());
         $this->assertEquals(0, $user->getNotifications()->count());
     }
-
 }
 
 /**

@@ -1,7 +1,7 @@
 <?php
 
-class MbFacadesTest extends Orchestra\Testbench\TestCase {
-
+class MbFacadesTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -145,7 +145,6 @@ class MbFacadesTest extends Orchestra\Testbench\TestCase {
 
         $this->assertInstanceOf('MicheleAngioni\MessageBoard\Models\Notification', $notification);
     }
-
 }
 
 

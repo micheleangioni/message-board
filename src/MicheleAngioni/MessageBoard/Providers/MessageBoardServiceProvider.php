@@ -1,11 +1,13 @@
-<?php namespace MicheleAngioni\MessageBoard\Providers;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use MicheleAngioni\MessageBoard\MbGateway;
 use MicheleAngioni\MessageBoard\PermissionManager;
 
-class MessageBoardServiceProvider extends ServiceProvider {
-
+class MessageBoardServiceProvider extends ServiceProvider
+{
 	/**
 	 * Indicates if loading of the provider is deferred.
 	 *
@@ -129,5 +131,4 @@ class MessageBoardServiceProvider extends ServiceProvider {
             return new PermissionManager($permissionRepository, $roleRepository);
         });
     }
-
 }

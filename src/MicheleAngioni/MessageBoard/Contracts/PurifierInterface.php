@@ -1,7 +1,8 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
 
-interface PurifierInterface {
+namespace MicheleAngioni\MessageBoard\Contracts;
 
+interface PurifierInterface
+{
     function clean($dirtyText, $config = 'default');
-
 }

@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Transformers;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use MicheleAngioni\MessageBoard\Models\Like;
@@ -22,5 +24,4 @@ class LikeTransformer extends TransformerAbstract
             'createdAt' => (string)$like->getCreatedAt()
         ];
     }
-
 }

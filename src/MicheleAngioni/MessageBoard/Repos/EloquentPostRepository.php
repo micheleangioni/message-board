@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Repos;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use Helpers;
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
@@ -11,7 +13,6 @@ use InvalidArgumentException;
 class EloquentPostRepository extends AbstractEloquentRepository implements PostRepositoryInterface
 {
     protected $model;
-
 
     public function __construct(Post $model)
     {
@@ -153,5 +154,4 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
         return $pagedPosts;
     }
-
 }

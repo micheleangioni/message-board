@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
 
-interface PostRepositoryInterface {
+namespace MicheleAngioni\MessageBoard\Contracts;
 
+interface PostRepositoryInterface
+{
     /**
      * Delete mb posts of input date, older than input datetime of format 'Y-m-d H:i:s' .
      * Return true on success.
@@ -32,5 +34,4 @@ interface PostRepositoryInterface {
      * @return \Illuminate\Support\Collection
      */
     public function getOrderedPosts($idUser, $category, $private, $page, $limit);
-
 }

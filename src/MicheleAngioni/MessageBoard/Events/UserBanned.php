@@ -1,10 +1,12 @@
-<?php namespace MicheleAngioni\MessageBoard\Events;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Events;
 
 use MicheleAngioni\MessageBoard\Models\Ban;
 use Illuminate\Queue\SerializesModels;
 
-class UserBanned {
-
+class UserBanned
+{
 	use SerializesModels;
 
     /**
@@ -19,5 +21,4 @@ class UserBanned {
     {
         $this->ban = $ban;
     }
-
 }

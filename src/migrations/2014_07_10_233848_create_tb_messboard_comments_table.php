@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTbMessboardCommentsTable extends Migration {
-
+class CreateTbMessboardCommentsTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -31,5 +31,4 @@ class CreateTbMessboardCommentsTable extends Migration {
     {
         Schema::drop('tb_messboard_comments');
     }
-
 }

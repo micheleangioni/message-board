@@ -1,3 +1,5 @@
-<?php namespace MicheleAngioni\MessageBoard\Contracts;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Contracts;
 
 interface UserRepositoryInterface {}

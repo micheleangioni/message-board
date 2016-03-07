@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Transformers;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use MicheleAngioni\MessageBoard\Presenters\CommentPresenter;
@@ -41,5 +43,4 @@ class CommentTransformer extends TransformerAbstract
     {
         return $this->collection($comment->likes, new LikeTransformer);
     }
-
 }

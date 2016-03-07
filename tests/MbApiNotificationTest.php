@@ -1,7 +1,7 @@
 <?php
 
-class MbApiNotificationTest extends Orchestra\Testbench\TestCase {
-
+class MbApiNotificationTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -187,7 +187,6 @@ class MbApiNotificationTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }
 
 /**

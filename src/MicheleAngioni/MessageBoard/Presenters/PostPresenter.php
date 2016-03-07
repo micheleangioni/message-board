@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Presenters;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Presenters;
 
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
@@ -6,8 +8,8 @@ use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\Support\Presenters\AbstractPresenter;
 use MicheleAngioni\Support\Presenters\PresentableInterface;
 
-class PostPresenter extends AbstractPresenter implements PresentableInterface {
-
+class PostPresenter extends AbstractPresenter implements PresentableInterface
+{
     /**
      * @var bool
      */
@@ -168,5 +170,4 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface {
             return $this->isNew = false;
         }
     }
-
 }

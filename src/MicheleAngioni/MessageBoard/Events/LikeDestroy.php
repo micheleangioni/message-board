@@ -1,11 +1,13 @@
-<?php namespace MicheleAngioni\MessageBoard\Events;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Events;
 
 use MicheleAngioni\MessageBoard\Contracts\LikeEventInterface;
 use MicheleAngioni\MessageBoard\Models\Like;
 use Illuminate\Queue\SerializesModels;
 
-class LikeDestroy implements LikeEventInterface {
-
+class LikeDestroy implements LikeEventInterface
+{
 	use SerializesModels;
 
     /**
@@ -28,5 +30,4 @@ class LikeDestroy implements LikeEventInterface {
     {
         return $this->like;
     }
-
 }

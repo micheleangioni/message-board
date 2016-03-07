@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTbUsersTable extends Migration {
-
+class CreateTbUsersTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -22,7 +22,6 @@ class CreateTbUsersTable extends Migration {
         });
     }
 
-
     /**
      * Reverse the migrations.
      *
@@ -32,5 +31,4 @@ class CreateTbUsersTable extends Migration {
     {
         Schema::drop('users');
     }
-
 }

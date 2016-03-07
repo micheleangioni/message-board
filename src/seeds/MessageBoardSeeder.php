@@ -3,8 +3,8 @@
 use MicheleAngioni\MessageBoard\Models\Permission;
 use MicheleAngioni\MessageBoard\Models\Role;
 
-class MessageBoardSeeder extends Illuminate\Database\Seeder {
-
+class MessageBoardSeeder extends Illuminate\Database\Seeder
+{
     /**
      * @var Role
      */
@@ -105,5 +105,4 @@ class MessageBoardSeeder extends Illuminate\Database\Seeder {
 
         $this->moderatorModel->permissions()->sync([1, 2, 3], false);
     }
-
 }

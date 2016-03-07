@@ -1,7 +1,7 @@
 <?php
 
-class MbPermissionManagerTest extends Orchestra\Testbench\TestCase {
-
+class MbPermissionManagerTest extends Orchestra\Testbench\TestCase
+{
     protected $permissionRepo;
 
     protected $roleRepo;
@@ -145,5 +145,4 @@ class MbPermissionManagerTest extends Orchestra\Testbench\TestCase {
         $permissionManager->detachPermission($newRole, $permission1);
         $this->assertEquals(3, $newRole->permissions()->count());
     }
-
 }

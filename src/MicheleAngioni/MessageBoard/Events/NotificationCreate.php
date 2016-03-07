@@ -1,10 +1,12 @@
-<?php namespace MicheleAngioni\MessageBoard\Events;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Events;
 
 use MicheleAngioni\MessageBoard\Models\Notification;
 use Illuminate\Queue\SerializesModels;
 
-class NotificationCreate {
-
+class NotificationCreate
+{
 	use SerializesModels;
 
     /**
@@ -19,5 +21,4 @@ class NotificationCreate {
     {
         $this->notification = $notification;
     }
-
 }

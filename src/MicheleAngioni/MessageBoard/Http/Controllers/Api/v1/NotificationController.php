@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Http\Controllers\Api\v1;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
@@ -9,8 +11,8 @@ use MicheleAngioni\MessageBoard\Transformers\NotificationTransformer;
 use Tymon\JWTAuth\JWTAuth;
 use Log;
 
-class NotificationController extends ApiController {
-
+class NotificationController extends ApiController
+{
     /*
      * Internal Message Board error codes
      */
@@ -112,5 +114,4 @@ class NotificationController extends ApiController {
 
         return response()->json([]);
     }
-
 }

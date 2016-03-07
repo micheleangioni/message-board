@@ -1,7 +1,7 @@
 <?php
 
-class MbNotificationServiceTest extends Orchestra\Testbench\TestCase {
-
+class MbNotificationServiceTest extends Orchestra\Testbench\TestCase
+{
     protected $permissionRepo;
 
     protected $roleRepo;
@@ -153,5 +153,4 @@ class MbNotificationServiceTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }

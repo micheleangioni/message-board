@@ -1,7 +1,9 @@
-<?php namespace MicheleAngioni\MessageBoard\Models;
+<?php
 
-class Permission extends \Illuminate\Database\Eloquent\Model {
+namespace MicheleAngioni\MessageBoard\Models;
 
+class Permission extends \Illuminate\Database\Eloquent\Model
+{
     /**
      * The database table used by the model.
      *
@@ -16,5 +18,4 @@ class Permission extends \Illuminate\Database\Eloquent\Model {
     {
         return $this->belongsToMany('\MicheleAngioni\MessageBoard\Models\Role', 'tb_messboard_permission_role')->withTimestamps();
     }
-
 }

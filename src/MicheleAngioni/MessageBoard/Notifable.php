@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php
+
+namespace MicheleAngioni\MessageBoard;
 
 trait Notifable
 {
@@ -166,5 +168,4 @@ trait Notifable
 
         return $query->count();
     }
-
 }

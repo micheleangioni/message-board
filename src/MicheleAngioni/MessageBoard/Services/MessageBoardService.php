@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Services;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Services;
 
 use Helpers;
 use Illuminate\Support\Collection;
@@ -28,8 +30,8 @@ use InvalidArgumentException;
 use MicheleAngioni\Support\Exceptions\PermissionsException;
 use RuntimeException;
 
-class MessageBoardService {
-
+class MessageBoardService
+{
     /**
      * @var CommentRepo
      */
@@ -730,5 +732,4 @@ class MessageBoardService {
     {
         return link_to_route(config('ma_messageboard.user_named_route'), e($user->getUsername()), [$user->getPrimaryId()], []);
     }
-
 }

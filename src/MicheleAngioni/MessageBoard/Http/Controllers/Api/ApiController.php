@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Http\Controllers\Api;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Http\Controllers\Api;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -174,5 +176,4 @@ class ApiController extends BaseController
 
         return $this->respondWithArray($rootScope->toArray());
     }
-
 }

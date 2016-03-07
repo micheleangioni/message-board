@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard;
+<?php
+
+namespace MicheleAngioni\MessageBoard;
 
 use Illuminate\Support\Collection;
 use MicheleAngioni\MessageBoard\Contracts\MbGatewayInterface;
@@ -6,8 +8,8 @@ use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 use MicheleAngioni\MessageBoard\Services\CategoryService;
 use MicheleAngioni\MessageBoard\Services\MessageBoardService;
 
-abstract class AbstractMbGateway implements MbGatewayInterface {
-
+abstract class AbstractMbGateway implements MbGatewayInterface
+{
     /**
      * @var CategoryService
      */
@@ -103,7 +105,6 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     {
         return $this->categoryService->deleteCategory($idCategory, $user);
     }
-
 
     /**
      * Create the coded text of the mb post.
@@ -369,5 +370,4 @@ abstract class AbstractMbGateway implements MbGatewayInterface {
     {
         return $this->messageBoardService->banUser($user, $days, $reason);
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 
-class MbEventsTest extends Orchestra\Testbench\TestCase {
-
+class MbEventsTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Setup the test environment.
      */
@@ -245,7 +245,6 @@ class MbEventsTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }
 
 

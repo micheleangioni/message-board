@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Presenters;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Presenters;
 
 use MicheleAngioni\MessageBoard\Contracts\MbUserInterface;
 use MicheleAngioni\MessageBoard\Contracts\PurifierInterface;
@@ -6,8 +8,8 @@ use MicheleAngioni\MessageBoard\Models\Like;
 use MicheleAngioni\Support\Presenters\AbstractPresenter;
 use MicheleAngioni\Support\Presenters\PresentableInterface;
 
-class CommentPresenter extends AbstractPresenter implements PresentableInterface {
-
+class CommentPresenter extends AbstractPresenter implements PresentableInterface
+{
     /**
      * @var bool
      */
@@ -130,5 +132,4 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
 
         return $this->isLiked = false;
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 
-class MbNotificationModelTest extends Orchestra\Testbench\TestCase {
-
+class MbNotificationModelTest extends Orchestra\Testbench\TestCase
+{
     /**
      * Get package providers. At a minimum this is the package being tested, but also
      * would include packages upon which our package depends, e.g. Cartalyst/Sentry
@@ -50,5 +50,4 @@ class MbNotificationModelTest extends Orchestra\Testbench\TestCase {
         $this->assertNotEquals($notification->getText(), $notification->getCleanText());
         $this->assertNotRegExp('/\<\?/', $notification->getCleanText());
     }
-
 }

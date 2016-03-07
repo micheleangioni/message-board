@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Http\Controllers\Api\v1;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Http\Controllers\Api\v1;
 
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
@@ -7,8 +9,8 @@ use Tymon\JWTAuth\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Log;
 
-class AuthenticationController extends ApiController {
-
+class AuthenticationController extends ApiController
+{
     /*
      * Internal Message Board error codes
      */
@@ -90,5 +92,4 @@ class AuthenticationController extends ApiController {
 
         response()->json();
     }
-
 }

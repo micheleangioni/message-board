@@ -1,4 +1,6 @@
-<?php namespace MicheleAngioni\MessageBoard\Repos;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Repos;
 
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\RoleRepositoryInterface;
@@ -8,10 +10,8 @@ class EloquentRoleRepository extends AbstractEloquentRepository implements RoleR
 {
     protected $model;
 
-
     public function __construct(Role $model)
     {
         $this->model = $model;
     }
-
 }

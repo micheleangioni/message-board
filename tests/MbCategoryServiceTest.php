@@ -1,7 +1,7 @@
 <?php
 
-class MbCategoryServiceTest extends Orchestra\Testbench\TestCase {
-
+class MbCategoryServiceTest extends Orchestra\Testbench\TestCase
+{
     protected $categoryService;
 
     /**
@@ -139,7 +139,6 @@ class MbCategoryServiceTest extends Orchestra\Testbench\TestCase {
     {
         Mockery::close();
     }
-
 }
 
 

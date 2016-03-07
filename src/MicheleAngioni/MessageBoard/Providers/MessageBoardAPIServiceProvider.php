@@ -1,9 +1,11 @@
-<?php namespace MicheleAngioni\MessageBoard\Providers;
+<?php
+
+namespace MicheleAngioni\MessageBoard\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class MessageBoardAPIServiceProvider extends ServiceProvider {
-
+class MessageBoardAPIServiceProvider extends ServiceProvider
+{
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -40,5 +42,4 @@ class MessageBoardAPIServiceProvider extends ServiceProvider {
             'MicheleAngioni\MessageBoard\Repos\EloquentUserRepository'
         );
     }
-
 }

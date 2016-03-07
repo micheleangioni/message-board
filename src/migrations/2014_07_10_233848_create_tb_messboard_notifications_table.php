@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTbMessboardNotificationsTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
