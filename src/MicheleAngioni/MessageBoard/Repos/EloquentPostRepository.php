@@ -21,15 +21,19 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
     /**
      * {@inheritdoc}
      */
-    public function deleteOldMessages($type, $datetime)
+    public function deleteOldMessages($datetime, $category = null)
     {
         if(!Helpers::checkDatetime($datetime)) {
             throw new InvalidArgumentException('InvalidArgumentException in '.__METHOD__.' at line '.__LINE__.': $datetime is not a valid datetime.');
         }
 
-        $posts = $this->model->where('post_type', '=', $type)
-            ->where('created_at', '<', $datetime)
-            ->get();
+        $query = $this->model;
+
+        if($category) {
+            $query = $query->where('category_id', '=', $category);
+        }
+
+        $posts = $query->where('created_at', '<', $datetime)->get();
 
         foreach($posts as $post) {
             $post->delete();
