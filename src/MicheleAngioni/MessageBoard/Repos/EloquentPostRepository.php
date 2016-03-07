@@ -3,6 +3,7 @@
 namespace MicheleAngioni\MessageBoard\Repos;
 
 use Helpers;
+use Illuminate\Database\Eloquent\Builder;
 use MicheleAngioni\Support\Repos\AbstractEloquentRepository;
 use MicheleAngioni\MessageBoard\Contracts\PostRepositoryInterface;
 use MicheleAngioni\MessageBoard\Models\Post;
@@ -72,9 +73,9 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
                     $posts = $this->model
                         ->with(['likes', 'poster', 'comments.likes.user', 'comments.user'])
                         ->whereNull('category_id')
-                        ->orWhere(function($query)
+                        ->orWhere(function(Builder $query)
                         {
-                            $query->whereHas('category', function($q)
+                            $query->whereHas('category', function(Builder $q)
                             {
                                 $q->where('private', false);
                             });
@@ -86,9 +87,9 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
                     $posts = $this->model
                         ->with(['likes', 'poster', 'comments.likes.user', 'comments.user'])
-                        ->where(function($query)
+                        ->where(function(Builder $query)
                         {
-                            $query->whereHas('category', function($q)
+                            $query->whereHas('category', function(Builder $q)
                             {
                                 $q->where('private', true);
                             });
