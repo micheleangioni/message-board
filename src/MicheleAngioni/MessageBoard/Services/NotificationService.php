@@ -45,15 +45,16 @@ class NotificationService
      *
      * @param  int  $toId
      * @param  int  $limit = 10
+     * 
      * @return Collection
      */
     public function getUserNotifications($toId, $limit = 10)
     {
         if($limit > 0) {
-            return $this->notificationRepo->getByLimit($limit, ['to_id' => $toId]);
+            return $this->notificationRepo->getByOrder('created_at', ['to_id' => $toId], [], $order = 'desc', $limit);
         }
         else {
-            return $this->notificationRepo->getBy(['to_id' => $toId]);
+            return $this->notificationRepo->getByOrder('created_at', ['to_id' => $toId], [], $order = 'desc');
         }
     }
 
