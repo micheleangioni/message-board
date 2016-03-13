@@ -51,7 +51,9 @@ Check our [wiki](https://github.com/micheleangioni/message-board/wiki) for full 
 	{
 		[...]
 		
-		MessageBoard::banUser(Auth::user(), $request->get('days'), $request->get('reason'));
+		$user = User::findOrFail($idUser);
+		
+		MessageBoard::banUser($user, $request->get('days'), $request->get('reason'));
 		
 		[...]
 	}
