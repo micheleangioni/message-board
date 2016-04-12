@@ -72,13 +72,16 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
                     $posts = $this->model
                         ->with(['likes', 'poster', 'comments.likes.user', 'comments.user'])
-                        ->whereNull('category_id')
-                        ->orWhere(function(Builder $query)
+                        ->where('user_id', $idUser)
+                        ->where(function(Builder $query)
                         {
-                            $query->whereHas('category', function(Builder $q)
-                            {
-                                $q->where('private', false);
-                            });
+                            $query->whereNull('category_id')
+                                ->orWhere(function ($query) {
+                                    $query->whereHas('category', function(Builder $q)
+                                    {
+                                        $q->where('private', false);
+                                    });
+                                });
                         })
                         ->get();
                 }
@@ -87,6 +90,7 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
 
                     $posts = $this->model
                         ->with(['likes', 'poster', 'comments.likes.user', 'comments.user'])
+                        ->where('user_id', $idUser)
                         ->where(function(Builder $query)
                         {
                             $query->whereHas('category', function(Builder $q)
