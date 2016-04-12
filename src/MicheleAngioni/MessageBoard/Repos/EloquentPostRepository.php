@@ -76,7 +76,7 @@ class EloquentPostRepository extends AbstractEloquentRepository implements PostR
                         ->where(function(Builder $query)
                         {
                             $query->whereNull('category_id')
-                                ->orWhere(function ($query) {
+                                ->orWhere(function (Builder $query) {
                                     $query->whereHas('category', function(Builder $q)
                                     {
                                         $q->where('private', false);
