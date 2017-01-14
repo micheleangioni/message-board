@@ -45,7 +45,7 @@ class CommentController extends ApiController
      * @param  Presenter  $presenter
      * @param  UserRepo  $userRepo
      */
-	function __construct(JWTAuth $auth, Manager $fractal, MbGateway $mbGateway, Presenter $presenter, UserRepo $userRepo)
+	public function __construct(JWTAuth $auth, Manager $fractal, MbGateway $mbGateway, Presenter $presenter, UserRepo $userRepo)
 	{
         $this->mbGateway = $mbGateway;
 

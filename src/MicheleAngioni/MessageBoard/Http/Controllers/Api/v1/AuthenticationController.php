@@ -25,7 +25,7 @@ class AuthenticationController extends ApiController
      * @param  JWTAuth  $auth
      * @param  Manager  $fractal
      */
-	function __construct(JWTAuth $auth, Manager $fractal)
+	public function __construct(JWTAuth $auth, Manager $fractal)
 	{
         parent::__construct($auth, $fractal);
 	}

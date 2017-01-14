@@ -12,7 +12,7 @@ class Purifier implements PurifierInterface
      */
     protected $purifier;
 
-    function __construct(HtmlPurifier $purifier)
+    public function __construct(HtmlPurifier $purifier)
     {
         $this->purifier = $purifier;
     }

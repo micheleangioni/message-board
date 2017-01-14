@@ -40,7 +40,7 @@ class PostPresenter extends AbstractPresenter implements PresentableInterface
     protected $user;
 
 
-	function __construct(MbUserInterface $user, $escapeText = false, PurifierInterface $purifier)
+	public function __construct(MbUserInterface $user, $escapeText = false, PurifierInterface $purifier)
 	{
         $this->escapeText = $escapeText;
 

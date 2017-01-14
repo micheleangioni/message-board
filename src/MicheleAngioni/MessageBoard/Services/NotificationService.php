@@ -13,7 +13,7 @@ class NotificationService
 {
     protected $notificationRepo;
 
-    function __construct(NotificationRepo $notificationRepo)
+    public function __construct(NotificationRepo $notificationRepo)
     {
         $this->notificationRepo = $notificationRepo;
     }

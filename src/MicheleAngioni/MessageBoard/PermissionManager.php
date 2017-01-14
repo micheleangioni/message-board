@@ -17,7 +17,7 @@ class PermissionManager
 
     protected $roleRepo;
 
-    function __construct(PermissionRepo $permissionRepo, RoleRepo $roleRepo)
+    public function __construct(PermissionRepo $permissionRepo, RoleRepo $roleRepo)
     {
         $this->permissionRepo = $permissionRepo;
 

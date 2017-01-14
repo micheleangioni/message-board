@@ -8,7 +8,7 @@ use MicheleAngioni\MessageBoard\Services\MessageBoardService;
 
 class MbGateway extends AbstractMbGateway implements MbGatewayInterface {
 
-    function __construct(CategoryService $categoryService, MessageBoardService $messageBoardService)
+    public function __construct(CategoryService $categoryService, MessageBoardService $messageBoardService)
     {
         parent::__construct($categoryService, $messageBoardService);
     }

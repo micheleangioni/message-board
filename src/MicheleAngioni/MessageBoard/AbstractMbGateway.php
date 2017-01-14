@@ -28,7 +28,7 @@ abstract class AbstractMbGateway implements MbGatewayInterface
     protected $postsPerPage;
 
 
-    function __construct(CategoryService $categoryService, MessageBoardService $messageBoardService)
+    public function __construct(CategoryService $categoryService, MessageBoardService $messageBoardService)
     {
         $this->categoryService = $categoryService;
 

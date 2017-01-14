@@ -74,7 +74,7 @@ class MessageBoardService
     protected $viewRepo;
 
 
-    function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
+    public function __construct(CommentRepo $commentRepo, LikeRepo $likeRepo, PostRepo $postRepo, Presenter $presenter,
                          PurifierInterface $purifier, ViewRepo $viewRepo)
     {
         $this->commentRepo = $commentRepo;

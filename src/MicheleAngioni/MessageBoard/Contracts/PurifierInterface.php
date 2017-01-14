@@ -4,5 +4,5 @@ namespace MicheleAngioni\MessageBoard\Contracts;
 
 interface PurifierInterface
 {
-    function clean($dirtyText, $config = 'default');
+    public function clean($dirtyText, $config = 'default');
 }

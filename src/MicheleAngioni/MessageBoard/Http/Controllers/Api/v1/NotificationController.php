@@ -43,7 +43,7 @@ class NotificationController extends ApiController
      * @param  MbGateway  $mbGateway
      * @param  NotificationService $notificationService
      */
-	function __construct(JWTAuth $auth, Manager $fractal, MbGateway $mbGateway, NotificationService $notificationService)
+	public function __construct(JWTAuth $auth, Manager $fractal, MbGateway $mbGateway, NotificationService $notificationService)
 	{
         $this->mbGateway = $mbGateway;
 

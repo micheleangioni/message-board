@@ -14,7 +14,7 @@ class CategoryService
 {
     protected $categoryRepo;
 
-    function __construct(CategoryRepo $categoryRepo)
+    public function __construct(CategoryRepo $categoryRepo)
     {
         $this->categoryRepo = $categoryRepo;
     }

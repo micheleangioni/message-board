@@ -44,7 +44,7 @@ class CommentPresenter extends AbstractPresenter implements PresentableInterface
      * @param  bool  $escapeText
      * @param  PurifierInterface  $purifier
      */
-	function __construct(MbUserInterface $user, $escapeText = false, PurifierInterface $purifier)
+	public function __construct(MbUserInterface $user, $escapeText = false, PurifierInterface $purifier)
 	{
         $this->escapeText = $escapeText;
 
